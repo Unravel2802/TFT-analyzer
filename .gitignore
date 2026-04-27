@@ -3,6 +3,7 @@ backend/venv/
 backend/__pycache__/
 backend/.env
 backend/*.pyc
+riot_api_key = os.getenv("RIOT_API_KEY")
 
 # Node
 frontend/node_modules/
