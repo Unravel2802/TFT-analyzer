@@ -8,9 +8,9 @@ settings = get_settings()
 
 app.add_middleware(
     CORSMiddleware,
-    allows_origins=settings.allowed_origins,
-    allows_methods=['*'],
-    allows_headers=['*'],
+    allow_origins=settings.allowed_origins,
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 @app.get('/health')
