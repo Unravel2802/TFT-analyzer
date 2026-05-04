@@ -23,7 +23,7 @@ class StatsService:
             placements.append(participant["placement"])
 
             for unit in participant["units"]:
-                unit_counts[unit["character_id"]] += 1
+                unit_counts[unit["character_id"].split("_")[-1]] += 1
             
             for trait in participant["traits"]:
                 if trait["num_units"] > 0:
@@ -38,8 +38,8 @@ class StatsService:
                     win_counts += 1
                 top4_counts += 1
         
-        top4_rates = top4_counts / len(placements)
-        win_rates = win_counts / len(placements)
+        top4_rates = str(round(top4_counts / len(placements) * 100, 1)) + "%"
+        win_rates = str(round(win_counts / len(placements) * 100, 1)) + "%"
 
         top_units = unit_counts.most_common(5)
         top_traits = trait_counts.most_common(5)
