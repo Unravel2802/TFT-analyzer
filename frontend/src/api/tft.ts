@@ -1,6 +1,6 @@
 import type { Account, PlayerStats } from '../types/tft.ts'
 
-const BASE_URL = 'https://localhost:8000'
+const BASE_URL = 'http://localhost:8000'
 
 export async function getAccount (
     gameName: string,
