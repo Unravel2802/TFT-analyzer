@@ -13,7 +13,7 @@ export default function SearchBar({ onSearch }: Props) {
         const [gameName, tagLine] = input.split('#')
 
         if (!gameName || !tagLine) {
-            alert('Pllease enter your Riot ID in the format: Name#TAG')
+            alert('Please enter your Riot ID in the format: Name#TAG')
             return
         }
 
@@ -22,14 +22,15 @@ export default function SearchBar({ onSearch }: Props) {
 
     }
     return  (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="search-form">
         <input 
+            className='search-input'
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Unravel2802#NA1"
         />
-        <button type="submit">Search</button>
+        <button type="submit" className="search-button">Search</button>
     </form>
     )
 }

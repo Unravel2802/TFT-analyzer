@@ -19,15 +19,15 @@ export default function PlayerPage() {
             const data = await getPlayerStats(gameName, tagLine)
             setStats(data)
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Could not load statsgi')
+            setError(err instanceof Error ? err.message : 'Could not load stats.')
         } finally {
             setLoading(false)
         }
     }
 
     return (
-        <div>
-            <h1> TFT Analyzer</h1>
+        <div className='page'>
+            <h1 className='page-title'> TFT Analyzer</h1>
 
             <SearchBar onSearch={handleSearch} />
             {loading && <p>Loading...</p>}
