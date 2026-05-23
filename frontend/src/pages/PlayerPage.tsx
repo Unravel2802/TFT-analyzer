@@ -27,7 +27,7 @@ export default function PlayerPage() {
 
     return (
         <div className='page'>
-            <h1 className='page-title'> TFT Analyzer</h1>
+            <h1 className='page-title'>TierMind</h1>
 
             <SearchBar onSearch={handleSearch} />
             {loading && <p>Loading...</p>}
@@ -35,7 +35,7 @@ export default function PlayerPage() {
             {stats && (
                 <div>
                     <div className="stat-cards">
-                        <StatCard label="Avg Placement" value={stats.avg_placement} />
+                        <StatCard label="Avg Placemment" value={stats.avg_placement} />
                         <StatCard label="Top 4 Rate" value={stats.top4_rate} />
                         <StatCard label="Win Rate" value={stats.win_rate} />
                     </div>
