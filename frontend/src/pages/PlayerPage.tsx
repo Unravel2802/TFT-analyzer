@@ -30,7 +30,7 @@ export default function PlayerPage() {
             <h1 className='page-title'>TierMind</h1>
 
             <SearchBar onSearch={handleSearch} />
-            {loading && <p>Loading...</p>}
+            {loading && <p className="status-text">Scounting the board...</p>}
             {error && <p>{error}</p>}
             {stats && (
                 <div>

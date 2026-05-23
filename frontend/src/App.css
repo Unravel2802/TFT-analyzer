@@ -127,3 +127,19 @@
   border-bottom: none;
   padding-bottom: 0;
 }
+
+/* ── Loading & error states ─────────────────────────────── */
+.status-text {
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+

@@ -12,3 +12,5 @@ frontend/dist/
 # General
 .DS_Store
 *.env
+
+settings.json
