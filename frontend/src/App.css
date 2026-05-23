@@ -61,7 +61,7 @@
 
 .stat-card {
   flex: 1;
-  max-width: 200px;
+  max-width: 240px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 8px;
