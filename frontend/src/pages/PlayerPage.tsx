@@ -30,12 +30,12 @@ export default function PlayerPage() {
             <h1 className='page-title'>TierMind</h1>
 
             <SearchBar onSearch={handleSearch} />
-            {loading && <p className="status-text">Scounting the board...</p>}
-            {error && <p>{error}</p>}
+            {loading && <p className="status-text">Scouting the board...</p>}
+            {error && <p className="error-text">{error}</p>}
             {stats && (
-                <div>
+                <div className="results">
                     <div className="stat-cards">
-                        <StatCard label="Avg Placemment" value={stats.avg_placement} />
+                        <StatCard label="Avg Placement" value={stats.avg_placement} />
                         <StatCard label="Top 4 Rate" value={stats.top4_rate} />
                         <StatCard label="Win Rate" value={stats.win_rate} />
                     </div>
