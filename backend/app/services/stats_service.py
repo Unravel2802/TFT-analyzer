@@ -27,7 +27,7 @@ class StatsService:
             
             for trait in participant["traits"]:
                 if trait["num_units"] > 0:
-                    trait_counts[trait["name"]] += 1
+                    trait_counts[trait["name"].split("_")[-1]] += 1
         
         avg_placements = sum(placements) / len(placements)
         top4_counts = 0
