@@ -28,6 +28,7 @@ export default function PlayerPage() {
     return (
         <div className='page'>
             <h1 className='page-title'>TierMind</h1>
+            <p className="page-tagline">Know your game. Climb your rank.</p>
 
             <SearchBar onSearch={handleSearch} />
             {loading && <p className="status-text">Scouting the board...</p>}
@@ -35,7 +36,7 @@ export default function PlayerPage() {
             {stats && (
                 <div className="results">
                     <div className="stat-cards">
-                        <StatCard label="Avg Placement" value={stats.avg_placement} />
+                        <StatCard label="Avg Placement" value={stats.avg_placement.toFixed(2)} />
                         <StatCard label="Top 4 Rate" value={stats.top4_rate} />
                         <StatCard label="Win Rate" value={stats.win_rate} />
                     </div>

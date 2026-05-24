@@ -18,6 +18,15 @@
   text-shadow: 0 0 30px rgba(200, 155, 60, 0.4);
 }
 
+.page-tagline {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0.6;
+  margin-top: -24px;
+}
+
 /* ── Search bar ─────────────────────────────────────────── */
 .search-form {
   display: flex;
@@ -85,6 +94,11 @@
   align-items: center;
   gap: 8px;
   box-shadow: var(--shadow);
+  transition: border-color0.2s
+}
+
+.stat-card:hover {
+  border-color: var(--gold);
 }
 
 .stat-label {
@@ -106,6 +120,7 @@
   gap: 24px;
   width: 100%;
   justify-content: center;
+  transition: border-color 0.2s;
 }
 
 .top-list {
@@ -116,6 +131,10 @@
   border-radius: 8px;
   padding: 24px;
   box-shadow: var(--shadow);
+}
+
+.top-list:hover{
+  border-color: var(--gold);
 }
 
 .top-list h3 {
