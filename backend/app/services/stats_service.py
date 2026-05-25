@@ -5,6 +5,21 @@ class StatsService:
     def __init__(self, riot_client: RiotClient):
         self.riot_client = riot_client
 
+    async def get_player_rank(self, puuid: str) -> dict:
+        summoner = await self.riot_client.get_summoner_by_puuid(puuid)
+        summoner_id = summoner["id"]
+
+        rank_entry = await self.riot_client.get_rank(summoner_id)
+
+        if rank_entry is None:
+            return {"tier": "UNRANKED", "rank": "", "lp": 0}
+        
+        return {
+            "tier": rank_entry["tier"],
+            "rank": rank_entry["rank"],
+            "lp": rank_entry["leaguePoints"],
+        }
+
     async def get_player_stats(self, puuid: str, count: int = 20) -> dict:
         match_ids = await self.riot_client.get_match_ids(puuid, count)
 
