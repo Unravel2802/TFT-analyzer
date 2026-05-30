@@ -10,13 +10,13 @@ export default function PlayerPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    async function handleSearch(gameName: string, tagLine: string) {
+    async function handleSearch(region: string, gameName: string, tagLine: string) {
         setLoading(true)
         setError(null)
         setStats(null)
 
         try {
-            const data = await getPlayerStats(gameName, tagLine)
+            const data = await getPlayerStats(region, gameName, tagLine)
             setStats(data)
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Could not load stats.')
@@ -35,6 +35,11 @@ export default function PlayerPage() {
             {error && <p className="error-text">{error}</p>}
             {stats && (
                 <div className="results">
+                    <div className="rank-display">
+                        <span className="rank-tier">{stats.tier}</span>
+                        {stats.rank && <span className="rank-division">{stats.rank}</span>}
+                        {stats.tier !== "UNRANKED" && <span className="rank-lp"> - {stats.lp} LP</span>}
+                    </div>
                     <div className="stat-cards">
                         <StatCard label="Avg Placement" value={stats.avg_placement.toFixed(2)} />
                         <StatCard label="Top 4 Rate" value={stats.top4_rate} />

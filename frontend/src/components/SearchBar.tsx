@@ -1,11 +1,14 @@
 import { useState } from 'react'
 
+const REGIONS = ['NA1', 'EUW1', 'KR', 'BR1']
+
 interface Props {
-    onSearch: (gameName: string, tagLine: string) => void
+    onSearch: (region: string, gameName: string, tagLine: string) => void
 }
 
 export default function SearchBar({ onSearch }: Props) {
     const [input, setInput] = useState('')
+    const [region, setRegion] = useState('NA1')
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -18,11 +21,20 @@ export default function SearchBar({ onSearch }: Props) {
         }
 
 
-        onSearch(gameName.trim(), tagLine.trim())
+        onSearch(region, gameName.trim(), tagLine.trim())
 
     }
     return  (
     <form onSubmit={handleSubmit} className="search-form">
+        <select
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+            className="region-select"
+        >
+            {REGIONS.map(r => (
+                <option key={r} value={r}>{r}</option>
+            ))}
+        </select>
         <input 
             className='search-input'
             type="text"

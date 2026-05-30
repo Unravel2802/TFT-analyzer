@@ -14,4 +14,7 @@ export interface PlayerStats {
     win_rate: string;
     top_units: UnitEntry[];
     top_traits: TraitEntry[];
+    tier: string
+    rank: string
+    lp: number
 }
