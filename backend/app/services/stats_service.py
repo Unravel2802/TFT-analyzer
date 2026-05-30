@@ -6,10 +6,7 @@ class StatsService:
         self.riot_client = riot_client
 
     async def get_player_rank(self, puuid: str) -> dict:
-        summoner = await self.riot_client.get_summoner_by_puuid(puuid)
-        summoner_id = summoner["id"]
-
-        rank_entry = await self.riot_client.get_rank(summoner_id)
+        rank_entry = await self.riot_client.get_rank(puuid)
 
         if rank_entry is None:
             return {"tier": "UNRANKED", "rank": "", "lp": 0}

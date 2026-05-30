@@ -47,12 +47,13 @@ class RiotClient:
         response.raise_for_status()
         return response.json()
 
-    async def get_rank(self, summoner_id: str) -> dict | None:
-        url = f"{self.platform_url}/tft/league/v1/entries/by-summoner/{summoner_id}"
+    async def get_rank(self, puuid: str) -> dict | None:
+        url = f"{self.platform_url}/tft/league/v1/entries/by-puuid/{puuid}"
         response = await self.client.get(url)
-        response.raise_for_status()
+        if not response.is_success:
+            return None
+        
         entries = response.json()
-
         for entry in entries:
             if entry["queueType"] == "RANKED_TFT":
                 return entry
