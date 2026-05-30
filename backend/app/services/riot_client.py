@@ -30,7 +30,7 @@ class RiotClient:
         return response.json()
     
     async def get_summoner_by_puuid(self, puuid: str) -> dict:
-        url = f"{self.platform_url}/tft/summoner/v1/summoners/by-puuid/{puuid}"
+        url = f"{self.platform_url}/lol/summoner/v4/summoners/by-puuid/{puuid}"
         response = await self.client.get(url)
         response.raise_for_status()
         return response.json()
@@ -48,7 +48,7 @@ class RiotClient:
         return response.json()
 
     async def get_rank(self, puuid: str) -> dict | None:
-        url = f"{self.platform_url}/tft/league/v1/entries/by-puuid/{puuid}"
+        url = f"{self.platform_url}/tft/league/v1/by-puuid/{puuid}"
         response = await self.client.get(url)
         if not response.is_success:
             return None
