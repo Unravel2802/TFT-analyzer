@@ -1,6 +1,18 @@
 from app.services.riot_client import RiotClient
 from collections import Counter
 
+TRAIT_DISPLAY_NAMES = {
+    "APTrait": "A.P.",
+    "DRX": "DRX",
+    "DarkStar": "Dark Star",
+    "Fateweaver": "Fateweaver",
+    "Timebreaker": "Timebreaker", 
+}
+
+def format_trait_name(raw: str) -> str:
+    key = raw.split("_")[-1]
+    return TRAIT_DISPLAY_NAMES.get(key, key)
+
 class StatsService:
     def __init__(self, riot_client: RiotClient):
         self.riot_client = riot_client
@@ -39,7 +51,7 @@ class StatsService:
             
             for trait in participant["traits"]:
                 if trait["num_units"] > 0:
-                    trait_counts[trait["name"].split("_")[-1]] += 1
+                    trait_counts[format_trait_name(trait["name"])] += 1
         
         avg_placements = sum(placements) / len(placements)
         top4_counts = 0
