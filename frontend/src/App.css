@@ -205,7 +205,7 @@
 .region-select {
   appearance: none;
   font-family: inherit;
-  padding: 12px 8px;
+  padding: 12px 32px 12px 12px;
   background: var(--bg-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23C89B3C'/%3E%3C/svg%3E") no-repeat right 10px center;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -234,8 +234,8 @@
 }
 
 .rank-tier {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--gold);
