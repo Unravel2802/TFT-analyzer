@@ -96,7 +96,7 @@
   box-shadow: var(--shadow);
   transition: border-color 0.2s
 }
-
+s
 .stat-card:hover {
   border-color: var(--gold);
 }

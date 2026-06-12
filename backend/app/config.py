@@ -6,6 +6,9 @@ class Settings(BaseSettings):
     riot_api_key: str
     database_url: str
     allowed_origins: list[str]
+    supabase_url: str
+    supabase_key: str
+    secret_key: str
 
     
     model_config = SettingsConfigDict(env_file=".env")
