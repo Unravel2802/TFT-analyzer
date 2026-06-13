@@ -253,3 +253,39 @@ s
   color: var(--text);
   letter-spacing: 1px;
 }
+
+/* ── Auth forms ─────────────────────────────────────────── */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.auth-switch {
+  font-size: 13px;
+  color: var(--text);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.auth-link {
+  color: var(--gold);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.auth-link:hover {
+  opacity: 0.8;
+}
