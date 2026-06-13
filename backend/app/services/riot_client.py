@@ -61,5 +61,5 @@ class RiotClient:
         return None
 
     async def close(self):
-        return await self.client.close()
+        return await self.client.aclose()
     

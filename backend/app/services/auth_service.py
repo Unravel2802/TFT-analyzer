@@ -2,9 +2,12 @@ from jose import jwt
 from datetime import datetime, timedelta, timezone
 from supabase import create_client, Client
 from app.config import get_settings
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import bcrypt
 
 settings = get_settings()
+security = HTTPBearer()
 
 
 supabase: Client = create_client(settings.supabase_url, settings.supabase_key)
@@ -30,11 +33,13 @@ def decode_access_token(token: str) -> str | None:
     except Exception:
         return None
 
-async def create_user(email: str, password: str) -> dict:
+async def create_user(email: str, password: str, riot_id: str, region: str) -> dict:
     hashed = hash_password(password)
     result = supabase.table('users').insert({
         "email": email,
-        "hashed_password": hashed
+        "hashed_password": hashed,
+        "riot_id": riot_id,
+        "region": region,
     }).execute()
     return result.data[0]
 
@@ -43,3 +48,16 @@ async def get_user_by_email(email: str) -> dict | None:
     if result.data:
         return result.data[0]
     return None
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    token = credentials.credentials
+    email = decode_access_token(token)
+
+    if not email:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    user = await get_user_by_email(email)
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    
+    return user
