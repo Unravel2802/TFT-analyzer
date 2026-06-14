@@ -27,6 +27,6 @@ async def get_my_stats(current_user: dict = Depends(get_current_user)):
             stats_service.get_player_rank(puuid),
         )
 
-        return {**stats, ** rank}
+        return {**stats, ** rank, "riot_id": current_user["riot_id"]}
     finally:
         await riot_client.close()

@@ -289,3 +289,37 @@ s
 .auth-link:hover {
   opacity: 0.8;
 }
+
+/* ── Dashboard ──────────────────────────────────────────── */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logout-button {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2;
+}
+
+.logout-button:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.player-name {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-bright);
+}

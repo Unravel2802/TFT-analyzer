@@ -43,6 +43,18 @@ export async function signup(email: string, password: string): Promise<{ access_
     return response.json()
 }
 
+export async function getMyStats(token: string): Promise<PlayerStats> {
+    const response = await fetch(`${BASE_URL}/me/stats`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch stats: ${response.status}`)
+    }
+
+    return response.json() as Promise<PlayerStats> 
+}
+
 export async function login(email: string, password: string):  Promise<{ access_token: string }> {
     const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',

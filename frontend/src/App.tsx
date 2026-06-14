@@ -4,13 +4,14 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import PlayerPage from "./pages/PlayerPage";
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import DashboardPage from './pages/DashboardPage'
 
 function AppContent() {
   const { token } = useAuth()
   const [page, setPage] = useState<'login' | 'signup'>('login')
 
   if (token) {
-    return <PlayerPage />
+    return <DashboardPage />
   }
 
   if (page === 'signup') {

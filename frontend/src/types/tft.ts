@@ -17,4 +17,5 @@ export interface PlayerStats {
     tier: string
     rank: string
     lp: number
+    riot_id: string
 }
