@@ -1,4 +1,4 @@
-import type { Account, PlayerStats } from '../types/tft'
+import type { Account, PlayerStats, MatchEntry } from '../types/tft'
 
 const BASE_URL = 'http://localhost:8000'
 
@@ -65,6 +65,18 @@ export async function login(email: string, password: string):  Promise<{ access_
     if (!response.ok) {
         const err = await response.json()
         throw new Error(err.detail ?? 'Login failed')
+    }
+
+    return response.json()
+}
+
+export async function getMyMatches(token: string): Promise<MatchEntry[]> {
+    const response = await fetch(`${BASE_URL}/me/matches`, {
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch matches: ${response.status}`)
     }
 
     return response.json()

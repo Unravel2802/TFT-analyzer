@@ -19,3 +19,10 @@ export interface PlayerStats {
     lp: number
     riot_id: string
 }
+
+export interface MatchEntry {
+    placement: number
+    game_datetime: number
+    units: string[]
+    traits: string[]
+}
