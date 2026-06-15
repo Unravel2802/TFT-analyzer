@@ -323,3 +323,79 @@ s
   letter-spacing: 2px;
   color: var(--text-bright);
 }
+
+.match-history {
+  width: 100%;
+}
+
+.match-history-title {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.match-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.match-row:last-child {
+  border-bottom: none;
+}
+
+.match-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 48px;
+}
+
+.placement-badge {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.match-date {
+  font-size: 11px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+
+.match-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.match-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.match-tag {
+  font-size:  11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.unit-tag {
+  background: rgba(200, 155, 60, 0.1);
+  color: var(--gold);
+  border: 1px solid rgba(200, 155, 60, 0.2);
+}
+
+.trait-tag {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
