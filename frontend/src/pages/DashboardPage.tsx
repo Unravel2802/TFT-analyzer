@@ -1,29 +1,35 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { getMyStats } from '../api/tft'
-import type { PlayerStats } from '../types/tft'
+import { getMyStats, getMyMatches } from '../api/tft'
+import type { PlayerStats, MatchEntry } from '../types/tft'
 import StatCard from '../components/StatCard'
 import TopList from '../components/TopList'
+import MatchHistory from '../components/MatchHistory'
 
 export default function DashboardPage() {
     const { token, logout } = useAuth()
     const [stats, setStats] = useState<PlayerStats | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [matches, setMatches] = useState<MatchEntry[]>([])
 
     useEffect(() => {
-        async function fetchStats() {
+        async function fetchAll() {
             try {
-                const data = await getMyStats(token!)
-                setStats(data)
+                const [statsData, matchesData] = await Promise.all([
+                    getMyStats(token!),
+                    getMyMatches(token!),
+                ])
+                setStats(statsData)
+                setMatches(matchesData)
             } catch (err) {
-                setError(err instanceof Error? err.message : 'Failed to load stats')
+                setError(err instanceof Error? err.message : 'Failed to load data')
             } finally {
                 setLoading(false)
             }
         }
 
-        fetchStats()
+        fetchAll()
     }, [])
 
     return (
@@ -55,7 +61,9 @@ export default function DashboardPage() {
                     <div className='top-lists'>
                         <TopList title='Top Units' entries={stats.top_units}/>
                         <TopList title='Top Traits' entries={stats.top_traits}/>
-                    </div>    
+                    </div>
+
+                    <MatchHistory matches={matches} />
                 </div>
             )}
         </div>
