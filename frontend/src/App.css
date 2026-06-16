@@ -399,3 +399,208 @@ s
   color: var(--text);
   border: 1px solid var(--border);
 }
+
+.rank-display[data-tier="iron"]     { --tier-color: #8a8a8a; }
+.rank-display[data-tier="bronze"]   { --tier-color: #8c523a; }
+.rank-display[data-tier="silver"]   { --tier-color: #a0a9b4; }
+.rank-display[data-tier="gold"]     { --tier-color: #C89B3C; }
+.rank-display[data-tier="platinum"] { --tier-color: #0bc4b4; }
+.rank-display[data-tier="emerald"]  { --tier-color: #1aaa55; }
+.rank-display[data-tier="diamond"]  { --tier-color: #576bce; }
+.rank-display[data-tier="master"]   { --tier-color: #9d48e0; }
+.rank-display[data-tier="grandmaster"] { --tier-color: #e06c4a; }
+.rank-display[data-tier="challenger"]  { --tier-color: #e8c44a; }
+
+.rank-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 28px;
+  background: rgba(var(--tier-color-rgb, 200, 155, 60), 0.88);
+  border: 1px solid var(--tier-color, var(--gold));
+  border-radius: 24px;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--tier-color, var(--gold)) 30%, transparent);
+}
+
+.rank-tier {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--tier-color, var(--gold));
+}
+
+/* ── Placement grid ─────────────────────────────────────── */
+.placement-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+}
+
+.placement-bubble {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.bubble-first {
+  background: rgba(200, 155, 60, 0.35);
+  color: #C89B3C;
+  border: 1px solid rgba(200, 155, 60, 0.8);
+}
+
+.bubble-top4 {
+  background: rgba(76, 175, 80, 0.30);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.7);
+}
+
+.bubble-bot4 {
+  background: rgba(229, 115, 115, 0.25);
+  color: #e57373;
+  border: 1px solid rgba(229, 115, 115, 0.6);
+}
+
+/* ── Player card ─────────────────────────────────────────── */
+.player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rank-emblem {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--tier-color, var(--gold)) 40%, transparent));
+}
+
+.player-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+/* ── Rank pill ───────────────────────────────────────────── */
+.rank-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--tier-color, var(--gold));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--tier-color, var(--gold)) 30%, transparent);
+}
+
+.rank-tier {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rank-division {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.06em;
+}
+
+.rank-lp {
+  font-size: 0.9rem;
+  color: var(--tier-color, var(--gold));
+  font-weight: 600;
+}
+
+/* ── Search bar ──────────────────────────────────────────── */
+.search-bar {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    max-width: 520px;
+    margin: 16px auto;
+}
+
+.region-select {
+    background: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.region-select:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+/* ── Auth header buttons ─────────────────────────────────── */
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.text-button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: color 0.2s;
+}
+
+.text-button:hover {
+    color: var(--text);
+}
+
+.primary-button {
+    background: var(--gold);
+    color: #0d1117;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.primary-button:hover {
+    opacity: 0.85;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.back-button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 0;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.back-button:hover {
+    color: var(--text);
+}

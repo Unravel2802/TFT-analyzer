@@ -1,36 +1,46 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { getMyStats, getMyMatches } from '../api/tft'
-import type { PlayerStats, MatchEntry } from '../types/tft'
-import StatCard from '../components/StatCard'
-import TopList from '../components/TopList'
-import MatchHistory from '../components/MatchHistory'
+import { getMyDashboard, getPlayerDashboard } from '../api/tft'
+import type { DashboardData } from '../types/tft'
+import SearchBar from '../components/SearchBar'
+import PlayerProfile from '../components/PlayerProfile'
 
 export default function DashboardPage() {
     const { token, logout } = useAuth()
-    const [stats, setStats] = useState<PlayerStats | null>(null)
+    const [ownData, setOwnData] = useState<DashboardData | null>(null)
+    const [viewedData, setViewedData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(true)
+    const [searchLoading, setSearchLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const [matches, setMatches] = useState<MatchEntry[]>([])
 
     useEffect(() => {
-        async function fetchAll() {
+        async function fetchOwn() {
             try {
-                const [statsData, matchesData] = await Promise.all([
-                    getMyStats(token!),
-                    getMyMatches(token!),
-                ])
-                setStats(statsData)
-                setMatches(matchesData)
+                const data = await getMyDashboard(token!)
+                setOwnData(data)
             } catch (err) {
-                setError(err instanceof Error? err.message : 'Failed to load data')
+                setError(err instanceof Error ? err.message : 'Failed to load data')
             } finally {
                 setLoading(false)
             }
         }
-
-        fetchAll()
+        fetchOwn()
     }, [])
+
+    async function handleSearch(region: string, gameName: string, tagLine: string) {
+        setSearchLoading(true)
+        setError(null)
+        try {
+            const result = await getPlayerDashboard(region, gameName, tagLine)
+            setViewedData(result)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Player not found')
+        } finally {
+            setSearchLoading(false)
+        }
+    }
+
+    const displayed = viewedData ?? ownData
 
     return (
         <div className='page'>
@@ -40,32 +50,18 @@ export default function DashboardPage() {
             </div>
             <p className='page-tagline'>Know your game. Climb your rank.</p>
 
+            <SearchBar onSearch={handleSearch} loading={searchLoading} />
+
+            {viewedData && (
+                <button className='back-button' onClick={() => setViewedData(null)}>
+                    ← Back to my profile
+                </button>
+            )}
+
             {loading && <p className='status-text'>Loading your stats...</p>}
             {error && <p className='error-text'>{error}</p>}
 
-            {stats && (
-                <div className='results'>
-                    <div className='player-name'>{stats.riot_id.split('#')[0]}</div>
-                    <div className='rank-display'>
-                        <span className='rank-tier'>{stats.tier}</span>
-                        {stats.rank && <span className='rank-division'>{stats.rank}</span>}
-                        {stats.tier !== 'UNRANKED' && <span className='rank-lp'> - {stats.lp} LP </span>}
-                    </div>
-
-                    <div className='stat-cards'>
-                        <StatCard label='Avg Placement' value={stats.avg_placement.toFixed(2)}/>
-                        <StatCard label='Top 4 Rate' value={stats.top4_rate}/>
-                        <StatCard label='Win Rate' value={stats.win_rate}/>
-                    </div>
-
-                    <div className='top-lists'>
-                        <TopList title='Top Units' entries={stats.top_units}/>
-                        <TopList title='Top Traits' entries={stats.top_traits}/>
-                    </div>
-
-                    <MatchHistory matches={matches} />
-                </div>
-            )}
+            {displayed && <PlayerProfile data={displayed} />}
         </div>
     )
 }
