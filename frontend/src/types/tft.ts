@@ -26,3 +26,7 @@ export interface MatchEntry {
     units: string[]
     traits: string[]
 }
+
+export interface DashboardData extends PlayerStats {
+    matches: MatchEntry[]
+}

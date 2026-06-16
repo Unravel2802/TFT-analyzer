@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { login } from '../api/tft'
 
-export default function LoginPage({ onSwitch }: {onSwitch: () => void }) {
+export default function LoginPage({ onSwitch, onBack }: { onSwitch: () => void, onBack: () => void }) {    
     const { login: setToken } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -56,6 +56,10 @@ export default function LoginPage({ onSwitch }: {onSwitch: () => void }) {
                 <p className='auth-switch'>
                     Don't have an account?{' '}
                     <span className='auth-link' onClick={onSwitch}>Sign up</span>
+                </p>
+
+                <p className='auth-switch'>
+                    <span className='auth-link' onClick={onBack}>← Back to search</span>
                 </p>
             </form>
         </div>

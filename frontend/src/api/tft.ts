@@ -1,4 +1,4 @@
-import type { Account, PlayerStats, MatchEntry } from '../types/tft'
+import type { Account, PlayerStats, MatchEntry, DashboardData } from '../types/tft'
 
 const BASE_URL = 'http://localhost:8000'
 
@@ -80,4 +80,24 @@ export async function getMyMatches(token: string): Promise<MatchEntry[]> {
     }
 
     return response.json()
+}
+
+export async function getMyDashboard(token: string): Promise<DashboardData> {
+    const response = await fetch(`${BASE_URL}/me/dashboard`, {
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+    if (!response.ok) throw new Error(`Failed to fetch dashboard: ${response.status}`)
+    return response.json() as Promise<DashboardData>
+}
+
+export async function getPlayerDashboard(
+    region: string,
+    gameName: string,
+    tagLine: string
+): Promise<DashboardData> {
+    const response = await fetch(
+        `${BASE_URL}/players/${region}/${gameName}/${tagLine}/dashboard`
+    )
+    if (!response.ok) throw new Error(`Player not found: ${response.status}`)
+    return response.json() as Promise<DashboardData>
 }
