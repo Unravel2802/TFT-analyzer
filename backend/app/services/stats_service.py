@@ -29,49 +29,27 @@ class StatsService:
             "lp": rank_entry["leaguePoints"],
         }
 
-    async def get_player_stats(self, puuid: str, count: int = 20) -> dict:
-        match_ids = await self.riot_client.get_match_ids(puuid, count)
-
+    def compute_stats(self, participants: list[dict]) -> dict:
         placements = []
         unit_counts = Counter()
         trait_counts = Counter()
-
-        for match_id in match_ids:
-            match = await self.riot_client.get_match(match_id)
-
-            participant = next(
-                p for p in match["info"]["participants"]
-                if p["puuid"] == puuid
-            )
-
+        
+        for participant in participants:
             placements.append(participant["placement"])
-
             for unit in participant["units"]:
                 unit_counts[unit["character_id"].split("_")[-1]] += 1
-            
             for trait in participant["traits"]:
                 if trait["num_units"] > 0:
                     trait_counts[format_trait_name(trait["name"])] += 1
-        
-        avg_placements = sum(placements) / len(placements)
-        top4_counts = 0
-        win_counts = 0 
-        for placement in placements:
-            if placement <= 4:
-                if placement == 1:
-                    win_counts += 1
-                top4_counts += 1
-        
-        top4_rates = str(round(top4_counts / len(placements) * 100, 1)) + "%"
-        win_rates = str(round(win_counts / len(placements) * 100, 1)) + "%"
 
-        top_units = unit_counts.most_common(5)
-        top_traits = trait_counts.most_common(5)
+        avg_placement = sum(placements) / len(placements)
+        top4_count = sum(1 for p in placements if p <= 4)
+        win_count = sum(1 for p in placements if p == 1)
 
-        return {                                         
-            "avg_placement": avg_placements,
-            "top4_rate": top4_rates,
-            "win_rate": win_rates,
-            "top_units": top_units,
-            "top_traits": top_traits,
+        return {
+            "avg_placement": avg_placement,
+            "top4_rate": str(round(top4_count / len(placements) * 100, 1)) + "%",
+            "win_rate": str(round(win_count / len(placements) * 100, 1)) + "%",
+            "top_units": unit_counts.most_common(5),
+            "top_traits": trait_counts.most_common(5)
         }
