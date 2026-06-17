@@ -2,6 +2,8 @@ import type { DashboardData } from '../types/tft'
 import StatCard from './StatCard'
 import TopList from './TopList'
 import MatchHistory from './MatchHistory'
+import PlacementTrend from './PlacementTrend'
+import PlacementDistribution from './PlacementDistribution'
 
 function PlacementGrid({ data }: { data: DashboardData }) {
     return (
@@ -13,9 +15,7 @@ function PlacementGrid({ data }: { data: DashboardData }) {
                     p <= 4  ? 'bubble-top4' :
                     'bubble-bot4'
                 return (
-                    <div key={i} className={`placement-bubble ${colorClass}`}>
-                        {p}
-                    </div>
+                    <div key={i} className={`placement-bubble ${colorClass}`}>{p}</div>
                 )
             })}
         </div>
@@ -24,36 +24,59 @@ function PlacementGrid({ data }: { data: DashboardData }) {
 
 export default function PlayerProfile({ data }: { data: DashboardData }) {
     return (
-        <div className='results'>
-            <div className='player-card'>
+        <div className='profile'>
+            <header className='hero'>
                 <img
                     className='rank-emblem'
                     src={`https://opgg-static.akamaized.net/images/medals_new/${data.tier.toLowerCase()}.png`}
                     alt={data.tier}
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                 />
-                <div className='player-name'>{data.riot_id.split('#')[0]}</div>
-                <div className='rank-display' data-tier={data.tier.toLowerCase()}>
-                    <span className='rank-tier'>{data.tier}</span>
-                    {data.rank && <span className='rank-division'>{data.rank}</span>}
-                    {data.tier !== 'UNRANKED' && <span className='rank-lp'>{data.lp} LP</span>}
+                <div className='hero-identity'>
+                    <div className='player-name'>{data.riot_id.split('#')[0]}</div>
+                    <div className='rank-display' data-tier={data.tier.toLowerCase()}>
+                        <span className='rank-tier'>{data.tier}</span>
+                        {data.rank && <span className='rank-division'>{data.rank}</span>}
+                        {data.tier !== 'UNRANKED' && <span className='rank-lp'>{data.lp} LP</span>}
+                    </div>
                 </div>
+                <div className='hero-stats'>
+                    <StatCard label='Avg Placement' value={data.avg_placement.toFixed(2)} />
+                    <StatCard label='Top 4 Rate' value={data.top4_rate} />
+                    <StatCard label='Win Rate' value={data.win_rate} />
+                </div>
+            </header>
+
+            <div className='profile-grid'>
+                <main className='profile-main'>
+                    <section className='panel'>
+                        <h3 className='panel-title'>Recent Form</h3>
+                        <PlacementGrid data={data} />
+                    </section>
+
+                    <section className='panel'>
+                        <h3 className='panel-title'>Performance</h3>
+                        <div className='charts'>
+                            <div className='chart-block'>
+                                <span className='chart-label'>Placement Trend (old → new)</span>
+                                <PlacementTrend matches={data.matches} />
+                            </div>
+                            <div className='chart-block'>
+                                <span className='chart-label'>Distribution</span>
+                                <PlacementDistribution matches={data.matches} />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className='panel'>
+                        <MatchHistory matches={data.matches} />
+                    </section>
+                </main>
+                <aside className='profile-side'>
+                    <TopList title='Top Units' entries={data.top_units} />
+                    <TopList title='Top Traits' entries={data.top_traits} />
+                </aside>
             </div>
-
-            <PlacementGrid data={data} />
-
-            <div className='stat-cards'>
-                <StatCard label='Avg Placement' value={data.avg_placement.toFixed(2)} />
-                <StatCard label='Top 4 Rate' value={data.top4_rate} />
-                <StatCard label='Win Rate' value={data.win_rate} />
-            </div>
-
-            <div className='top-lists'>
-                <TopList title='Top Units' entries={data.top_units} />
-                <TopList title='Top Traits' entries={data.top_traits} />
-            </div>
-
-            <MatchHistory matches={data.matches} />
         </div>
     )
 }
