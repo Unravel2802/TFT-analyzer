@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { getMyDashboard, getPlayerDashboard } from '../api/tft'
 import type { DashboardData } from '../types/tft'
 import SearchBar from '../components/SearchBar'
 import PlayerProfile from '../components/PlayerProfile'
+import ProfileSkeleton from '../components/ProfileSkeleton'
 
 export default function DashboardPage() {
     const { token, logout } = useAuth()
@@ -11,23 +12,29 @@ export default function DashboardPage() {
     const [viewedData, setViewedData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(true)
     const [searchLoading, setSearchLoading] = useState(false)
+    const lastAttempt = useRef<() => void>(() => {})
     const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        async function fetchOwn() {
-            try {
-                const data = await getMyDashboard(token!)
-                setOwnData(data)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to load data')
-            } finally {
-                setLoading(false)
-            }
+    async function fetchOwn() {
+        lastAttempt.current = fetchOwn
+        setLoading(true)
+        setError(null)
+        try {
+            const data = await getMyDashboard(token!)
+            setOwnData(data)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load data')
+        } finally {
+            setLoading(false)
         }
+    }
+    
+    useEffect(() => {
         fetchOwn()
     }, [])
 
     async function handleSearch(region: string, gameName: string, tagLine: string) {
+        lastAttempt.current = () => handleSearch(region, gameName, tagLine)
         setSearchLoading(true)
         setError(null)
         try {
@@ -58,8 +65,15 @@ export default function DashboardPage() {
                 </button>
             )}
 
-            {loading && <p className='status-text'>Loading your stats...</p>}
-            {error && <p className='error-text'>{error}</p>}
+            {loading && <ProfileSkeleton />}
+            {error && (
+                <div className='error-box'>
+                    <p className='error-text'>{error}</p>
+                    <button className='retry-button' onClick={() => lastAttempt.current()}>
+                        Try again
+                    </button>
+                </div>
+            )}
 
             {displayed && <PlayerProfile data={displayed} />}
         </div>
