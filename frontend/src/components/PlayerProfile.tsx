@@ -23,6 +23,7 @@ function PlacementGrid({ data }: { data: DashboardData }) {
 }
 
 export default function PlayerProfile({ data }: { data: DashboardData }) {
+    const hasMatches = data.matches.length > 0
     return (
         <div className='profile'>
             <header className='hero'>
@@ -40,14 +41,15 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
                         {data.tier !== 'UNRANKED' && <span className='rank-lp'>{data.lp} LP</span>}
                     </div>
                 </div>
-                <div className='hero-stats'>
+                {hasMatches && (<div className='hero-stats'>
                     <StatCard label='Avg Placement' value={data.avg_placement.toFixed(2)} />
                     <StatCard label='Top 4 Rate' value={data.top4_rate} />
                     <StatCard label='Win Rate' value={data.win_rate} />
                 </div>
+                )}
             </header>
 
-            <div className='profile-grid'>
+            {hasMatches ? (<div className='profile-grid'>
                 <main className='profile-main'>
                     <section className='panel'>
                         <h3 className='panel-title'>Recent Form</h3>
@@ -76,7 +78,12 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
                     <TopList title='Top Units' entries={data.top_units} />
                     <TopList title='Top Traits' entries={data.top_traits} />
                 </aside>
-            </div>
+            </div>) : (
+                <div className='panel empty-state'>
+                    <p className='empty-title'>No ranked games</p>
+                    <p className='empty-sub'>Play some ranked TFT and your stats will show up here.</p>
+                </div>
+            )}
         </div>
     )
 }

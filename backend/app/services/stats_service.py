@@ -30,6 +30,14 @@ class StatsService:
         }
 
     def compute_stats(self, participants: list[dict]) -> dict:
+        if not participants:
+            return {
+                "avg_placement": 0,
+                "top4_rate": "0.0%",
+                "win_rate": "0.0%",
+                "top_units": [],
+                "top_traits": [],
+            }
         placements = []
         unit_counts = Counter()
         trait_counts = Counter()
