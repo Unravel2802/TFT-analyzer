@@ -7,7 +7,7 @@ import PlayerProfile from '../components/PlayerProfile'
 import ProfileSkeleton from '../components/ProfileSkeleton'
 
 export default function DashboardPage() {
-    const { token, logout } = useAuth()
+    const { token } = useAuth()
     const [ownData, setOwnData] = useState<DashboardData | null>(null)
     const [viewedData, setViewedData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(true)
@@ -51,10 +51,6 @@ export default function DashboardPage() {
 
     return (
         <div className='page'>
-            <div className='dashboard-header'>
-                <h1 className='page-title'>TierMind</h1>
-                <button className='logout-button' onClick={logout}>Sign Out</button>
-            </div>
             <p className='page-tagline'>Know your game. Climb your rank.</p>
 
             <SearchBar onSearch={handleSearch} loading={searchLoading} />

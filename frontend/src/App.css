@@ -755,3 +755,51 @@
 .skeleton-line { border-radius: var(--radius-sm); }
 .skeleton-card { width: 96px; height: 64px; }
 .skeleton-panel { height: 180px; }
+
+/* ── Navbar ───────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-4);
+}
+.nav-brand {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--gold-light);
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.nav-link {
+  color: var(--text);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: var(--space-1) 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s;
+}don
+.nav-link:hover { color: var(--text-bright); }
+.nav-link-active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+.nav-button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.nav-button:hover { color: var(--gold); }
