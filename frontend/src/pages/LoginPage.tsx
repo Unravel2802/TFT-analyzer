@@ -1,14 +1,16 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { login } from '../api/tft'
 
-export default function LoginPage({ onSwitch, onBack }: { onSwitch: () => void, onBack: () => void }) {    
+export default function LoginPage() {    
     const { login: setToken } = useAuth()
+    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
-
+    
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true)
@@ -17,6 +19,7 @@ export default function LoginPage({ onSwitch, onBack }: { onSwitch: () => void, 
         try {
             const data = await login(email, password)
             setToken(data.access_token)
+            navigate('/dashboard')
         } catch (err) {
             setError(err instanceof Error ? err.message: 'Login failed')
         } finally {
@@ -27,7 +30,6 @@ export default function LoginPage({ onSwitch, onBack }: { onSwitch: () => void, 
 
     return (
         <div className='page'>
-            <h1 className='page-title'>TierMind</h1>
             <p className='page-tagline'>Know your game. Climb your rank.</p>
 
             <form className='auth-form' onSubmit={handleSubmit}>
@@ -55,11 +57,7 @@ export default function LoginPage({ onSwitch, onBack }: { onSwitch: () => void, 
 
                 <p className='auth-switch'>
                     Don't have an account?{' '}
-                    <span className='auth-link' onClick={onSwitch}>Sign up</span>
-                </p>
-
-                <p className='auth-switch'>
-                    <span className='auth-link' onClick={onBack}>← Back to search</span>
+                    <Link className='auth-link' to='/signup'>Sign up</Link>
                 </p>
             </form>
         </div>

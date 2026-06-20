@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { signup } from '../api/tft'
 
-export default function SignupPage({ onSwitch, onBack }: { onSwitch: () => void, onBack: () => void }) {    
+export default function SignupPage() {    
     const { login: setToken } = useAuth()
+    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null)
@@ -17,6 +19,7 @@ export default function SignupPage({ onSwitch, onBack }: { onSwitch: () => void,
         try {
             const data = await signup(email, password)
             setToken(data.access_token)
+            navigate('/dashboard')
         } catch(err) {
             setError(err instanceof Error ? err.message : 'Signup failed')
         } finally {
@@ -56,11 +59,7 @@ export default function SignupPage({ onSwitch, onBack }: { onSwitch: () => void,
 
                 <p className='auth-switch'>
                     Already have an account?{' '}
-                    <span className='auth-link' onClick={onSwitch}>Sign in</span>
-                </p>
-
-                <p className='auth-switch'>
-                    <span className='auth-link' onClick={onBack}>← Back to search</span>
+                    <Link className='auth-link' to='/login'>Log in</Link>
                 </p>
             </form>
         </div>

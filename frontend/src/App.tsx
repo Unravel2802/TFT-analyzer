@@ -1,29 +1,38 @@
 import './App.css'
-import { useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
 import SearchPage from './pages/SearchPage'
+import Navbar from './components/Navbar'
+
+function ProtectedRoute({ children }: { children: React.ReactNode}) {
+    const { token } = useAuth()
+    if (!token) return <Navigate to='/login' replace/>
+    return <>{children}</>
+ }
 
 function AppContent() {
-    const { token } = useAuth()
-    const [page, setPage] = useState<'search' | 'login' | 'signup'>('search')
-
-    if (token) return <DashboardPage />
-    if (page === 'login') return (
-        <LoginPage
-            onSwitch={() => setPage('signup')}
-            onBack={() => setPage('search')}
-        />
+    return (
+        <>
+            <Navbar />
+            <Routes>
+                <Route path='/' element={<SearchPage />} />
+                <Route path='/login' element={<LoginPage />} />
+                <Route path='/signup' element={<SignupPage />} />
+                <Route 
+                    path='/dashboard'
+                    element={
+                        <ProtectedRoute>
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path='*' element={<Navigate to='/' replace />} />
+            </Routes>
+        </>
     )
-    if (page === 'signup') return (
-        <SignupPage
-            onSwitch={() => setPage('login')}
-            onBack={() => setPage('search')}
-        />
-    )
-    return <SearchPage onLogin={() => setPage('login')} onSignup={() => setPage('signup')} />
 }
 
 export default function App() {

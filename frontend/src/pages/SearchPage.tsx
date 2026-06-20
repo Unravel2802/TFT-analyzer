@@ -4,12 +4,7 @@ import type { DashboardData } from '../types/tft'
 import SearchBar from '../components/SearchBar'
 import PlayerProfile from '../components/PlayerProfile'
 
-interface SearchPageProps {
-    onLogin: () => void
-    onSignup: () => void
-}
-
-export default function SearchPage({ onLogin, onSignup }: SearchPageProps) {
+export default function SearchPage() {
     const [data, setData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -29,13 +24,6 @@ export default function SearchPage({ onLogin, onSignup }: SearchPageProps) {
 
     return (
         <div className='page'>
-            <div className='dashboard-header'>
-                <h1 className='page-title'>TierMind</h1>
-                <div className='auth-buttons'>
-                    <button className='text-button' onClick={onLogin}>Sign In</button>
-                    <button className='primary-button' onClick={onSignup}>Sign Up</button>
-                </div>
-            </div>
             <p className='page-tagline'>Know your game. Climb your rank.</p>
 
             <SearchBar onSearch={handleSearch} loading={loading} />
