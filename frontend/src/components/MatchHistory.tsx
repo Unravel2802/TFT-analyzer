@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { championIcon } from '../data/champions'
 import type { MatchEntry } from '../types/tft'
 
 function formatDate(ms: number): string {
@@ -37,10 +38,18 @@ function MatchRow({ match }: { match: MatchEntry }) {
 
             {open && (
                 <div className='match-detail'>
-                    <div className='match-tags'>
-                        {match.units.map(u => (
-                            <span key={u} className='match-tag unit-tag'>{u}</span>
-                        ))}
+                    <div className='match-units'>
+                        {match.units.map((u, i) => {
+                            const icon = championIcon(u.id)
+                            return (
+                                <div key={i} className='unit-icon-wrap'>
+                                    {icon
+                                        ? <img className='unit-icon' src={icon} alt={u.id} />
+                                        : <span className='unit-fallback'>{u.id.split('_').pop()}</span>
+                                    }
+                                </div>
+                            )
+                        })}
                     </div>
                     <div className='match-tags'>
                         {match.traits.map(t => (

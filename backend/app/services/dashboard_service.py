@@ -41,7 +41,10 @@ async def build_dashboard(riot_client, stats_service, game_name: str, tag_line: 
         {
             "placement": p["placement"],
             "game_datetime": raw_matches[i]["info"]["game_datetime"],
-            "units": [u["character_id"].split("_")[-1] for u in p["units"]],
+            "units": [
+                {"id": u["character_id"], "tier": u["tier"]}
+                for u in p["units"]
+            ],
             "traits": [format_trait_name(t["name"]) for t in p["traits"] if t["num_units"] > 0],
         }
         for i, p in enumerate(participants)

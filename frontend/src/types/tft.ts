@@ -23,10 +23,15 @@ export interface PlayerStats {
 export interface MatchEntry {
     placement: number
     game_datetime: number
-    units: string[]
+    units: MatchUnit[]
     traits: string[]
 }
 
 export interface DashboardData extends PlayerStats {
     matches: MatchEntry[]
+}
+
+export interface MatchUnit {
+    id: string
+    tier: number
 }
