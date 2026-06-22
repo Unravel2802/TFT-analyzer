@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getMatchDetail } from '../api/tft'
-import type { MatchDetail } from '../types/tft'
-import UnitBoard from '../components/UnitBoard'
-import TraitRow from '../components/TraitRow'
+import { getMatchDetail } from '@/features/matches/api'
+import type { MatchDetail } from '@/types/tft'
+import UnitBoard from '@/components/UnitBoard'
+import TraitRow from '@/components/TraitRow'
 
 function placementClass(p: number): string {
     return p === 1 ? 'result-win' : p <= 4 ? 'result-top4' : 'result-bot4'

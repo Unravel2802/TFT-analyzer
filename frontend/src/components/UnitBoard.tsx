@@ -1,4 +1,4 @@
-import type { MatchUnit } from '../types/tft'
+import type { MatchUnit } from '@/types/tft'
 import { championIcon, championCost, itemIcon } from '../lib/gameAssets'
 
 export default function UnitBoard({ units }: { units: MatchUnit[] }) {

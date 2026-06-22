@@ -1,4 +1,4 @@
-import type { DashboardData } from '../types/tft'
+import type { DashboardData } from '@/types/tft'
 import StatCard from './StatCard'
 import TopList from './TopList'
 import MatchHistory from './MatchHistory'

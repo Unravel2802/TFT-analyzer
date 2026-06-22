@@ -1,4 +1,4 @@
-import type { MatchTrait } from '../types/tft'
+import type { MatchTrait } from '@/types/tft'
 import { traitIcon } from '../lib/gameAssets'
 
 export default function TraitRow({ traits }: { traits: MatchTrait[] }) {

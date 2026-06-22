@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
-import { getMyDashboard, getPlayerDashboard } from '../api/tft'
-import type { DashboardData } from '../types/tft'
-import SearchBar from '../components/SearchBar'
-import PlayerProfile from '../components/PlayerProfile'
-import ProfileSkeleton from '../components/ProfileSkeleton'
+import { getMyDashboard, getPlayerDashboard } from '@/features/player/api'
+import type { DashboardData } from '@/types/tft'
+import SearchBar from '@/features/player/SearchBar'
+import PlayerProfile from '@/features/player/PlayerProfile'
+import ProfileSkeleton from '@/features/player/ProfileSkeleton'
 
 export default function DashboardPage() {
     const { token } = useAuth()

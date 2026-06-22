@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import type { MatchEntry } from '../types/tft'
+import type { MatchEntry } from '@/types/tft'
 import { Link } from 'react-router-dom'
-import UnitBoard from '../components/UnitBoard'
-import TraitRow from '../components/TraitRow'
+import UnitBoard from '@/components/UnitBoard'
+import TraitRow from '@/components/TraitRow'
 
 function formatDate(ms: number): string {
     return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })

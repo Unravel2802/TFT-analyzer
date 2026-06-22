@@ -1,4 +1,4 @@
-import type { MatchEntry } from '../types/tft'
+import type { MatchEntry } from '@/types/tft'
 
 export default function PlacementTrend({ matches }: { matches: MatchEntry[] }) {
     // Riot returns newest-first; reverse so the line reads left→right = old→new

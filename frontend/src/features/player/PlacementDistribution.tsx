@@ -1,5 +1,5 @@
 
-import type { MatchEntry } from '../types/tft'
+import type { MatchEntry } from '@/types/tft'
 
 export default function PlacementDistribution({ matches }: { matches: MatchEntry[] }) {
     // tally how many times each placement 1..8 happened

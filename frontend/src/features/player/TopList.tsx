@@ -1,4 +1,4 @@
-import type { UnitEntry, TraitEntry } from '../types/tft'
+import type { UnitEntry, TraitEntry } from '@/types/tft'
 
 interface Props {
     title: string

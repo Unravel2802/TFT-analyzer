@@ -3,10 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/features/auth/AuthContext'
 import LoginPage from '@/features/auth/LoginPage'
 import SignupPage from '@/features/auth/SignupPage'
-import DashboardPage from './pages/DashboardPage'
-import SearchPage from './pages/SearchPage'
+import DashboardPage from '@/features/player/DashboardPage'
+import SearchPage from '@/features/player/SearchPage'
 import Navbar from './layout/Navbar'
-import MatchDetailPage from './pages/MatchDetailPage'
+import MatchDetailPage from '@/features/matches/MatchDetailPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()

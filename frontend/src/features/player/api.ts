@@ -1,9 +1,9 @@
-import type { DashboardData } from '@/types/tft'
 import { BASE_URL } from '@/lib/apiClient'
+import type { DashboardData } from '@/types/tft'
 
 export async function getMyDashboard(token: string): Promise<DashboardData> {
     const response = await fetch(`${BASE_URL}/me/dashboard`, {
-        headers: { 'Authorization': `Bearer ${token}`}
+        headers: { 'Authorization': `Bearer ${token}` }
     })
     if (!response.ok) throw new Error(`Failed to fetch dashboard: ${response.status}`)
     return response.json() as Promise<DashboardData>
@@ -19,10 +19,4 @@ export async function getPlayerDashboard(
     )
     if (!response.ok) throw new Error(`Player not found: ${response.status}`)
     return response.json() as Promise<DashboardData>
-}
-
-export async function getMatchDetail(matchId: string): Promise<MatchDetail> {
-    const response = await fetch(`${BASE_URL}/matches/${matchId}`)
-    if (!response.ok) throw new Error(`Failed to fetch match: ${response.status}`)
-    return response.json() as Promise<MatchDetail>
 }
