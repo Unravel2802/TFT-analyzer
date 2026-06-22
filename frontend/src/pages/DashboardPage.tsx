@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '@/features/auth/AuthContext'
 import { getMyDashboard, getPlayerDashboard } from '../api/tft'
 import type { DashboardData } from '../types/tft'
 import SearchBar from '../components/SearchBar'

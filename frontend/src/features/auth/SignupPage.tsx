@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { signup } from '../api/tft'
+import { useAuth } from '@/features/auth/AuthContext'
+import { signup } from '@/features/auth/api'
 
 export default function SignupPage() {    
     const { login: setToken } = useAuth()
