@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.services.riot_client import RiotClient
+from app.clients.riot import RiotClient
 from app.services.stats_service import StatsService
 from app.services.dashboard_service import build_dashboard
 from app.config import get_settings

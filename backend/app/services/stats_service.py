@@ -1,4 +1,4 @@
-from app.services.riot_client import RiotClient
+from app.clients.riot import RiotClient
 from collections import Counter
 
 TRAIT_DISPLAY_NAMES = {
