@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from app.services.auth_service import supabase
+from app.db.supabase import supabase
 
 MAX_AGE = timedelta(days=30)
 

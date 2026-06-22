@@ -1,11 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator
-from app.services.auth_service import (
-    create_user,
-    get_user_by_email,
-    verify_password,
-    create_access_token,
-)
+from app.services.auth_service import create_user, get_user_by_email
+from app.core.security import verify_password, create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

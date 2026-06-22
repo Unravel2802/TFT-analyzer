@@ -1,4 +1,4 @@
-from app.services.auth_service import supabase
+from app.db.supabase import supabase
 
 def get_cached_matches(match_ids: list[str]) -> dict[str, dict]:
     if not match_ids:
