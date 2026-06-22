@@ -8,7 +8,7 @@ from pathlib import Path
 
 DDRAGON = "https://ddragon.leagueoflegends.com"
 CDRAGON = "https://raw.communitydragon.org/latest/game/assets/characters"
-OUT = Path(__file__).resolve().parents[1] / "frontend/src/data/champions.generated.ts"
+OUT = Path(__file__).resolve().parents[1] / "frontend/src/lib/gameAssets.generated.ts"
 
 
 def fetch_json(url: str):

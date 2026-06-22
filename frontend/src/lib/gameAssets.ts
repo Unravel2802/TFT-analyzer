@@ -1,4 +1,4 @@
-import { CHAMPION_ICONS, CHAMPION_COSTS, ITEM_ICONS, TRAIT_ICONS } from './champions.generated'
+import { CHAMPION_ICONS, CHAMPION_COSTS, ITEM_ICONS, TRAIT_ICONS } from './gameAssets.generated'
 
 export function traitIcon(traitId: string): string | undefined {
     return TRAIT_ICONS[traitId]
