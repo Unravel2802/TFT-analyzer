@@ -5,7 +5,7 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
 import SearchPage from './pages/SearchPage'
-import Navbar from './components/Navbar'
+import Navbar from './layout/Navbar'
 import MatchDetailPage from './pages/MatchDetailPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
