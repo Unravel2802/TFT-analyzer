@@ -1,7 +1,6 @@
 import asyncio
 from app.services.match_cache import get_cached_matches, store_matches
 from app.services.account_cache import get_cached_puuid, store_puuid
-from app.services.stats_service import format_trait_name
 
 _riot_semaphore = asyncio.Semaphore(5)
 
@@ -43,10 +42,13 @@ async def build_dashboard(riot_client, stats_service, game_name: str, tag_line: 
             "placement": p["placement"],
             "game_datetime": raw_matches[i]["info"]["game_datetime"],
             "units": [
-                {"id": u["character_id"], "tier": u["tier"]}
+                {"id": u["character_id"], "tier": u["tier"], "items": u["itemNames"]}
                 for u in p["units"]
             ],
-            "traits": [format_trait_name(t["name"]) for t in p["traits"] if t["num_units"] > 0],
+            "traits": [
+                {"id": t["name"], "num_units": t["num_units"], "style": t["style"]}
+                for t in p["traits"] if t["num_units"] > 0
+            ],
         }
         for i, p in enumerate(participants)
     ]

@@ -25,7 +25,7 @@ export interface MatchEntry {
     placement: number
     game_datetime: number
     units: MatchUnit[]
-    traits: string[]
+    traits: MatchTrait[]
 }
 
 export interface DashboardData extends PlayerStats {
@@ -33,11 +33,6 @@ export interface DashboardData extends PlayerStats {
 }
 
 export interface MatchUnit {
-    id: string
-    tier: number
-}
-
-export interface MatchDetailUnit {
     id: string
     tier: number
     items: string[]
@@ -48,12 +43,18 @@ export interface MatchParticipant {
     puuid: string
     placement: number
     level: number
-    units: MatchDetailUnit[]
-    traits: { name: string; num_units: number; style: number }[]
+    units: MatchUnit[]
+    traits: MatchTrait[];
 }
 
 export interface MatchDetail {
     match_id: string
     game_datetime: number
     participants: MatchParticipant[]
+}
+
+export interface MatchTrait {
+    id: string
+    num_units: number
+    style: number
 }

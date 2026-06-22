@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getMatchDetail } from '../api/tft'
 import type { MatchDetail } from '../types/tft'
-import { championIcon } from '../data/champions'
+import UnitBoard from '../components/UnitBoard'
+import TraitRow from '../components/TraitRow'
 
 function placementClass(p: number): string {
     return p === 1 ? 'result-win' : p <= 4 ? 'result-top4' : 'result-bot4'
@@ -29,7 +30,7 @@ export default function MatchDetailPage() {
         load()
     }, [id])
 
-    if (loading) return <div className='page'><p className='status-next'>Loading match...</p></div>
+    if (loading) return <div className='page'><p className='status-text'>Loading match...</p></div>
     if (error) return <div className='page'><p className='error-text'>{error}</p></div>
     if (!data) return null
 
@@ -44,25 +45,8 @@ export default function MatchDetailPage() {
                             <span className='board-name'>{part.riot_id}</span>
                             <span className='board-level'>Lv {part.level}</span>
                         </div>
-                        <div className='board-units'>
-                            {part.units.map((u, i) => {
-                                const icon = championIcon(u.id)
-                                return (
-                                    <div key={i} className='unit-icon-wrap' title={u.id}>
-                                        {icon
-                                            ? <img className='unit-icon' src={icon} alt={u.id} />
-                                            : <span className='unit-fallback'>{u.id.split('_').pop()}</span>}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div className='board-traits'>
-                            {part.traits.map((t, i) => (
-                                <span key={i} className={`trait-chip trait-style-${t.style}`}>
-                                    {t.num_units} {t.name}
-                                </span>
-                            ))}
-                        </div>
+                        <UnitBoard units={part.units} />
+                        <TraitRow traits={part.traits} />
                     </section>
                 ))}
             </div>

@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { championIcon } from '../data/champions'
 import type { MatchEntry } from '../types/tft'
 import { Link } from 'react-router-dom'
+import UnitBoard from '../components/UnitBoard'
+import TraitRow from '../components/TraitRow'
 
 function formatDate(ms: number): string {
     return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -39,24 +40,8 @@ function MatchRow({ match }: { match: MatchEntry }) {
 
             {open && (
                 <div className='match-detail'>
-                    <div className='match-units'>
-                        {match.units.map((u, i) => {
-                            const icon = championIcon(u.id)
-                            return (
-                                <div key={i} className='unit-icon-wrap'>
-                                    {icon
-                                        ? <img className='unit-icon' src={icon} alt={u.id} />
-                                        : <span className='unit-fallback'>{u.id.split('_').pop()}</span>
-                                    }
-                                </div>
-                            )
-                        })}
-                    </div>
-                    <div className='match-tags'>
-                        {match.traits.map(t => (
-                            <span key={t} className='match-tag trait-tag'>{t}</span>
-                        ))}
-                    </div>
+                    <UnitBoard units={match.units} />
+                    <TraitRow traits={match.traits} />
                     <Link className='match-fulllink' to={`/matches/${match.match_id}`}>
                         View full game →
                     </Link>

@@ -3,7 +3,6 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from app.services.riot_client import RiotClient 
 from app.services.match_cache import get_cached_matches, store_matches
-from app.services.stats_service import format_trait_name
 from app.config import get_settings
 
 router = APIRouter(prefix="/matches", tags=["matches"])
@@ -17,13 +16,13 @@ def _build_participant(p: dict) -> dict:
         "placement": p["placement"],
         "level": p["level"],
         "units": [
-            {"id": u["chracter_id"], "tier": u["tier"], "items": u["itemNames"]}
+            {"id": u["character_id"], "tier": u["tier"], "items": u["itemNames"]}
             for u in p["units"]
         ],
         "traits": [
-            {"name": format_trait_name(t["name"]), "num_units": t["nums_units"], "style": t["style"]}
-            for t in p["traits"] if t["nums_units"] > 0
-        ]
+            {"id": t["name"], "num_units": t["num_units"], "style": t["style"]}
+            for t in p["traits"] if t["num_units"] > 0
+        ],
     }
 
 
@@ -43,11 +42,10 @@ async def get_match_detail(match_id: str):
         finally:
             await riot_client.close()
 
-        participants = sorted(match["info"]["participants"], key=lambda p: p["placement"])
-        return {
-            "match_id": match_id,
-            "game_datetime": match["info"]["game_datetime"],
-            "participants": [_build_participant(p) for p in participants],
-        }
-    
+    participants = sorted(match["info"]["participants"], key=lambda p: p["placement"])
+    return {
+        "match_id": match_id,
+        "game_datetime": match["info"]["game_datetime"],
+        "participants": [_build_participant(p) for p in participants],
+    }
     
