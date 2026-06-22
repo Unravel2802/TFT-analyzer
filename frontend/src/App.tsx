@@ -6,6 +6,7 @@ import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
 import SearchPage from './pages/SearchPage'
 import Navbar from './components/Navbar'
+import MatchDetailPage from './pages/MatchDetailPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -21,6 +22,7 @@ function AppContent() {
                 <Route path='/' element={<SearchPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/signup' element={<SignupPage />} />
+                <Route path='/matches/:id' element={<MatchDetailPage />} />
                 <Route 
                     path='/dashboard'
                     element={

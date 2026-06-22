@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
-from app.api.routes import players, auth, me
+from app.api.routes import players, auth, me, matches
 
 app = FastAPI(title='TFT Analyzer')
 
@@ -18,6 +18,8 @@ app.include_router(auth.router)
 app.include_router(players.router)
 
 app.include_router(me.router)
+
+app.include_router(matches.router)
 
 @app.get('/health')
 def health_check():

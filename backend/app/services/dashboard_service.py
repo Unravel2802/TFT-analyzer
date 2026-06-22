@@ -39,6 +39,7 @@ async def build_dashboard(riot_client, stats_service, game_name: str, tag_line: 
     stats = stats_service.compute_stats(participants)
     matches = [
         {
+            "match_id": match_ids[i],
             "placement": p["placement"],
             "game_datetime": raw_matches[i]["info"]["game_datetime"],
             "units": [

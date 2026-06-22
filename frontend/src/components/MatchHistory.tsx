@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { championIcon } from '../data/champions'
 import type { MatchEntry } from '../types/tft'
+import { Link } from 'react-router-dom'
 
 function formatDate(ms: number): string {
     return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -56,6 +57,9 @@ function MatchRow({ match }: { match: MatchEntry }) {
                             <span key={t} className='match-tag trait-tag'>{t}</span>
                         ))}
                     </div>
+                    <Link className='match-fulllink' to={`/matches/${match.match_id}`}>
+                        View full game →
+                    </Link>
                 </div>
             )}
         </div>

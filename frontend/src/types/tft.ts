@@ -1,4 +1,4 @@
-// GET/players/{game_name}/{tag_line}
+
 export interface Account {
     puuid: string;
     gameName: string;
@@ -21,6 +21,7 @@ export interface PlayerStats {
 }
 
 export interface MatchEntry {
+    match_id: string
     placement: number
     game_datetime: number
     units: MatchUnit[]
@@ -34,4 +35,25 @@ export interface DashboardData extends PlayerStats {
 export interface MatchUnit {
     id: string
     tier: number
+}
+
+export interface MatchDetailUnit {
+    id: string
+    tier: number
+    items: string[]
+}
+
+export interface MatchParticipant {
+    riot_id: string
+    puuid: string
+    placement: number
+    level: number
+    units: MatchDetailUnit[]
+    traits: { name: string; num_units: number; style: number }[]
+}
+
+export interface MatchDetail {
+    match_id: string
+    game_datetime: number
+    participants: MatchParticipant[]
 }
