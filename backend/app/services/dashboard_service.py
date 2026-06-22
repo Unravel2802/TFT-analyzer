@@ -1,6 +1,6 @@
 import asyncio
-from app.services.match_cache import get_cached_matches, store_matches
-from app.services.account_cache import get_cached_puuid, store_puuid
+from app.repositories.matches import get_cached_matches, store_matches
+from app.repositories.accounts import get_cached_puuid, store_puuid
 
 _riot_semaphore = asyncio.Semaphore(5)
 

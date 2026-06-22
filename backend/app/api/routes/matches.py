@@ -2,7 +2,7 @@ import asyncio
 import httpx 
 from fastapi import APIRouter, HTTPException
 from app.services.riot_client import RiotClient 
-from app.services.match_cache import get_cached_matches, store_matches
+from app.repositories.matches import get_cached_matches, store_matches
 from app.config import get_settings
 
 router = APIRouter(prefix="/matches", tags=["matches"])
