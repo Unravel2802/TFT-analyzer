@@ -20,6 +20,7 @@ export interface DashboardData {
     top_units: UnitEntry[]
     top_traits: TraitEntry[]
     matches: MatchEntry[]
+    profile_icon_url: string
 }
 
 export interface MatchUnit {

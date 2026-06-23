@@ -1,6 +1,7 @@
 import asyncio
 from app.repositories.matches import get_cached_matches, store_matches
 from app.repositories.accounts import get_cached_puuid, store_puuid
+from app.clients.ddragon import get_latest_version, profile_icon_url
 
 _riot_semaphore = asyncio.Semaphore(5)
 
@@ -17,9 +18,10 @@ async def build_dashboard(riot_client, stats_service, game_name: str, tag_line: 
         puuid = account["puuid"]
         await asyncio.to_thread(store_puuid, name_key, tag_key, puuid)
 
-    rank_data, match_ids = await asyncio.gather(
+    rank_data, match_ids, summoner = await asyncio.gather(
         stats_service.get_player_rank(puuid),
         riot_client.get_match_ids(puuid, count=20),
+        riot_client.get_summoner_by_puuid(puuid),
     )
 
     cached = await asyncio.to_thread(get_cached_matches, match_ids)
@@ -53,4 +55,12 @@ async def build_dashboard(riot_client, stats_service, game_name: str, tag_line: 
         for i, p in enumerate(participants)
     ]
 
-    return {**stats, **rank_data, "riot_id": f"{game_name}#{tag_line}", "matches": matches}
+    version = await get_latest_version()
+    icon_url = profile_icon_url(version, summoner["profileIconId"])
+    return {
+        **stats, 
+        **rank_data, 
+        "riot_id": f"{game_name}#{tag_line}", 
+        "profile_icon_url": icon_url,
+        "matches": matches
+    }

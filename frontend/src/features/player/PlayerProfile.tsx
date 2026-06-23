@@ -37,6 +37,13 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
                         alt={data.tier}
                         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                     />
+                    {data.profile_icon_url && (
+                        <img
+                            className='profile-icon'
+                            src={data.profile_icon_url}
+                            alt='Profile icon' 
+                        />
+                    )}
                     <div className='identity-overlay'>
                         <div className='player-name'>{data.riot_id.split('#')[0]}</div>
                         <div className='rank-line'>

@@ -366,6 +366,21 @@
   filter: drop-shadow(0 0 24px color-mix(in srgb, var(--tier-color, var(--gold)) 50%, transparent));
 }
 
+/* player profile icon, dropped into the centre of the emblem crest */
+.profile-icon {
+  position: absolute;
+  top: 32%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid color-mix(in srgb, var(--tier-color, var(--gold)) 70%, #fff);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.65);
+  z-index: 1;
+}
+
 /* dark fade at the bottom so the name/rank stay readable over the art */
 .identity-overlay {
   position: absolute;
