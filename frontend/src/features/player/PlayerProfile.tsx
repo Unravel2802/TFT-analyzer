@@ -24,28 +24,40 @@ function PlacementGrid({ data }: { data: DashboardData }) {
 
 export default function PlayerProfile({ data }: { data: DashboardData }) {
     const hasMatches = data.matches.length > 0
+    const top4Count = data.matches.filter(m => m.placement <= 4).length
+    const winCount = data.matches.filter(m => m.placement === 1).length
+    const tierLabel = data.tier.charAt(0) + data.tier.slice(1).toLowerCase()
     return (
         <div className='profile'>
-            <header className='hero' data-tier={data.tier.toLowerCase()}>
-                <img
-                    className='rank-emblem'
-                    src={`https://opgg-static.akamaized.net/images/medals_new/${data.tier.toLowerCase()}.png`}
-                    alt={data.tier}
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                />
-                <div className='hero-identity'>
-                    <div className='player-name'>{data.riot_id.split('#')[0]}</div>
-                    <div className='rank-display'>
-                        <span className='rank-tier'>{data.tier}</span>
-                        {data.rank && <span className='rank-division'>{data.rank}</span>}
-                        {data.tier !== 'UNRANKED' && <span className='rank-lp'>{data.lp} LP</span>}
+            <header className='hero'>
+                <div className='identity-card' data-tier={data.tier.toLowerCase()}>
+                    <img
+                        className='rank-emblem'
+                        src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-${data.tier.toLowerCase()}.png`}
+                        alt={data.tier}
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                    />
+                    <div className='identity-overlay'>
+                        <div className='player-name'>{data.riot_id.split('#')[0]}</div>
+                        <div className='rank-line'>
+                            {data.tier === 'UNRANKED'
+                                ? 'Unranked'
+                                : `${tierLabel} ${data.rank} ${data.lp}LP`}
+                        </div>
                     </div>
                 </div>
-                {hasMatches && (<div className='hero-stats'>
-                    <StatCard label='Avg Placement' value={data.avg_placement.toFixed(2)} />
-                    <StatCard label='Top 4 Rate' value={data.top4_rate} />
-                    <StatCard label='Win Rate' value={data.win_rate} />
-                </div>
+
+                {hasMatches && (
+                    <div className='stats-panel'>
+                        <h3 className='stats-panel-title'>
+                            Recent {data.matches.length} Matches <span className='muted'>(Ranked)</span>
+                        </h3>
+                        <div className='hero-stats'>
+                            <StatCard label='Avg.' value={data.avg_placement.toFixed(2)} />
+                            <StatCard label='Top 4' value={top4Count} />
+                            <StatCard label='Won' value={winCount} />
+                        </div>
+                    </div>
                 )}
             </header>
 
