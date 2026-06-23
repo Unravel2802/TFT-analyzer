@@ -514,16 +514,16 @@
   color: var(--text-bright);
 }
 
-.rank-display[data-tier="iron"]        { --tier-color: #8a8a8a; }
-.rank-display[data-tier="bronze"]      { --tier-color: #8c523a; }
-.rank-display[data-tier="silver"]      { --tier-color: #a0a9b4; }
-.rank-display[data-tier="gold"]        { --tier-color: #c89b3c; }
-.rank-display[data-tier="platinum"]    { --tier-color: #0bc4b4; }
-.rank-display[data-tier="emerald"]     { --tier-color: #1aaa55; }
-.rank-display[data-tier="diamond"]     { --tier-color: #576bce; }
-.rank-display[data-tier="master"]      { --tier-color: #9d48e0; }
-.rank-display[data-tier="grandmaster"] { --tier-color: #e06c4a; }
-.rank-display[data-tier="challenger"]  { --tier-color: #e8c44a; }
+.hero[data-tier="iron"]        { --tier-color: #8a8a8a; }
+.hero[data-tier="bronze"]      { --tier-color: #8c523a; }
+.hero[data-tier="silver"]      { --tier-color: #a0a9b4; }
+.hero[data-tier="gold"]        { --tier-color: #c89b3c; }
+.hero[data-tier="platinum"]    { --tier-color: #0bc4b4; }
+.hero[data-tier="emerald"]     { --tier-color: #1aaa55; }
+.hero[data-tier="diamond"]     { --tier-color: #576bce; }
+.hero[data-tier="master"]      { --tier-color: #9d48e0; }
+.hero[data-tier="grandmaster"] { --tier-color: #e06c4a; }
+.hero[data-tier="challenger"]  { --tier-color: #e8c44a; }
 /* ── Search bar ──────────────────────────────────────────── */
 .search-bar {
     display: flex;
@@ -615,8 +615,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tier-color, var(--gold)) 22%, var(--bg-card)) 0%,
+    var(--bg-card) 55%
+  );
+  border: 1px solid color-mix(in srgb, var(--tier-color, var(--gold)) 45%, var(--border));
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   box-shadow: var(--shadow);

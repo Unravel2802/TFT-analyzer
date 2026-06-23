@@ -26,7 +26,7 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
     const hasMatches = data.matches.length > 0
     return (
         <div className='profile'>
-            <header className='hero'>
+            <header className='hero' data-tier={data.tier.toLowerCase()}>
                 <img
                     className='rank-emblem'
                     src={`https://opgg-static.akamaized.net/images/medals_new/${data.tier.toLowerCase()}.png`}
@@ -35,7 +35,7 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
                 />
                 <div className='hero-identity'>
                     <div className='player-name'>{data.riot_id.split('#')[0]}</div>
-                    <div className='rank-display' data-tier={data.tier.toLowerCase()}>
+                    <div className='rank-display'>
                         <span className='rank-tier'>{data.tier}</span>
                         {data.rank && <span className='rank-division'>{data.rank}</span>}
                         {data.tier !== 'UNRANKED' && <span className='rank-lp'>{data.lp} LP</span>}
