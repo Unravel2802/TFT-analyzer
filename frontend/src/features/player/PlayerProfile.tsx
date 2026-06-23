@@ -52,6 +52,7 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
                         <h3 className='stats-panel-title'>
                             Recent {data.matches.length} Matches <span className='muted'>(Ranked)</span>
                         </h3>
+                        <PlacementGrid data={data} />
                         <div className='hero-stats'>
                             <StatCard label='Avg.' value={data.avg_placement.toFixed(2)} />
                             <StatCard label='Top 4' value={top4Count} />
@@ -63,11 +64,6 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
 
             {hasMatches ? (<div className='profile-grid'>
                 <main className='profile-main'>
-                    <section className='panel'>
-                        <h3 className='panel-title'>Recent Form</h3>
-                        <PlacementGrid data={data} />
-                    </section>
-
                     <section className='panel'>
                         <h3 className='panel-title'>Performance</h3>
                         <div className='charts'>
