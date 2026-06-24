@@ -31,19 +31,20 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
         <div className='profile'>
             <header className='hero'>
                 <div className='identity-card' data-tier={data.tier.toLowerCase()}>
-                    <img
-                        className='rank-emblem'
-                        src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-${data.tier.toLowerCase()}.png`}
-                        alt={data.tier}
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    />
-                    {data.profile_icon_url && (
+                    <div className='crest'>
                         <img
-                            className='profile-icon'
-                            src={data.profile_icon_url}
-                            alt='Profile icon' 
+                            className='rank-emblem'
+                            src={`https://opgg-static.akamaized.net/images/medals_new/${data.tier.toLowerCase()}.png`}
+                            alt={data.tier}
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                         />
-                    )}
+                        {data.tactician_icon_url && (
+                            <img className='tactician-icon' src={data.tactician_icon_url} alt='Tactician' />
+                        )}
+                        {data.profile_icon_url && (
+                            <img className='profile-icon' src={data.profile_icon_url} alt='Profile icon' />
+                        )}
+                    </div>
                     <div className='identity-overlay'>
                         <div className='player-name'>{data.riot_id.split('#')[0]}</div>
                         <div className='rank-line'>

@@ -21,6 +21,7 @@ export interface DashboardData {
     top_traits: TraitEntry[]
     matches: MatchEntry[]
     profile_icon_url: string
+    tactician_icon_url: string | null
 }
 
 export interface MatchUnit {

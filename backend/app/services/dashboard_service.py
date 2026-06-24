@@ -2,6 +2,7 @@ import asyncio
 from app.repositories.matches import get_cached_matches, store_matches
 from app.repositories.accounts import get_cached_puuid, store_puuid
 from app.clients.ddragon import get_latest_version, profile_icon_url
+from app.clients.cdragon import tactician_icon_url
 
 _riot_semaphore = asyncio.Semaphore(5)
 
@@ -57,10 +58,15 @@ async def build_dashboard(riot_client, stats_service, game_name: str, tag_line: 
 
     version = await get_latest_version()
     icon_url = profile_icon_url(version, summoner["profileIconId"])
+
+    companion_id = participants[0].get("companion", {}).get("content_ID") if participants else None
+    tactician_url = await tactician_icon_url(companion_id) if companion_id else None
+
     return {
         **stats, 
         **rank_data, 
         "riot_id": f"{game_name}#{tag_line}", 
         "profile_icon_url": icon_url,
+        "tactician_icon_url": tactician_url,
         "matches": matches
     }
