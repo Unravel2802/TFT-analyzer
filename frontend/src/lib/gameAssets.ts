@@ -1,10 +1,11 @@
-import { CHAMPION_ICONS, CHAMPION_COSTS, ITEM_ICONS, TRAIT_ICONS } from './gameAssets.generated'
+import { CHAMPION_COSTS, ITEM_ICONS, TRAIT_ICONS } from './gameAssets.generated'
+
+export function championFace(characterId: string): string {
+    return `https://ap.tft.tools/img/face/${characterId.toLowerCase()}.jpg?w=96`
+}
 
 export function traitIcon(traitId: string): string | undefined {
     return TRAIT_ICONS[traitId]
-}
-export function championIcon(characterId: string): string | undefined {
-    return CHAMPION_ICONS[characterId]
 }
 
 export function championCost(characterId: string): number | undefined {

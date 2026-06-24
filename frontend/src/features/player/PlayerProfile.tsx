@@ -33,6 +33,7 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
                 <div className='identity-card' data-tier={data.tier.toLowerCase()}>
                     <div className='crest'>
                         <img
+                            key={data.tier}
                             className='rank-emblem'
                             src={`https://opgg-static.akamaized.net/images/medals_new/${data.tier.toLowerCase()}.png`}
                             alt={data.tier}

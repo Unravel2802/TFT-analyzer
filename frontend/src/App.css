@@ -862,6 +862,23 @@
 
 .portrait-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+/* shown when a champion square icon 404s (e.g. reskin units like Rhaast) */
+.portrait-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--text-bright);
+  background: var(--bg-card-hover);
+  overflow: hidden;
+}
+
 .cost-1 { border-color: #6b7280; }
 .cost-2 { border-color: #2ed47a; }
 .cost-3 { border-color: #2b87d8; }
