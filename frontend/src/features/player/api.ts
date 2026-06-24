@@ -15,7 +15,7 @@ export async function getPlayerDashboard(
     tagLine: string
 ): Promise<DashboardData> {
     const response = await fetch(
-        `${BASE_URL}/players/${region}/${gameName}/${tagLine}/dashboard`
+        `${BASE_URL}/players/${region}/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}/dashboard`
     )
     if (!response.ok) throw new Error(`Player not found: ${response.status}`)
     return response.json() as Promise<DashboardData>

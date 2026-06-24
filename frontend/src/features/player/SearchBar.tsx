@@ -43,8 +43,18 @@ export default function SearchBar({ onSearch, loading }: SearchBarProps) {
         e.preventDefault()
         const trimmed = riotId.trim()
         if (!trimmed) return
-        const tagLine = DEFAULT_TAGS[region] ?? region.toUpperCase()
-        onSearch(region, trimmed, tagLine)
+
+        let gameName = trimmed
+        let tagLine = DEFAULT_TAGS[region] ?? region.toUpperCase()
+
+        const hash = trimmed.indexOf('#')
+        if (hash !== -1) {
+            gameName = trimmed.slice(0, hash)
+            const customTag = trimmed.slice(hash + 1).trim()
+            if (customTag) tagLine = customTag
+        }
+
+        onSearch(region, gameName, tagLine)
     }
 
     return  (
