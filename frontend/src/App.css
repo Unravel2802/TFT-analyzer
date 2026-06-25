@@ -193,7 +193,11 @@
 
 .nav-button:hover { color: var(--gold); }
 
-
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
 /* ── 4. Auth ─────────────────────────────────────────────── */
 .auth-form {
   display: flex;
@@ -1088,4 +1092,18 @@
 
 .dropdown-button {
   font-family: inherit;
+}
+
+.dropdown-label {
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.dropdown-divider {
+  height: 1px;
+  margin: var(--space-1) var(--space-2);
+  background: var(--border);
 }

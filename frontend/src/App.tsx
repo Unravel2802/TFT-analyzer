@@ -9,6 +9,7 @@ import Navbar from './layout/Navbar'
 import MatchDetailPage from '@/features/matches/MatchDetailPage'
 import ProfilePage from '@/features/account/ProfilePage'
 import SettingsPage from '@/features/account/SettingsPage'
+import PlaceholderPage from '@/components/PlaceholderPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -55,6 +56,18 @@ function AppContent() {
                         </ProtectedRoute>
                     }
                 />
+
+                {/* Public — all users */}
+                <Route path='/leaderboard' element={<PlaceholderPage title='Leaderboard' />} />
+                <Route path='/comps' element={<PlaceholderPage title='Meta / Comps' />} />
+                <Route path='/units' element={<PlaceholderPage title='Units' />} />
+                <Route path='/augments' element={<PlaceholderPage title='Augments' />} />
+                <Route path='/help' element={<PlaceholderPage title='Help / About' />} />
+
+                {/* Signed-in only */}
+                <Route path='/compare' element={<ProtectedRoute><PlaceholderPage title='Compare' /></ProtectedRoute>} />
+                <Route path='/favorites' element={<ProtectedRoute><PlaceholderPage title='Favorites' /></ProtectedRoute>} />
+                <Route path='/notifications' element={<ProtectedRoute><PlaceholderPage title='Notifications' /></ProtectedRoute>} />
 
                 <Route path='/' element={<RootRoute />} />
                 <Route path='*' element={<Navigate to='/dashboard' replace />} />
