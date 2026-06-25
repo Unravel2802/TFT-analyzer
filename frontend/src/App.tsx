@@ -7,6 +7,8 @@ import DashboardPage from '@/features/player/DashboardPage'
 import SearchPage from '@/features/player/SearchPage'
 import Navbar from './layout/Navbar'
 import MatchDetailPage from '@/features/matches/MatchDetailPage'
+import ProfilePage from '@/features/account/ProfilePage'
+import SettingsPage from '@/features/account/SettingsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -35,6 +37,25 @@ function AppContent() {
                         </ProtectedRoute>
                     }
                 />
+
+                <Route 
+                    path='/profile'
+                    element={
+                        <ProtectedRoute>
+                            <ProfilePage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path='/settings'
+                    element={
+                        <ProtectedRoute>
+                            <SettingsPage />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route path='/' element={<RootRoute />} />
                 <Route path='*' element={<Navigate to='/dashboard' replace />} />
             </Routes>
