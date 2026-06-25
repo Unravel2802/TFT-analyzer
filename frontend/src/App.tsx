@@ -14,12 +14,16 @@ function ProtectedRoute({ children }: { children: React.ReactNode}) {
     return <>{children}</>
  }
 
+function RootRoute() {
+    const { token } = useAuth()
+    return token ? <Navigate to='/dashboard' /> : <SearchPage />
+}
+
 function AppContent() {
     return (
         <>
             <Navbar />
             <Routes>
-                <Route path='/' element={<SearchPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/signup' element={<SignupPage />} />
                 <Route path='/matches/:id' element={<MatchDetailPage />} />
@@ -31,7 +35,8 @@ function AppContent() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path='*' element={<Navigate to='/' replace />} />
+                <Route path='/' element={<RootRoute />} />
+                <Route path='*' element={<Navigate to='/dashboard' replace />} />
             </Routes>
         </>
     )

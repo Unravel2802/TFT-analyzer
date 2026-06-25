@@ -17,7 +17,6 @@ export default function Navbar() {
         <nav className='navbar'>
             <NavLink to='/' className='nav-brand'>TierMind</NavLink>
             <div className='nav-links'>
-                <NavLink to='/' className={linkClass} end>Search</NavLink>
                 {token ? (
                     <>
                         <NavLink to='/dashboard' className={linkClass}>Dashboard</NavLink>
@@ -25,6 +24,7 @@ export default function Navbar() {
                     </>
                 ) : (
                     <>
+                    <   NavLink to='/' className={linkClass} end>Search</NavLink>
                         <NavLink to='/login' className={linkClass}>Sign In</NavLink>
                         <NavLink to='/signup' className={linkClass}>Sign Up</NavLink>
                     </>
