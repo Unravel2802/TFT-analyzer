@@ -16,3 +16,13 @@ def store_matches(matches: dict[str, dict]) -> None:
         return 
     rows = [{"match_id": mid, "data": data} for mid, data in matches.items()]
     supabase.table("tft_matches").upsert(rows).execute() 
+
+def get_all_matches(limit: int = 1000) -> list[dict]:
+    result = (
+        supabase.table("tft_matches")
+        .select("data")
+        .limit(limit)
+        .execute()
+    )
+    
+    return [row["data"] for row in result.data]

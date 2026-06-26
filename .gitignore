@@ -16,3 +16,5 @@ frontend/dist/
 settings.json
 
 node_modules/
+
+CLAUDE.md
