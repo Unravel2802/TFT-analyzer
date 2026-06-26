@@ -10,6 +10,7 @@ import MatchDetailPage from '@/features/matches/MatchDetailPage'
 import ProfilePage from '@/features/account/ProfilePage'
 import SettingsPage from '@/features/account/SettingsPage'
 import PlaceholderPage from '@/components/PlaceholderPage'
+import UnitsPage from '@/features/units/UnitsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -60,7 +61,7 @@ function AppContent() {
                 {/* Public — all users */}
                 <Route path='/leaderboard' element={<PlaceholderPage title='Leaderboard' />} />
                 <Route path='/comps' element={<PlaceholderPage title='Meta / Comps' />} />
-                <Route path='/units' element={<PlaceholderPage title='Units' />} />
+                <Route path='/units' element={<UnitsPage />} />
                 <Route path='/augments' element={<PlaceholderPage title='Augments' />} />
                 <Route path='/help' element={<PlaceholderPage title='Help / About' />} />
 

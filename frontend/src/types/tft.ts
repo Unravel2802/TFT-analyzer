@@ -50,3 +50,12 @@ export interface MatchTrait {
     num_units: number
     style: number
 }
+
+export interface UnitStat {
+    unit_id: string
+    name: string
+    games: number
+    play_rate: number
+    avg_placement: number
+    top4_rate: number
+}

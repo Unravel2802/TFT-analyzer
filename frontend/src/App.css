@@ -1107,3 +1107,25 @@
   margin: var(--space-1) var(--space-2);
   background: var(--border);
 }
+
+/* ── Table styling ─────────────────────────────────────────── */
+.meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.meta-table th,
+.meta-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.meta-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+.unit-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
