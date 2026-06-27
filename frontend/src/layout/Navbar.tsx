@@ -60,7 +60,6 @@ export default function Navbar() {
                                     <NavLink to='/leaderboard' className='dropdown-item' onClick={closeMenu}>Leaderboard</NavLink>
                                     <NavLink to='/comps' className='dropdown-item' onClick={closeMenu}>Comps</NavLink>
                                     <NavLink to='/units' className='dropdown-item' onClick={closeMenu}>Units</NavLink>
-                                    <NavLink to='/augments' className='dropdown-item' onClick={closeMenu}>Augments</NavLink>
                                     <NavLink to='/compare' className='dropdown-item' onClick={closeMenu}>Compare</NavLink>
 
                                     <div className='dropdown-divider' />

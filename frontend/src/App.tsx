@@ -62,7 +62,6 @@ function AppContent() {
                 <Route path='/leaderboard' element={<PlaceholderPage title='Leaderboard' />} />
                 <Route path='/comps' element={<PlaceholderPage title='Meta / Comps' />} />
                 <Route path='/units' element={<UnitsPage />} />
-                <Route path='/augments' element={<PlaceholderPage title='Augments' />} />
                 <Route path='/help' element={<PlaceholderPage title='Help / About' />} />
 
                 {/* Signed-in only */}
