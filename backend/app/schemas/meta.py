@@ -17,3 +17,5 @@ class CompStat(BaseModel):
     avg_placement: float
     top4_rate: float
     win_rate: float
+    core_units: list[str]
+    flex_units: list[str]

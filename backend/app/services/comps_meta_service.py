@@ -32,7 +32,10 @@ def compute_comp_stats(participants:  list[dict], min_games: int = 1, set_number
         return []
 
     prefix = set_prefix(set_number)
-    tally = defaultdict(lambda: {"games": 0, "placement_sum": 0, "top4": 0, "wins": 0})
+    tally = defaultdict(lambda: {
+        "games": 0, "placement_sum": 0, "top4": 0, "wins": 0,
+        "unit_counts": defaultdict(int)    
+    })
 
     for p in participants:
         trait = _dominant_trait(p["traits"])
@@ -49,6 +52,16 @@ def compute_comp_stats(participants:  list[dict], min_games: int = 1, set_number
             row["top4"] += 1
         if placement == 1:
             row["wins"] += 1
+
+
+        row["unit_counts"]
+        seen = set()
+        for u in p["units"]:
+            uid = u["character_id"]
+            if not is_real_unit(uid, prefix) or uid in seen:
+                continue
+            seen.add(uid)
+            row["unit_counts"][uid] += 1
         
     results = []
     for (trait, carries), row in tally.items():
@@ -56,10 +69,20 @@ def compute_comp_stats(participants:  list[dict], min_games: int = 1, set_number
         if games < min_games:
             continue
         name = trait if not carries else f"{trait} " + " & ".join(carries)
+
+
+        counts = row["unit_counts"]
+        ordered = sorted(counts, key=lambda u: counts[u], reverse=True)
+        core = [u for u in ordered if counts[u] / games >= 0.5]
+        flex = [u for u in ordered if 0.25 <= counts[u] / games < 0.5]
+
+
         results.append({
             "name": name,
             "trait": trait,
             "carries": list(carries),
+            "core_units": core,
+            "flex_units": flex[:6],
             "games": games,
             "play_rate": round(games / total_boards * 100, 1),
             "avg_placement": round(row["placement_sum"] / games,  2),

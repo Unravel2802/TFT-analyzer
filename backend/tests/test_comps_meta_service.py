@@ -98,3 +98,13 @@ class TestComputeCompStats:
         assert "Sorcerer Jhin" in names
         assert "Vanguard Bard" not in names
 
+        
+    def test_core_and_flex_split_by_frequency(self):
+        boards = [
+            make_participant(1, units=[("TFT17_Jhin", ["a", "b"]), ("TFT17_Lux", [])], traits=[("TFT17_Sorcerer", 4, 3)]),
+            make_participant(2, units=[("TFT17_Jhin", ["a", "b"])], traits=[("TFT17_Sorcerer", 4, 3)]),
+            make_participant(3, units=[("TFT17_Jhin", ["a", "b"])], traits=[("TFT17_Sorcerer", 4, 3)]),
+        ]
+        comp = compute_comp_stats(boards, min_games=1, set_number=17)[0]
+        assert comp["core_units"] == ["TFT17_Jhin"]   # 3/3 = 100% -> core
+        assert "TFT17_Lux" in comp["flex_units"]       # 1/3 = 33% -> flex
