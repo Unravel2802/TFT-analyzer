@@ -2,6 +2,8 @@ from collections import defaultdict
 from app.services.meta_common import dominant_set, participants_from_matches, short_name, is_real_unit, set_prefix
 from app.services.stats_service import format_trait_name
 
+_TRAIT_JUNK = ("Unique",)   # champion-specific hidden traits aren't comp identities
+
 def _board_carries(units: list[dict], prefix: str | None, max_carries: int = 2) -> list[str]:
     candidates = []
     for u in units:
@@ -15,7 +17,10 @@ def _board_carries(units: list[dict], prefix: str | None, max_carries: int = 2) 
     return [name for _, name in candidates[:max_carries]]
 
 def _dominant_trait(traits: list[dict]) -> str | None:
-    active = [t for t in traits if t["num_units"] > 0]
+    active = [
+        t for t in traits 
+        if t["num_units"] > 0 and not any(j in t["name"] for j in _TRAIT_JUNK)
+    ]
     if not active:
         return None
     active.sort(key=lambda t: (t["style"], t["num_units"]), reverse=True)

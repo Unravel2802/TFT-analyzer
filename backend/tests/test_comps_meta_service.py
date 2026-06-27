@@ -55,6 +55,13 @@ class TestDominantTrait:
         traits = [{"name": "TFT17_Sorcerer", "num_units": 0, "style": 0}]
         assert _dominant_trait(traits) is None
 
+    def test_unique_traits_are_not_comp_identities(self):
+        traits = [
+            {"name": "TFT17_BlitzcrankUniqueTrait", "num_units": 1, "style": 4},
+            {"name": "TFT17_Sorcerer", "num_units": 4, "style": 3},
+        ]
+        assert _dominant_trait(traits) == "Sorcerer"
+
 
 class TestComputeCompStats:
     def test_groups_same_trait_and_carries(self):
@@ -90,3 +97,4 @@ class TestComputeCompStats:
         names = [c["name"] for c in compute_comp_stats(common + rare, min_games=2, set_number=17)]
         assert "Sorcerer Jhin" in names
         assert "Vanguard Bard" not in names
+
