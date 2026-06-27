@@ -1,5 +1,5 @@
-from app.services.units_meta_service import compute_unit_stats, _format_unit_name
-from app.services.meta_common import participants_from_matches
+from app.services.units_meta_service import compute_unit_stats
+from app.services.meta_common import participants_from_matches, short_name
 
 def make_participant(placement, units=None):
     return {
@@ -9,7 +9,7 @@ def make_participant(placement, units=None):
 
 
 def test_format_unit_name_strips_set_prefix():
-    assert _format_unit_name("TFT14_Ahri") == "Ahri"
+    assert short_name("TFT14_Ahri") == "Ahri"
 
 
 class TestComputeUnitStats:
