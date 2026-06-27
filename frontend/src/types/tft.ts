@@ -69,4 +69,6 @@ export interface CompStat {
     avg_placement: number
     top4_rate: number
     win_rate: number
+    core_units: string[]
+    flex_units: string[]
 }

@@ -1129,3 +1129,21 @@
     align-items: center;
     gap: 0.5rem;
 }
+
+.comp-name {
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+.comp-units {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.comp-flex-divider {
+    width: 1px;
+    align-self: stretch;
+    min-height: 28px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 6px;
+}

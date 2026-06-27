@@ -1,8 +1,23 @@
 import { useEffect, useState } from 'react'
 import { getCompsMeta } from './api'
+import { championFace, championCost } from '@/lib/gameAssets'
 import type { CompStat } from '@/types/tft'
 
 type SortKey = 'play_rate' | 'avg_placement' | 'top4_rate' | 'win_rate' | 'games'
+
+function Portrait({ id }: { id: string }) {
+    const [failed, setFailed] = useState(false)
+    const cost = championCost(id) ?? 1
+    const short = id.split('_').pop() ?? id
+    return (
+        <div className={`unit-portrait cost-${cost}`} title={id}>
+            {failed
+                ? <div className='portrait-fallback'>{short}</div>
+                : <img className='portrait-img' src={championFace(id)} alt={short} onError={() => setFailed(true)} />
+            }
+        </div>
+    )
+}
 
 export default function CompsPage() {
     const [comps, setComps] = useState<CompStat[]>([])
@@ -49,7 +64,14 @@ export default function CompsPage() {
                 <tbody>
                     {sorted.map(c => (
                         <tr key={c.name}>
-                            <td>{c.name}</td>
+                            <td>
+                                <div className='comp-name'>{c.name}</div>
+                                <div className='comp-units'>
+                                    {c.core_units.map(id  => <Portrait key={id} id={id} />)}
+                                    {c.flex_units.length > 0 && <span className='comp-flex-divider' />}
+                                    {c.flex_units.map(id => <Portrait key={id} id={id} />)}
+                                </div>
+                            </td>
                             <td>{c.play_rate}%</td>
                             <td>{c.avg_placement}</td>
                             <td>{c.top4_rate}%</td>
