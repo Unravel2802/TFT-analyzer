@@ -59,3 +59,14 @@ export interface UnitStat {
     avg_placement: number
     top4_rate: number
 }
+
+export interface CompStat {
+    name: string
+    trait: string
+    carries: string[]
+    games: number
+    play_rate: number
+    avg_placement: number
+    top4_rate: number
+    win_rate: number
+}
