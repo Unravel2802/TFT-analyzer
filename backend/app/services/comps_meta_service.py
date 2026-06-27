@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import Counter, defaultdict
 from app.services.meta_common import dominant_set, participants_from_matches, short_name, is_real_unit, set_prefix
 from app.services.stats_service import format_trait_name
 
@@ -34,7 +34,9 @@ def compute_comp_stats(participants:  list[dict], min_games: int = 1, set_number
     prefix = set_prefix(set_number)
     tally = defaultdict(lambda: {
         "games": 0, "placement_sum": 0, "top4": 0, "wins": 0,
-        "unit_counts": defaultdict(int)    
+        "unit_counts": defaultdict(int),
+        "unit_items": defaultdict(Counter),
+        "unit_itemized": defaultdict(int),   
     })
 
     for p in participants:
@@ -63,6 +65,12 @@ def compute_comp_stats(participants:  list[dict], min_games: int = 1, set_number
             seen.add(uid)
             row["unit_counts"][uid] += 1
         
+            items = u.get("itemNames", [])
+            if len(items) >= 2:
+                row["unit_itemized"][uid] += 1
+                for it in items:
+                    row["unit_items"][uid][it] += 1
+
     results = []
     for (trait, carries), row in tally.items():
         games = row["games"]
@@ -73,9 +81,14 @@ def compute_comp_stats(participants:  list[dict], min_games: int = 1, set_number
 
         counts = row["unit_counts"]
         ordered = sorted(counts, key=lambda u: counts[u], reverse=True)
-        core = [u for u in ordered if counts[u] / games >= 0.5]
-        flex = [u for u in ordered if 0.25 <= counts[u] / games < 0.5]
 
+        def make_unit(uid: str) -> dict:
+            is_carry = row["unit_itemized"][uid] / counts[uid] >= 0.5
+            items = [it for it, _ in row["unit_items"][uid].most_common(3)] if is_carry else []
+            return {"id": uid, "items": items}
+
+        core = [make_unit(u) for u in ordered if counts[u] / games >= 0.5]
+        flex = [make_unit(u) for u in ordered if 0.25 <= counts[u] / games < 0.5]
 
         results.append({
             "name": name,

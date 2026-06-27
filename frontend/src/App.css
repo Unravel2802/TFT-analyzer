@@ -1136,9 +1136,19 @@
 }
 .comp-units {
     display: flex;
-    align-items: center;
+    align-items: flex-start;     /* was center; items make units different heights */
     gap: 4px;
     flex-wrap: wrap;
+}
+.comp-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.comp-unit-items {
+    display: flex;
+    gap: 1px;
+    margin-top: 2px;
 }
 .comp-flex-divider {
     width: 1px;

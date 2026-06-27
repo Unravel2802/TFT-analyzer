@@ -60,6 +60,11 @@ export interface UnitStat {
     top4_rate: number
 }
 
+export interface CompUnit {
+    id: string
+    items: string[]
+}
+
 export interface CompStat {
     name: string
     trait: string
@@ -69,6 +74,6 @@ export interface CompStat {
     avg_placement: number
     top4_rate: number
     win_rate: number
-    core_units: string[]
-    flex_units: string[]
+    core_units: CompUnit[]
+    flex_units: CompUnit[]
 }

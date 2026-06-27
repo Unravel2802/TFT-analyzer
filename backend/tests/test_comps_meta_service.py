@@ -106,5 +106,23 @@ class TestComputeCompStats:
             make_participant(3, units=[("TFT17_Jhin", ["a", "b"])], traits=[("TFT17_Sorcerer", 4, 3)]),
         ]
         comp = compute_comp_stats(boards, min_games=1, set_number=17)[0]
-        assert comp["core_units"] == ["TFT17_Jhin"]   # 3/3 = 100% -> core
-        assert "TFT17_Lux" in comp["flex_units"]       # 1/3 = 33% -> flex
+        assert [u["id"] for u in comp["core_units"]] == ["TFT17_Jhin"]
+        assert "TFT17_Lux" in [u["id"] for u in comp["flex_units"]]
+
+    def test_carry_items_are_top_three(self):
+        boards = [
+            make_participant(1, units=[("TFT17_Jhin", ["IE", "LW", "GS"])], traits=[("TFT17_Sorcerer", 4, 3)]),
+            make_participant(2, units=[("TFT17_Jhin", ["IE", "LW", "GS"])], traits=[("TFT17_Sorcerer", 4, 3)]),
+        ]
+        jhin = compute_comp_stats(boards, min_games=1, set_number=17)[0]["core_units"][0]
+        assert jhin["id"] == "TFT17_Jhin"
+        assert set(jhin["items"]) == {"IE", "LW", "GS"}
+
+    def test_non_carry_unit_has_no_items(self):
+        boards = [
+            make_participant(1, units=[("TFT17_Jhin", ["IE", "LW"]), ("TFT17_Leona", [])], traits=[("TFT17_Sorcerer", 4, 3)]),
+            make_participant(2, units=[("TFT17_Jhin", ["IE", "LW"]), ("TFT17_Leona", [])], traits=[("TFT17_Sorcerer", 4, 3)]),
+        ]
+        comp = compute_comp_stats(boards, min_games=1, set_number=17)[0]
+        leona = next(u for u in comp["core_units"] if u["id"] == "TFT17_Leona")
+        assert leona["items"] == []

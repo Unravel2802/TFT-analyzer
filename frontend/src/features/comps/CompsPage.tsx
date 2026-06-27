@@ -1,20 +1,30 @@
 import { useEffect, useState } from 'react'
 import { getCompsMeta } from './api'
-import { championFace, championCost } from '@/lib/gameAssets'
-import type { CompStat } from '@/types/tft'
+import { championFace, championCost, itemIcon } from '@/lib/gameAssets'
+import type { CompStat, CompUnit } from '@/types/tft'
 
 type SortKey = 'play_rate' | 'avg_placement' | 'top4_rate' | 'win_rate' | 'games'
 
-function Portrait({ id }: { id: string }) {
+function Portrait({ unit }: { unit: CompUnit }) {
     const [failed, setFailed] = useState(false)
-    const cost = championCost(id) ?? 1
-    const short = id.split('_').pop() ?? id
+    const cost = championCost(unit.id) ?? 1
+    const short = unit.id.split('_').pop() ?? unit.id
     return (
-        <div className={`unit-portrait cost-${cost}`} title={id}>
-            {failed
-                ? <div className='portrait-fallback'>{short}</div>
-                : <img className='portrait-img' src={championFace(id)} alt={short} onError={() => setFailed(true)} />
-            }
+        <div className='comp-unit'>
+            <div className={`unit-portrait cost-${cost}`} title={unit.id}>
+                {failed
+                    ? <div className='portrait-fallback'>{short}</div>
+                    : <img className='portrait-img' src={championFace(unit.id)} alt={short} onError={() => setFailed(true)} />
+                }
+            </div>
+            {unit.items.length > 0 && (
+                <div className='comp-unit-items'>
+                    {unit.items.map((it, i) => {
+                        const img = itemIcon(it)
+                        return img ? <img key={i} className='item-icon' src={img} alt={it} title={it} /> : null
+                    })}
+                </div>
+            )}
         </div>
     )
 }
@@ -67,9 +77,9 @@ export default function CompsPage() {
                             <td>
                                 <div className='comp-name'>{c.name}</div>
                                 <div className='comp-units'>
-                                    {c.core_units.map(id  => <Portrait key={id} id={id} />)}
+                                    {c.core_units.map(u  => <Portrait key={u.id} unit={u} />)}
                                     {c.flex_units.length > 0 && <span className='comp-flex-divider' />}
-                                    {c.flex_units.map(id => <Portrait key={id} id={id} />)}
+                                    {c.flex_units.map(u => <Portrait key={u.id} unit={u} />)}
                                 </div>
                             </td>
                             <td>{c.play_rate}%</td>

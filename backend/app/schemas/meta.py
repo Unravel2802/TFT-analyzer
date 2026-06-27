@@ -8,6 +8,10 @@ class UnitStat(BaseModel):
     avg_placement: float
     top4_rate: float
 
+class CompUnit(BaseModel):
+    id: str
+    items: list[str]
+
 class CompStat(BaseModel):
     name: str
     trait: str
@@ -17,5 +21,5 @@ class CompStat(BaseModel):
     avg_placement: float
     top4_rate: float
     win_rate: float
-    core_units: list[str]
-    flex_units: list[str]
+    core_units: list[CompUnit]
+    flex_units: list[CompUnit]
