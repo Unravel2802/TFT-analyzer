@@ -1,13 +1,10 @@
-from collections import Counter, defaultdict
+from collections import defaultdict
+from app.services.meta_common import dominant_set, participants_from_matches
 
 _JUNK_MARKERS = ("PVE", "Enemy", "Summon", "Nitro")
 
 def _is_real_unit(character_id: str) -> bool:
     return not any(marker in character_id for marker in _JUNK_MARKERS)
-
-def _dominant_set(raw_matches: list[dict]) -> int | None:
-    counts = Counter(m["info"].get("tft_set_number") for m in raw_matches)
-    return counts.most_common(1)[0][0] if counts else None
 
 def _format_unit_name(character_id: str) -> str:
     return character_id.split("_")[-1]
@@ -55,7 +52,7 @@ def compute_unit_stats(participants: list[dict], min_games: int = 1, set_number:
     return results
 
 def compute_units_meta(raw_matches: list[dict], min_games: int = 1) -> list[dict]:
-    set_number = _dominant_set(raw_matches)
+    set_number = dominant_set(raw_matches)
     participants = participants_from_matches(raw_matches, set_number)
     return compute_unit_stats(participants, min_games=min_games, set_number=set_number)
 

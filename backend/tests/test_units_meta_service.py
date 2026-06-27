@@ -1,9 +1,5 @@
-from app.services.units_meta_service import (
-    compute_unit_stats,
-    participants_from_matches,
-    _format_unit_name,
-)
-
+from app.services.units_meta_service import compute_unit_stats, _format_unit_name
+from app.services.meta_common import participants_from_matches
 
 def make_participant(placement, units=None):
     return {
