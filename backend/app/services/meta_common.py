@@ -1,6 +1,6 @@
 from collections import Counter
 
-_JUNK_MARKERS = ("PVE", "Enemy", "Summon", "Nitro")
+_JUNK_MARKERS = ("PVE", "Enemy", "Summon", "Nitro", "Minion", "Follower")
 
 def dominant_set(raw_matches: list[dict]) -> int | None:
     counts = Counter(m["info"].get("tft_set_number") for m in raw_matches)
@@ -23,8 +23,8 @@ def is_real_unit(character_id: str, prefix: str | None) -> bool:
     """True for a draftable, current-set unit (right set prefix, not PvE/summon junk)."""
     if prefix is not None and not character_id.lower().startswith(prefix):
         return False
-    return not any(marker in character_id for marker in _JUNK_MARKERS)
-
+    cid = character_id.lower()
+    return not any(marker.lower() in cid for marker in _JUNK_MARKERS)
 
 def short_name(character_id: str) -> str:
     return character_id.split("_")[-1]
