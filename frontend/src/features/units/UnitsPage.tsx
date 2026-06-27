@@ -34,8 +34,8 @@ export default function UnitsPage() {
     return (
         <div className='page'>
             <h1 className='page-title'>Units</h1>
-            <p className='page-tagline'>Per-unit performance across all cached games.</p>
-
+            <p className='page-tagline'>Per-unit performance across recent Challenger/Master games.</p>
+            
             <table className='meta-table'>
                 <thead>
                     <tr>
