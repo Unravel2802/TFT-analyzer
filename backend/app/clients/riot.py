@@ -83,3 +83,10 @@ class RiotClient:
 
     async def close(self):
         return await self.client.aclose()
+
+    async def get_apex_league(self, tier: str) -> dict:
+        # tier: "challenger" | "grandmaster" | "master"
+        url = f"{self.platform_url}/tft/league/v1/{tier}"
+        response = await self.client.get(url)
+        response.raise_for_status()
+        return response.json()
