@@ -77,3 +77,18 @@ export interface CompStat {
     core_units: CompUnit[]
     flex_units: CompUnit[]
 }
+
+export interface CoachStat {
+    name: string
+    games: number
+    avg_placement: number
+}
+
+export interface CoachInsights {
+    games_analyzed: number
+    overall_avg_placement: number
+    best_traits: CoachStat[]
+    worst_traits: CoachStat[]
+    best_units: CoachStat[]
+    worst_units: CoachStat[]
+}

@@ -12,6 +12,7 @@ import SettingsPage from '@/features/account/SettingsPage'
 import PlaceholderPage from '@/components/PlaceholderPage'
 import UnitsPage from '@/features/units/UnitsPage'
 import CompsPage from '@/features/comps/CompsPage'
+import CoachPage from '@/features/coach/CoachPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -71,8 +72,7 @@ function AppContent() {
                 <Route path='/notifications' element={<ProtectedRoute><PlaceholderPage title='Notifications' /></ProtectedRoute>} />
 
                 {/* Signed-in: differentiator features */}
-                <Route path='/coach' element={<ProtectedRoute><PlaceholderPage title='Personal Coach' note='Insights from your own match history — coming soon.' /></ProtectedRoute>} />
-                <Route path='/climb' element={<ProtectedRoute><PlaceholderPage title='Climb Tracker' note='Set a rank goal and track your LP over time — coming soon.' /></ProtectedRoute>} />
+                <Route path='/coach' element={<ProtectedRoute><CoachPage /></ProtectedRoute>} />                <Route path='/climb' element={<ProtectedRoute><PlaceholderPage title='Climb Tracker' note='Set a rank goal and track your LP over time — coming soon.' /></ProtectedRoute>} />
                 <Route path='/journal' element={<ProtectedRoute><PlaceholderPage title='Game Journal' note='Annotate your matches and review your mistakes — coming soon.' /></ProtectedRoute>} />
                 <Route path='/sessions' element={<ProtectedRoute><PlaceholderPage title='Sessions' note='Tilt and session awareness from your play patterns — coming soon.' /></ProtectedRoute>} />
 
