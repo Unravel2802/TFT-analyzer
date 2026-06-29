@@ -15,6 +15,7 @@ import CompsPage from '@/features/comps/CompsPage'
 import CoachPage from '@/features/coach/CoachPage'
 import ClimbPage from '@/features/climb/ClimbPage'
 import SessionsPage from '@/features/sessions/SessionsPage'
+import JournalPage from '@/features/journal/JournalPage'
 
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
@@ -77,8 +78,7 @@ function AppContent() {
                 {/* Signed-in: differentiator features */}
                 <Route path='/coach' element={<ProtectedRoute><CoachPage /></ProtectedRoute>} />                
                 <Route path='/climb' element={<ProtectedRoute><ClimbPage /></ProtectedRoute>} />
-                <Route path='/journal' element={<ProtectedRoute><PlaceholderPage title='Game Journal' note='Annotate your matches and review your mistakes — coming soon.' /></ProtectedRoute>} />
-                <Route path='/sessions' element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
+                <Route path='/journal' element={<ProtectedRoute><JournalPage /></ProtectedRoute>} />                <Route path='/sessions' element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
                 <Route path='/' element={<RootRoute />} />
                 <Route path='*' element={<Navigate to='/dashboard' replace />} />
             </Routes>

@@ -112,3 +112,9 @@ export interface SessionsInsights {
     after_two_losses: { avg_placement: number; games: number } | null
     time_of_day: { part: string; avg_placement: number; games: number }[]
 }
+
+export interface NoteEntry {
+    match_id: string
+    note: string
+    updated_at: string
+}

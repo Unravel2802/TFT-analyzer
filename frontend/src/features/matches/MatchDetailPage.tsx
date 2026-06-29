@@ -4,6 +4,7 @@ import { getMatchDetail } from '@/features/matches/api'
 import type { MatchDetail } from '@/types/tft'
 import UnitBoard from '@/components/UnitBoard'
 import TraitRow from '@/components/TraitRow'
+import MatchNote from '@/features/journal/MatchNote'
 
 function placementClass(p: number): string {
     return p === 1 ? 'result-win' : p <= 4 ? 'result-top4' : 'result-bot4'
@@ -49,6 +50,9 @@ export default function MatchDetailPage() {
                         <TraitRow traits={part.traits} />
                     </section>
                 ))}
+            </div>
+            <div>
+            {   id && <MatchNote matchId={id} />}
             </div>
         </div>
     )
