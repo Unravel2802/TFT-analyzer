@@ -104,3 +104,11 @@ export interface ClimbData {
     progress: { start_abs_lp: number; current_abs_lp: number; goal_abs_lp: number; percent: number } | null
     snapshots: RankPoint[]
 }
+
+export interface SessionsInsights {
+    games_analyzed: number
+    overall_avg_placement: number
+    current_streak: { type: string; count: number } | null
+    after_two_losses: { avg_placement: number; games: number } | null
+    time_of_day: { part: string; avg_placement: number; games: number }[]
+}
