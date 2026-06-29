@@ -1,42 +1,19 @@
-import asyncio
 from collections import defaultdict
-
-from app.repositories.accounts import get_cached_puuid, store_puuid
-from app.repositories.matches import get_cached_matches, store_matches
 from app.services.units_meta_service import compute_unit_stats
 from app.services.stats_service import format_trait_name
-from app.services.player_lookup import resolve_puuid
-
-_sem = asyncio.Semaphore(5)
-
-
-async def _fetch(riot_client, mid):
-    async with _sem:
-        return mid, await riot_client.get_match(mid)
+from app.services.player_lookup import resolve_puuid, fetch_user_matches
 
 
 async def _fetch_user_participants(riot_client, game_name, tag_line, count=20) -> list[dict]:
-    name_key, tag_key = game_name.lower(), tag_line.lower()
-    puuid = await asyncio.to_thread(get_cached_puuid, name_key, tag_key)
-    match_ids = await riot_client.get_match_ids(puuid, count=count)
-    if puuid is None:
-        account = await riot_client.get_account(game_name, tag_line)
-        puuid = account["puuid"]
-        await asyncio.to_thread(store_puuid, name_key, tag_key, puuid)
-
-    match_ids = await riot_client.get_match_ids(puuid, count=count)
-    cached = await asyncio.to_thread(get_cached_matches, match_ids)
-    missing = [mid for mid in match_ids if mid not in cached]
-    fetched = dict(await asyncio.gather(*[_fetch(riot_client, mid) for mid in missing]))
-    await asyncio.to_thread(store_matches, fetched)   # source defaults to 'search'
-
-    all_matches = {**cached, **fetched}
+    puuid = await resolve_puuid(riot_client, game_name, tag_line)
+    matches = await fetch_user_matches(riot_client, puuid, count=count)
     participants = []
-    for mid in match_ids:
-        board = next((p for p in all_matches[mid]["info"]["participants"] if p["puuid"] == puuid), None)
+    for m in matches:
+        board = next((p for p in m["info"]["participants"] if p["puuid"] == puuid), None)
         if board is not None:
             participants.append(board)
     return participants
+
 
 
 def compute_trait_stats(participants: list[dict], min_games: int = 2) -> list[dict]:

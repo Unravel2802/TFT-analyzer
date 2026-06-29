@@ -8,6 +8,8 @@ from app.schemas.coach import CoachInsights
 from app.config import get_settings
 from app.schemas.climb import ClimbData, GoalRequest
 from app.services.climb_service import build_climb, set_goal
+from app.services.session_service import build_sessions
+from app.schemas.session import SessionsInsights
 
 import httpx
 
@@ -59,3 +61,16 @@ async def get_my_climb(current_user: dict = Depends(get_current_user)):
 async def set_my_climb_goal(body: GoalRequest, current_user: dict = Depends(get_current_user)):
     await set_goal(current_user["id"], body.target_tier, body.target_division)
     return {"status": "ok"}
+
+@router.get("/sessions", response_model=SessionsInsights)
+async def get_my_sessions(tz_offset: int = 0, current_user: dict = Depends(get_current_user)):
+    game_name, tag_line = current_user["riot_id"].split("#")
+    riot_client = RiotClient(api_key=settings.riot_api_key, region=current_user["region"])
+    try:
+        return await build_sessions(riot_client, game_name, tag_line, tz_offset_minutes=tz_offset)
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 429:
+            raise HTTPException(status_code=429, detail="Riot API rate limit hit. Wait 2 minutes")
+        raise HTTPException(status_code=e.response.status_code, detail="Riot API error")
+    finally:
+        await riot_client.close()
