@@ -1,9 +1,22 @@
 import asyncio
-from app.repositories.climb import store_snapshot, get_snapshots, get_goal
+from datetime import datetime, timezone, timedelta
 from app.services.lp_utils import abs_lp
 from app.services.player_lookup import resolve_puuid
 from app.repositories.climb import store_snapshot, get_snapshots, get_goal, upsert_goal
 
+GOAL_LOCK = timedelta(days=7)
+
+class GoalLockedError(Exception):
+    def __init__(self, locked_until: str):
+        self.locked_until = locked_until
+        super().__init__(f"Goal locked until {locked_until}")
+
+
+def _goal_lock_info(goal: dict) -> tuple[bool, str]:
+    """(can_change, locked_until_iso) for a stored goal row."""
+    updated = datetime.fromisoformat(goal["updated_at"])
+    unlocks = updated + GOAL_LOCK
+    return datetime.now(timezone.utc) >= unlocks, unlocks.isoformat()
 
 async def build_climb(riot_client, stats_service, user_id, game_name: str, tag_line: str) -> dict:
     puuid = await resolve_puuid(riot_client, game_name, tag_line)
@@ -20,6 +33,10 @@ async def build_climb(riot_client, stats_service, user_id, game_name: str, tag_l
         snapshots = await asyncio.to_thread(get_snapshots, user_id)
 
     goal = await asyncio.to_thread(get_goal, user_id)
+    if goal:
+        can_change, locked_until = _goal_lock_info(goal)
+        goal["can_change"] = can_change
+        goal["locked_until"] = locked_until
 
     progress = None
     if goal and snapshots:
@@ -42,6 +59,11 @@ async def build_climb(riot_client, stats_service, user_id, game_name: str, tag_l
     }
 
 async def set_goal(user_id, target_tier: str, target_division: str = "") -> None:
+    existing = await asyncio.to_thread(get_goal, user_id)
+    if existing:
+        can_change, locked_until = _goal_lock_info(existing)
+        if not can_change:
+            raise GoalLockedError(locked_until)
     target_abs = abs_lp(target_tier, target_division, 0)
     await asyncio.to_thread(
         upsert_goal, user_id, target_tier.upper(), target_division.upper(), target_abs
