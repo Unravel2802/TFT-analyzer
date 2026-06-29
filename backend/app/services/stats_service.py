@@ -1,3 +1,5 @@
+import re
+
 from app.clients.riot import RiotClient
 from collections import Counter
 
@@ -6,12 +8,15 @@ TRAIT_DISPLAY_NAMES = {
     "DRX": "DRX",
     "DarkStar": "Dark Star",
     "Fateweaver": "Fateweaver",
-    "Timebreaker": "Timebreaker", 
+    "Timebreaker": "Timebreaker",
+    "MeleeTrait": "Melee",
 }
 
 def format_trait_name(raw: str) -> str:
     key = raw.split("_")[-1]
-    return TRAIT_DISPLAY_NAMES.get(key, key)
+    if key in TRAIT_DISPLAY_NAMES:
+        return TRAIT_DISPLAY_NAMES[key]
+    return re.sub(r"(?<=[a-z])(?=[A-Z])", " ", key)   # SpaceGroove -> Space Groove
 
 class StatsService:
     def __init__(self, riot_client: RiotClient):

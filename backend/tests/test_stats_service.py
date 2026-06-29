@@ -12,7 +12,9 @@ def test_format_trait_name_maps_known():
 
 def test_format_trait_name_falls_back_to_suffix():
     assert format_trait_name("TFT9_Brawler") == "Brawler"
-
+    
+def test_format_trait_name_splits_camelcase():
+    assert format_trait_name("TFT17_SpaceGroove") == "Space Groove"
 
 class TestComputeStats:
     def setup_method(self):

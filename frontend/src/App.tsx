@@ -78,7 +78,8 @@ function AppContent() {
                 {/* Signed-in: differentiator features */}
                 <Route path='/coach' element={<ProtectedRoute><CoachPage /></ProtectedRoute>} />                
                 <Route path='/climb' element={<ProtectedRoute><ClimbPage /></ProtectedRoute>} />
-                <Route path='/journal' element={<ProtectedRoute><JournalPage /></ProtectedRoute>} />                <Route path='/sessions' element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
+                <Route path='/journal' element={<ProtectedRoute><JournalPage /></ProtectedRoute>} />
+                <Route path='/sessions' element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
                 <Route path='/' element={<RootRoute />} />
                 <Route path='*' element={<Navigate to='/dashboard' replace />} />
             </Routes>

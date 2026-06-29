@@ -11,6 +11,10 @@
 - [x] Navbar burger menu (Profile, Settings, Sign Out) + Dashboard as top-level link
 - [~] Profile page (placeholder)
 - [~] Settings page (placeholder)
+- [x] Personal Coach (best/worst traits & units from your games)
+- [x] Climb Tracker (rank snapshots, goal, progress)
+- [x] Sessions/Tilt (streak + time-of-day)
+- [x] Game Journal (per-match notes)
 
 ---
 
@@ -19,9 +23,8 @@
 ### Featured (top-level nav, next to Dashboard)
 
 - [ ] **Leaderboard** — top ranked players by region; click through to a profile.
-- [ ] **Meta / Comps** — best team comps + comp tier list for the live patch.
-- [ ] **Units** — per-champion stats: avg placement, play rate, best items/traits.
-- [ ] **Augments** — augment win/pick rates by stage.
+- [x] **Meta / Comps** — best team comps + comp tier list for the live patch.
+- [x] **Units** — per-champion stats: avg placement, play rate, best items/traits.
 - [ ] **Compare** — two players (or your past vs present) side by side.
 
 ### Secondary (inside burger)
