@@ -14,14 +14,14 @@ function Portrait({ unit }: { unit: CompUnit }) {
             <div className={`unit-portrait cost-${cost}`} title={unit.id}>
                 {failed
                     ? <div className='portrait-fallback'>{short}</div>
-                    : <img className='portrait-img' src={championFace(unit.id)} alt={short} onError={() => setFailed(true)} />
+                    : <img className='portrait-img' src={championFace(unit.id)} alt={short} loading='lazy' decoding='async' onError={() => setFailed(true)} />
                 }
             </div>
             {unit.items.length > 0 && (
                 <div className='comp-unit-items'>
                     {unit.items.map((it, i) => {
                         const img = itemIcon(it)
-                        return img ? <img key={i} className='item-icon' src={img} alt={it} title={it} /> : null
+                        return img ? <img key={i} className='item-icon' src={img} alt={it} title={it} loading='lazy' decoding='async' /> : null
                     })}
                 </div>
             )}

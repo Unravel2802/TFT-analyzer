@@ -12,7 +12,7 @@ function UnitPortrait({ id, cost }: { id: string; cost: number }) {
         <div className={`unit-portrait cost-${cost}`} title={id}>
             {failed
                 ? <div className='portrait-fallback'>{shortName(id)}</div>
-                : <img className='portrait-img' src={championFace(id)} alt={id} onError={() => setFailed(true)} />}
+                : <img className='portrait-img' src={championFace(id)} alt={id} loading='lazy' decoding='async' onError={() => setFailed(true)} />}
         </div>
     )
 }
@@ -30,7 +30,7 @@ export default function UnitBoard({ units }: { units: MatchUnit[] }) {
                             {u.items.map((it, j) => {
                                 const img = itemIcon(it)
                                 return img
-                                    ? <img key={j} className='item-icon' src={img} alt={it} title={it} />
+                                    ? <img key={j} className='item-icon' src={img} alt={it} title={it} loading='lazy' decoding='async' />
                                     : null
                             })}
                         </div>

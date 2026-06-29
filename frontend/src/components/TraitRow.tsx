@@ -9,7 +9,7 @@ export default function TraitRow({ traits }: { traits: MatchTrait[] }) {
                 if (!icon) return null
                 return (
                     <span key={i} className={`trait-badge trait-style-${t.style}`} title={t.id}>
-                        <img className='trait-icon' src={icon} alt={t.id} />
+                        <img className='trait-icon' src={icon} alt={t.id} loading='lazy' decoding='async' />
                         <span className='trait-count'>{t.num_units}</span>
                     </span>
                 )

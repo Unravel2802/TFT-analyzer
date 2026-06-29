@@ -35,7 +35,7 @@ export default function UnitsPage() {
         <div className='page'>
             <h1 className='page-title'>Units</h1>
             <p className='page-tagline'>Per-unit performance across recent Challenger/Master games.</p>
-            
+
             <table className='meta-table'>
                 <thead>
                     <tr>
@@ -53,7 +53,7 @@ export default function UnitsPage() {
                             <tr key={u.unit_id}>
                                 <td className='unit-cell'>
                                     <div className={`unit-portrait cost-${cost}`} title={u.unit_id}>
-                                        <img className='portrait-img' src={championFace(u.unit_id)} alt={u.name} />             
+                                        <img className='portrait-img' src={championFace(u.unit_id)} alt={u.name} loading='lazy' decoding='async' />            
                                     </div>     
                                     <span>{u.name}</span>     
                                 </td>
