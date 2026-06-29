@@ -13,6 +13,8 @@ import PlaceholderPage from '@/components/PlaceholderPage'
 import UnitsPage from '@/features/units/UnitsPage'
 import CompsPage from '@/features/comps/CompsPage'
 import CoachPage from '@/features/coach/CoachPage'
+import ClimbPage from '@/features/climb/ClimbPage'
+
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -74,6 +76,7 @@ function AppContent() {
                 {/* Signed-in: differentiator features */}
                 <Route path='/coach' element={<ProtectedRoute><CoachPage /></ProtectedRoute>} />                <Route path='/climb' element={<ProtectedRoute><PlaceholderPage title='Climb Tracker' note='Set a rank goal and track your LP over time — coming soon.' /></ProtectedRoute>} />
                 <Route path='/journal' element={<ProtectedRoute><PlaceholderPage title='Game Journal' note='Annotate your matches and review your mistakes — coming soon.' /></ProtectedRoute>} />
+                <Route path='/climb' element={<ProtectedRoute><ClimbPage /></ProtectedRoute>} />
                 <Route path='/sessions' element={<ProtectedRoute><PlaceholderPage title='Sessions' note='Tilt and session awareness from your play patterns — coming soon.' /></ProtectedRoute>} />
 
                 <Route path='/' element={<RootRoute />} />

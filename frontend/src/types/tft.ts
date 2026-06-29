@@ -92,3 +92,15 @@ export interface CoachInsights {
     best_units: CoachStat[]
     worst_units: CoachStat[]
 }
+
+export interface RankPoint {
+    abs_lp: number
+    captured_at: string
+}
+
+export interface ClimbData {
+    current: { tier: string; division: string; lp: number; abs_lp: number }
+    goal: { target_tier: string; target_division: string; target_abs_lp: number } | null
+    progress: { start_abs_lp: number; current_abs_lp: number; goal_abs_lp: number; percent: number } | null
+    snapshots: RankPoint[]
+}
