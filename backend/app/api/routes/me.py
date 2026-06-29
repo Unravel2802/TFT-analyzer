@@ -6,6 +6,9 @@ from app.services.dashboard_service import build_dashboard
 from app.services.coach_service import build_coach
 from app.schemas.coach import CoachInsights
 from app.config import get_settings
+from app.schemas.climb import ClimbData, GoalRequest
+from app.services.climb_service import build_climb, set_goal
+
 import httpx
 
 router = APIRouter(prefix="/me", tags=["me"])
@@ -37,3 +40,22 @@ async def get_my_coach(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=e.response.status_code, detail="Riot API error")
     finally:
         await riot_client.close()
+
+@router.get("/climb", response_model=ClimbData)
+async def get_my_climb(current_user: dict = Depends(get_current_user)):
+    game_name, tag_line = current_user["riot_id"].split("#")
+    riot_client = RiotClient(api_key=settings.riot_api_key, region=current_user["region"])
+    stats_service = StatsService(riot_client)
+    try:
+        return await build_climb(riot_client, stats_service, current_user["id"], game_name, tag_line)
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 429:
+            raise HTTPException(status_code=429, detail="Riot API rate limit hit. Wait 2 minutes")
+        raise HTTPException(status_code=e.response.status_code, detail="Riot API error")
+    finally:
+        await riot_client.close()
+
+@router.post("/climb/goal")
+async def set_my_climb_goal(body: GoalRequest, current_user: dict = Depends(get_current_user)):
+    await set_goal(current_user["id"], body.target_tier, body.target_division)
+    return {"status": "ok"}

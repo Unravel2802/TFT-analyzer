@@ -5,6 +5,7 @@ from app.repositories.accounts import get_cached_puuid, store_puuid
 from app.repositories.matches import get_cached_matches, store_matches
 from app.services.units_meta_service import compute_unit_stats
 from app.services.stats_service import format_trait_name
+from app.services.player_lookup import resolve_puuid
 
 _sem = asyncio.Semaphore(5)
 
@@ -17,6 +18,7 @@ async def _fetch(riot_client, mid):
 async def _fetch_user_participants(riot_client, game_name, tag_line, count=20) -> list[dict]:
     name_key, tag_key = game_name.lower(), tag_line.lower()
     puuid = await asyncio.to_thread(get_cached_puuid, name_key, tag_key)
+    match_ids = await riot_client.get_match_ids(puuid, count=count)
     if puuid is None:
         account = await riot_client.get_account(game_name, tag_line)
         puuid = account["puuid"]
