@@ -52,6 +52,12 @@ class RiotClient:
         response.raise_for_status()
         return response.json()
 
+    async def get_account_by_puuid(self, puuid: str) -> dict:
+        url = f"{self.cluster_url}/riot/account/v1/accounts/by-puuid/{puuid}"
+        response = await self.client.get(url)
+        response.raise_for_status()
+        return response.json()
+
     async def get_summoner_by_puuid(self, puuid: str) -> dict:
         url = f"{self.platform_url}/lol/summoner/v4/summoners/by-puuid/{puuid}"
         response = await self.client.get(url)
