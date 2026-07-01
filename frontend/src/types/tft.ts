@@ -118,3 +118,14 @@ export interface NoteEntry {
     note: string
     updated_at: string
 }
+
+export interface LeaderboardEntry {
+    rank: number
+    game_name: string | null
+    tag_line: string | null
+    puuid: string
+    tier: string
+    league_points: number
+    wins: number
+    losses: number
+}
