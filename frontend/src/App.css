@@ -118,40 +118,24 @@
 
 .search-button:hover { opacity: 0.85; }
 
-.region-select {
-  appearance: none;
-  font-family: inherit;
-  background-color: var(--bg-card);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a0aec0'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 10px 6px;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 30px 10px 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: border-color 0.2s;
-}
-
-.region-select:focus {
-  outline: none;
-  border-color: var(--gold);
-}
-
-.region-dropdown {
+.select-box {
   position: relative;
   display: inline-block;
+  min-width: 110px;
 }
 
-.region-trigger {
+.select-box-full {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.select-box-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-width: 110px;
+  width: 100%;
   padding: 10px 12px;
   background-color: var(--bg-card);
   color: var(--text);
@@ -163,21 +147,21 @@
   transition: border-color 0.2s;
 }
 
-.region-trigger:hover,
-.region-trigger[aria-expanded='true'] {
+.select-box-trigger:hover,
+.select-box-trigger[aria-expanded='true'] {
   border-color: var(--gold);
 }
 
-.region-caret {
+.select-box-caret {
   font-size: 0.7rem;
 }
 
-.region-menu {
+.select-box-menu {
   position: absolute;
-  top: calc(100% + 4px);        /* 4px below the trigger */
+  top: calc(100% + 4px);
   left: 50%;
-  transform: translateX(-50%);  /* centered under the trigger */
-  min-width: 110px;
+  transform: translateX(-50%);
+  width: 100%;
   margin: 0;
   padding: 4px;
   list-style: none;
@@ -186,22 +170,25 @@
   border-radius: 8px;
   box-shadow: var(--shadow);
   z-index: 20;
+  max-height: 260px;
+  overflow-y: auto;
 }
 
-.region-option {
+.select-box-option {
   padding: 8px 12px;
   text-align: center;
   border-radius: 6px;
   cursor: pointer;
   color: var(--text);
+  white-space: nowrap;
 }
 
-.region-option:hover {
+.select-box-option:hover {
   background-color: var(--gold-dim);
   color: var(--text-bright);
 }
 
-.region-option-active {
+.select-box-option-active {
   color: var(--gold);
 }
 

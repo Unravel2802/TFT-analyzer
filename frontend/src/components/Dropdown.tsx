@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 
-interface Region { value: string; label: string }
+export interface Option { value: string; label: string }
 
 interface Props {
-    regions: Region[]
+    options: Option[]
     value: string
     onChange: (value: string) => void
+    fullWidth?: boolean
 }
 
-export default function RegionSelect({ regions, value, onChange }: Props) {
+export default function Dropdown({ options, value, onChange, fullWidth }: Props) {
     const [open, setOpen] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
-    const selected = regions.find(r => r.value === value)
+    const selected = options.find(o => o.value === value)
 
     // close the menu when clicking anywhere outside it
     useEffect(() => {
@@ -23,29 +24,29 @@ export default function RegionSelect({ regions, value, onChange }: Props) {
     }, [])
 
     return (
-        <div className='region-dropdown' ref={ref}>
+        <div className={fullWidth ? 'select-box select-box-full' : 'select-box'} ref={ref}>
             <button
                 type='button'
-                className='region-trigger'
+                className='select-box-trigger'
                 onClick={() => setOpen(o => !o)}
                 aria-haspopup='listbox'
                 aria-expanded={open}
             >
                 <span>{selected?.label ?? value}</span>
-                <span className='region-caret'>▾</span>
+                <span className='select-box-caret'>▾</span>
             </button>
 
             {open && (
-                <ul className='region-menu' role='listbox'>
-                    {regions.map(r => (
+                <ul className='select-box-menu' role='listbox'>
+                    {options.map(o => (
                         <li
-                            key={r.value}
+                            key={o.value}
                             role='option'
-                            aria-selected={r.value === value}
-                            className={r.value === value ? 'region-option region-option-active' : 'region-option'}
-                            onClick={() => { onChange(r.value); setOpen(false) }}
+                            aria-selected={o.value === value}
+                            className={o.value === value ? 'select-box-option select-box-option-active' : 'select-box-option'}
+                            onClick={() => { onChange(o.value); setOpen(false) }}
                         >
-                            {r.label}
+                            {o.label}
                         </li>
                     ))}
                 </ul>
