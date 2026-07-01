@@ -121,11 +121,15 @@
 .region-select {
   appearance: none;
   font-family: inherit;
-  background: var(--bg-card);
+  background-color: var(--bg-card);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a0aec0'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px 6px;
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 10px 12px;
+  padding: 10px 30px 10px 12px;
   font-size: 0.9rem;
   cursor: pointer;
   flex-shrink: 0;
@@ -137,6 +141,69 @@
   border-color: var(--gold);
 }
 
+.region-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.region-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 110px;
+  padding: 10px 12px;
+  background-color: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.region-trigger:hover,
+.region-trigger[aria-expanded='true'] {
+  border-color: var(--gold);
+}
+
+.region-caret {
+  font-size: 0.7rem;
+}
+
+.region-menu {
+  position: absolute;
+  top: calc(100% + 4px);        /* 4px below the trigger */
+  left: 50%;
+  transform: translateX(-50%);  /* centered under the trigger */
+  min-width: 110px;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  z-index: 20;
+}
+
+.region-option {
+  padding: 8px 12px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.region-option:hover {
+  background-color: var(--gold-dim);
+  color: var(--text-bright);
+}
+
+.region-option-active {
+  color: var(--gold);
+}
 
 /* ── 3. Navbar ───────────────────────────────────────────── */
 .navbar {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getLeaderboard } from './api'
 import type { LeaderboardEntry } from '@/types/tft'
+import RegionSelect from '@/components/RegionSelect'
 
 const REGIONS = [
     { value: 'NA1',  label: 'NA' },
@@ -34,13 +35,7 @@ export default function LeaderboardPage() {
             <h1 className='page-title'>Leaderboard</h1>
             <p className='page-tagline'>Top ranked players on the live ladder.</p>
 
-            <select
-                className='region-select'
-                value={region}
-                onChange={e => setRegion(e.target.value)}
-            >
-                {REGIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
-            </select>
+            <RegionSelect regions={REGIONS} value={region} onChange={setRegion} />
 
             {loading && <p className='page-tagline'>Loading leaderboard…</p>}
             {error && <div className='error-box'><p className='error-text'>{error}</p></div>}
