@@ -16,7 +16,7 @@ import CoachPage from '@/features/coach/CoachPage'
 import ClimbPage from '@/features/climb/ClimbPage'
 import SessionsPage from '@/features/sessions/SessionsPage'
 import JournalPage from '@/features/journal/JournalPage'
-
+import LeaderboardPage from '@/features/leaderboard/LeaderboardPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode}) {
     const { token } = useAuth()
@@ -65,7 +65,7 @@ function AppContent() {
                 />
 
                 {/* Public — all users */}
-                <Route path='/leaderboard' element={<PlaceholderPage title='Leaderboard' />} />
+                <Route path='/leaderboard' element={<LeaderboardPage />} />
                 <Route path='/comps' element={<CompsPage />} />
                 <Route path='/units' element={<UnitsPage />} />
                 <Route path='/help' element={<PlaceholderPage title='Help / About' />} />
