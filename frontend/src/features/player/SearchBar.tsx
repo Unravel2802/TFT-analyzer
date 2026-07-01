@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Dropdown from '@/components/Dropdown'
 
 interface SearchBarProps {
     onSearch: (region: string, gameName: string, tagLine: string) => void
@@ -59,15 +60,7 @@ export default function SearchBar({ onSearch, loading }: SearchBarProps) {
 
     return  (
         <form className='search-bar' onSubmit={handleSubmit}>
-            <select
-                className='region-select'
-                value={region}
-                onChange={e => setRegion(e.target.value)}
-            >
-                {REGIONS.map(r => (
-                    <option key={r.value} value={r.value}>{r.label}</option>
-                ))}
-            </select>
+            <Dropdown options={REGIONS} value={region} onChange={setRegion} />
             <input
                 className='search-input'
                 type='text'

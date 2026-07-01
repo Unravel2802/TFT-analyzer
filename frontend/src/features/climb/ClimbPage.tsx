@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getMyClimb, setClimbGoal } from './api'
 import type { ClimbData, RankPoint } from '@/types/tft'
+import Dropdown from '@/components/Dropdown'
 
 const TIERS = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND', 'MASTER']
 const DIVISIONS = ['IV', 'III', 'II', 'I']
@@ -94,13 +95,17 @@ export default function ClimbPage() {
 
             <form className='climb-goal-form' onSubmit={saveGoal}>
                 <span>Goal:</span>
-                <select value={tier} onChange={e => setTier(e.target.value)}>
-                    {TIERS.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
+                <Dropdown
+                    options={TIERS.map(t => ({ value: t, label: t }))}
+                    value={tier}
+                    onChange={setTier}
+                />
                 {tier !== 'MASTER' && (
-                    <select value={division} onChange={e => setDivision(e.target.value)}>
-                        {DIVISIONS.map(d => <option key={d} value={d}>{d}</option>)}
-                    </select>
+                    <Dropdown
+                        options={DIVISIONS.map(d => ({ value: d, label: d }))}
+                        value={division}
+                        onChange={setDivision}
+                    />
                 )}
                 <button className='primary-button' disabled={saving}>{saving ? 'Saving…' : 'Set goal'}</button>
             </form>

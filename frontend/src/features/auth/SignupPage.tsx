@@ -2,10 +2,18 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthContext'
 import { signup } from '@/features/auth/api'
+import Dropdown from '@/components/Dropdown'
 
 const DEFAULT_TAGS: Record<string, string> = {
     NA1: 'NA1', EUW1: 'EUW', KR: 'KR', BR1: 'BR1',
 }
+
+const REGION_OPTIONS = [
+    { value: 'NA1',  label: 'NA' },
+    { value: 'EUW1', label: 'EUW' },
+    { value: 'KR',   label: 'KR' },
+    { value: 'BR1',  label: 'BR' },
+]
 
 export default function SignupPage() {    
     const { login: setToken } = useAuth()
@@ -68,16 +76,7 @@ export default function SignupPage() {
                     onChange={e => setRiotId(e.target.value)}
                 />
 
-                <select
-                    className='search-input'
-                    value={region}
-                    onChange={e => setRegion(e.target.value)}
-                >
-                    <option value='NA1'>NA</option>
-                    <option value='EUW1'>EUW</option>
-                    <option value='KR'>KR</option>
-                    <option value='BR1'>BR</option>
-                </select>
+                <Dropdown fullWidth options={REGION_OPTIONS} value={region} onChange={setRegion} />
 
                 {error && <p className='error-text'>{error}</p>}
 
