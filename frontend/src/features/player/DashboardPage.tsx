@@ -5,6 +5,7 @@ import type { DashboardData } from '@/types/tft'
 import SearchBar from '@/features/player/SearchBar'
 import PlayerProfile from '@/features/player/PlayerProfile'
 import ProfileSkeleton from '@/features/player/ProfileSkeleton'
+import Button from '@/components/Button'
 
 export default function DashboardPage() {
     const { token } = useAuth()
@@ -56,18 +57,18 @@ export default function DashboardPage() {
             <SearchBar onSearch={handleSearch} loading={searchLoading} />
 
             {viewedData && (
-                <button className='back-button' onClick={() => setViewedData(null)}>
+                <Button variant='ghost' onClick={() => setViewedData(null)}>
                     ← Back to my profile
-                </button>
+                </Button>
             )}
 
             {loading && <ProfileSkeleton />}
             {error && (
                 <div className='error-box'>
                     <p className='error-text'>{error}</p>
-                    <button className='retry-button' onClick={() => lastAttempt.current()}>
+                    <Button onClick={() => lastAttempt.current()}>
                         Try again
-                    </button>
+                    </Button>
                 </div>
             )}
 

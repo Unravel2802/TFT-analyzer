@@ -3,6 +3,7 @@ import { useAuth } from '@/features/auth/AuthContext'
 import { getMyClimb, setClimbGoal } from './api'
 import type { ClimbData, RankPoint } from '@/types/tft'
 import Dropdown from '@/components/Dropdown'
+import Button from '@/components/Button'
 
 const TIERS = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND', 'MASTER']
 const DIVISIONS = ['IV', 'III', 'II', 'I']
@@ -107,7 +108,7 @@ export default function ClimbPage() {
                         onChange={setDivision}
                     />
                 )}
-                <button className='primary-button' disabled={saving}>{saving ? 'Saving…' : 'Set goal'}</button>
+                <Button disabled={saving}>{saving ? 'Saving…' : 'Set goal'}</Button>
             </form>
         </div>
     )

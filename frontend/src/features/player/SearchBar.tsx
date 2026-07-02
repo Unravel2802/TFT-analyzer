@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
+import Button from '@/components/Button'
 
 interface SearchBarProps {
     onSearch: (region: string, gameName: string, tagLine: string) => void
@@ -68,9 +69,9 @@ export default function SearchBar({ onSearch, loading }: SearchBarProps) {
                 value={riotId}
                 onChange={e => setRiotId(e.target.value)}
             />
-            <button className='search-button' type='submit' disabled={loading}>
+            <Button type='submit' disabled={loading}>
                 {loading ? 'Searching...': 'Search'}
-            </button>
+            </Button>
         </form>
     )
 }

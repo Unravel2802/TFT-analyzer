@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthContext'
 import { login } from '@/features/auth/api'
+import Button from '@/components/Button'
 
 export default function LoginPage() {    
     const { login: setToken } = useAuth()
@@ -51,9 +52,9 @@ export default function LoginPage() {
 
                 {error && <p className='error-text'>{error}</p>}
 
-                <button className='search-button' type='submit' disabled={loading}>
+                <Button type='submit' disabled={loading}>
                     {loading ? 'Signing in...' : 'Sign In'}
-                </button>
+                </Button>
 
                 <p className='auth-switch'>
                     Don't have an account?{' '}

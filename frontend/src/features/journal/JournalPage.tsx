@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getJournal, deleteNote } from './api'
 import type { NoteEntry } from '@/types/tft'
+import Button from '@/components/Button'
 
 export default function JournalPage() {
     const { token } = useAuth()
@@ -38,7 +39,7 @@ export default function JournalPage() {
                                 <p className='journal-note'>{n.note}</p>
                                 <div className='journal-meta'>
                                     <Link to={`/matches/${n.match_id}`} className='nav-link'>View match</Link>
-                                    <button className='text-button' onClick={() => remove(n.match_id)}>Delete</button>
+                                    <Button variant='ghost' onClick={() => remove(n.match_id)}>Delete</Button>
                                 </div>
                             </li>
                         ))}

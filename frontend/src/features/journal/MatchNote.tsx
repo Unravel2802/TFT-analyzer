@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getJournal, saveNote, deleteNote } from './api'
+import Button from '@/components/Button'
 
 export default function MatchNote({ matchId }: { matchId: string }) {
     const { token } = useAuth()
@@ -45,8 +46,8 @@ export default function MatchNote({ matchId }: { matchId: string }) {
                 rows={3}
             />
             <div className='note-actions'>
-                <button className='primary-button' onClick={save} disabled={!note.trim() || note === saved}>Save</button>
-                {saved && <button className='text-button' onClick={remove}>Delete</button>}
+                <Button onClick={save} disabled={!note.trim() || note === saved}>Save</Button>
+                {saved && <Button variant='ghost' onClick={remove}>Delete</Button>}
                 <span className='muted'>{status}</span>
             </div>
         </div>

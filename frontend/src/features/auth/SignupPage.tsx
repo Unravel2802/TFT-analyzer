@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthContext'
 import { signup } from '@/features/auth/api'
 import Dropdown from '@/components/Dropdown'
+import Button from '@/components/Button'
 
 const DEFAULT_TAGS: Record<string, string> = {
     NA1: 'NA1', EUW1: 'EUW', KR: 'KR', BR1: 'BR1',
@@ -80,9 +81,9 @@ export default function SignupPage() {
 
                 {error && <p className='error-text'>{error}</p>}
 
-                <button className='search-button' type='submit' disabled={loading}>
+                <Button type='submit' disabled={loading}>
                     {loading ? 'Creating account...' : 'Sign Up'}
-                </button>
+                </Button>
 
                 <p className='auth-switch'>
                     Already have an account?{' '}
