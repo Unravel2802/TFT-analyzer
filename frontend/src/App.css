@@ -102,21 +102,45 @@
   opacity: 0.5;
 }
 
-.search-button {
-  padding: 12px 24px;
-  background: var(--gold);
+/* shared Button component (components/Button.tsx) — variant="primary" | "ghost" */
+.btn {
   border: none;
-  border-radius: 6px;
-  color: #0a0e1a;
-  font-size: 15px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
   font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.search-button:hover { opacity: 0.85; }
+.btn-primary {
+  background-color: var(--gold);
+  color: #0a0e1a;
+  padding: 12px 28px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 16px var(--gold-glow);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 8px 16px;
+}
+
+.btn-ghost:hover {
+  background-color: var(--gold-dim);
+  color: var(--text-bright);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
 .select-box {
   position: relative;
@@ -136,24 +160,43 @@
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 20px;
   background-color: var(--bg-card);
-  color: var(--text);
+  color: var(--text-bright);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   font-family: inherit;
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.2s;
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
-.select-box-trigger:hover,
+.select-box-trigger:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
 .select-box-trigger[aria-expanded='true'] {
   border-color: var(--gold);
 }
 
+.select-box-trigger:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 .select-box-caret {
-  font-size: 0.7rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.select-box-trigger[aria-expanded='true'] .select-box-caret {
+  transform: rotate(180deg);
 }
 
 .select-box-menu {
@@ -172,6 +215,12 @@
   z-index: 20;
   max-height: 260px;
   overflow-y: auto;
+  animation: select-box-menu-in 0.15s ease-out;
+}
+
+@keyframes select-box-menu-in {
+  from { opacity: 0; transform: translate(-50%, -4px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
 .select-box-option {
@@ -234,19 +283,6 @@
   border-bottom-color: var(--gold);
 }
 
-.nav-button {
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: var(--fs-sm);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.nav-button:hover { color: var(--gold); }
-
 .nav-left {
   display: flex;
   align-items: center;
@@ -292,82 +328,7 @@
   align-items: center;
 }
 
-.text-button {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: color 0.2s;
-}
-
-.text-button:hover { color: var(--text); }
-
-.primary-button {
-  background: var(--gold);
-  color: #0d1117;
-  border: none;
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.primary-button:hover { opacity: 0.85; }
-
-
 /* ── 5. Misc buttons ─────────────────────────────────────── */
-.back-button {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  cursor: pointer;
-  padding: 4px 0;
-  margin-bottom: 8px;
-  transition: color 0.2s;
-}
-
-.back-button:hover { color: var(--text); }
-
-.logout-button {
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-size: 12px;
-  font-family: inherit;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-}
-
-.logout-button:hover {
-  border-color: var(--gold);
-  color: var(--gold);
-}
-
-.retry-button {
-  padding: 12px 4px;
-  background: var(--gold);
-  border: none;
-  border-radius: 6px;
-  color: #0a0e1a;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.retry-button:hover { opacity: 0.85; }
 
 
 /* ── 6. Profile layout ───────────────────────────────────── */
