@@ -84,7 +84,6 @@ export default function Navbar() {
                         <NavLink to='/leaderboard' className={linkClass}>Leaderboard</NavLink>
                         <NavLink to='/comps' className={linkClass}>Comps</NavLink>
                         <NavLink to='/units' className={linkClass}>Units</NavLink>
-                        <NavLink to='/augments' className={linkClass}>Augments</NavLink>
                         <NavLink to='/help' className={linkClass}>Help</NavLink>
                     </>
                 )}
