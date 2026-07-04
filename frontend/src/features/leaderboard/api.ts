@@ -1,8 +1,8 @@
-import { BASE_URL } from '@/lib/apiClient'
+import { request } from '@/lib/apiClient'
 import type { LeaderboardEntry } from '@/types/tft'
 
-export async function getLeaderboard(region: string, limit = 25): Promise<LeaderboardEntry[]> {
-    const response = await fetch(`${BASE_URL}/leaderboard/${region}?limit=${limit}`)
-    if (!response.ok) throw new Error(`Failed to fetch leaderboard: ${response.status}`)
-    return response.json() as Promise<LeaderboardEntry[]>
+export function getLeaderboard(region: string, limit = 25): Promise<LeaderboardEntry[]> {
+    return request(`/leaderboard/${region}?limit=${limit}`, {
+        fallbackError: 'Failed to fetch leaderboard',
+    })
 }

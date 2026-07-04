@@ -1,19 +1,19 @@
-import { BASE_URL } from '@/lib/apiClient'
+import { request } from '@/lib/apiClient'
 import type { ClimbData } from '@/types/tft'
 
-export async function getMyClimb(token: string): Promise<ClimbData> {
-    const r = await fetch(`${BASE_URL}/me/climb`, {
-        headers: { Authorization: `Bearer ${token}` },
-    })
-    if (!r.ok) throw new Error(`Failed to fetch climb: ${r.status}`)
-    return r.json() as Promise<ClimbData>
+export function getMyClimb(token: string): Promise<ClimbData> {
+    return request('/me/climb', { token, fallbackError: 'Failed to fetch climb' })
 }
 
-export async function setClimbGoal(token: string, target_tier: string, target_division: string): Promise<void> {
-    const r = await fetch(`${BASE_URL}/me/climb/goal`, {
+export async function setClimbGoal(
+    token: string,
+    target_tier: string,
+    target_division: string
+): Promise<void> {
+    await request('/me/climb/goal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ target_tier, target_division }),
+        token,
+        body: { target_tier, target_division },
+        fallbackError: 'Failed to set goal',
     })
-    if (!r.ok) throw new Error(`Failed to set goal: ${r.status}`)
 }
