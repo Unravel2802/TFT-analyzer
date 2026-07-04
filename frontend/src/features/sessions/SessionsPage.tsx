@@ -2,6 +2,24 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getMySessions } from './api'
 import type { SessionsInsights } from '@/types/tft'
+import BarChart from '@/components/charts/BarChart'
+
+// Lower avg placement is better, so the tallest bar is the WORST bucket.
+// Color carries the verdict instead: best bucket green, worst red, rest neutral.
+function timeOfDayBars(buckets: SessionsInsights['time_of_day']) {
+    const values = buckets.map(b => b.avg_placement)
+    const best = Math.min(...values)
+    const worst = Math.max(...values)
+    return buckets.map(b => ({
+        label: b.part,
+        value: b.avg_placement,
+        color:
+            best === worst ? 'var(--text-muted)'
+            : b.avg_placement === best ? 'var(--top4)'
+            : b.avg_placement === worst ? 'var(--bot4)'
+            : 'var(--text-muted)',
+    }))
+}
 
 export default function SessionsPage() {
     const { token } = useAuth()
@@ -24,7 +42,14 @@ export default function SessionsPage() {
     if (!data) return null
 
     const s = data.current_streak
-    const streakText = s ? `${s.count}-game ${s.type} streak` : '—'
+    const tilt = data.after_two_losses
+    // meaningfully worse = at least half a placement below your overall average
+    const tiltWorse = tilt != null && tilt.avg_placement - data.overall_avg_placement >= 0.5
+
+    const buckets = data.time_of_day
+    const bestBucket = buckets.length >= 2
+        ? buckets.reduce((a, b) => (b.avg_placement < a.avg_placement ? b : a))
+        : null
 
     return (
         <div className='page'>
@@ -36,27 +61,42 @@ export default function SessionsPage() {
             <div className='coach-grid'>
                 <div className='coach-card'>
                     <h3 className='coach-card-title'>Current streak</h3>
-                    <p className={s?.type === 'loss' ? 'coach-bad' : 'coach-good'}>{streakText}</p>
-                    {data.after_two_losses && (
-                        <p className='muted'>
-                            After 2+ losses you average {data.after_two_losses.avg_placement} ({data.after_two_losses.games}g)
+                    {s ? (
+                        <p className='streak-line'>
+                            <span className={`streak-count ${s.type === 'loss' ? 'coach-bad' : 'coach-good'}`}>
+                                {s.count}
+                            </span>
+                            <span className='streak-label'>{s.type === 'loss' ? 'losses' : 'wins'} in a row</span>
+                        </p>
+                    ) : <p className='muted'>No active streak.</p>}
+
+                    {tilt && (
+                        <p className={tiltWorse ? 'coach-bad' : 'coach-good'}>
+                            {tiltWorse
+                                ? `After two straight losses you average ${tilt.avg_placement} — noticeably below your ${data.overall_avg_placement} overall. Consider a short break after two losses.`
+                                : `After two straight losses you average ${tilt.avg_placement} vs ${data.overall_avg_placement} overall — you recover well.`}
+                            <span className='muted'> ({tilt.games} games)</span>
                         </p>
                     )}
                 </div>
 
                 <div className='coach-card'>
-                    <h3 className='coach-card-title'>Time of day</h3>
-                    {data.time_of_day.length === 0
+                    <h3 className='coach-card-title'>Avg placement by time of day</h3>
+                    {buckets.length === 0
                         ? <p className='muted'>Not enough games yet.</p>
                         : (
-                            <ul className='coach-list'>
-                                {data.time_of_day.map(b => (
-                                    <li key={b.part} className='coach-row'>
-                                        <span>{b.part}</span>
-                                        <span>{b.avg_placement} avg · {b.games}g</span>
-                                    </li>
-                                ))}
-                            </ul>
+                            <>
+                                <BarChart
+                                    bars={timeOfDayBars(buckets)}
+                                    ariaLabel='Average placement by time of day (lower is better)'
+                                    showValues
+                                    tooltipLabel={i => `${buckets[i].part} · ${buckets[i].games} games`}
+                                    max={8}
+                                />
+                                <p className='muted'>Lower is better.
+                                    {bestBucket && ` You place best in the ${bestBucket.part.toLowerCase()}.`}
+                                </p>
+                            </>
                         )}
                 </div>
             </div>

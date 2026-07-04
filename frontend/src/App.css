@@ -449,6 +449,10 @@
   box-shadow: var(--shadow);
 }
 
+.muted {
+  color: var(--text-muted);
+}
+
 .stats-panel-title {
   font-size: var(--fs-lg);
   font-weight: 700;
@@ -1195,6 +1199,21 @@
     min-height: 28px;
     background: rgba(255, 255, 255, 0.15);
     margin: 0 6px;
+}
+
+.streak-line {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+.streak-count {
+    font-size: 32px;
+    font-weight: 700;
+}
+.streak-label {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
 }
 
 .coach-grid {
