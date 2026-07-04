@@ -15,7 +15,7 @@ icons, star levels, items, and traits.
 cd backend
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-cp ".env .example" .env        # then fill in the values below
+cp .env.example .env           # then fill in the values below
 uvicorn app.main:app --reload  # serves http://localhost:8000
 ```
 

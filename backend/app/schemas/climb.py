@@ -17,6 +17,8 @@ class ClimbGoal(BaseModel):
     target_tier: str
     target_division: str
     target_abs_lp: int
+    can_change: bool
+    locked_until: str
 
 
 class ClimbProgress(BaseModel):
@@ -35,10 +37,3 @@ class ClimbData(BaseModel):
 class GoalRequest(BaseModel):
     target_tier: str
     target_division: str = ""
-
-class ClimbGoal(BaseModel):
-    target_tier: str
-    target_division: str
-    target_abs_lp: int
-    can_change: bool
-    locked_until: str
