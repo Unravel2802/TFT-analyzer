@@ -4,34 +4,28 @@ import { getMyClimb, setClimbGoal } from './api'
 import type { ClimbData, RankPoint } from '@/types/tft'
 import Dropdown from '@/components/Dropdown'
 import Button from '@/components/Button'
+import LineChart from '@/components/charts/LineChart'
 
 const TIERS = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND', 'MASTER']
 const DIVISIONS = ['IV', 'III', 'II', 'I']
 
-function LpChart({ snapshots, goalAbs }: { snapshots: RankPoint[]; goalAbs?: number }) {
-    const vals = snapshots.map(s => s.abs_lp)
-    if (vals.length === 0) return <p className='muted'>No data yet — play a ranked game and check back.</p>
+function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
 
-    const all = goalAbs != null ? [...vals, goalAbs] : vals
-    const lo = Math.min(...all), hi = Math.max(...all)
-    const range = hi - lo || 1
-    const W = 320, H = 140, pad = 24
-    const innerW = W - pad * 2, innerH = H - pad * 2
-    const n = vals.length
-    const x = (i: number) => (n <= 1 ? pad + innerW / 2 : pad + (i / (n - 1)) * innerW)
-    const y = (v: number) => pad + (1 - (v - lo) / range) * innerH   // higher LP → top
+function LpChart({ snapshots, goalAbs }: { snapshots: RankPoint[]; goalAbs?: number }) {
+    if (snapshots.length === 0) {
+        return <p className='muted'>No data yet — play a ranked game and check back.</p>
+    }
 
     return (
-        <svg className='chart' viewBox={`0 0 ${W} ${H}`}>
-            {goalAbs != null && (
-                <line x1={pad} y1={y(goalAbs)} x2={W - pad} y2={y(goalAbs)}
-                      stroke='var(--gold)' strokeDasharray='4 3' strokeWidth='1' />
-            )}
-            <polyline points={vals.map((v, i) => `${x(i)},${y(v)}`).join(' ')}
-                      fill='none' stroke='var(--gold)' strokeWidth='2'
-                      strokeLinejoin='round' strokeLinecap='round' />
-            {vals.map((v, i) => <circle key={i} cx={x(i)} cy={y(v)} r='3' fill='var(--win)' />)}
-        </svg>
+        <LineChart
+            values={snapshots.map(s => s.abs_lp)}
+            ariaLabel={`LP over time across ${snapshots.length} rank changes`}
+            formatValue={v => `${v} LP`}
+            xLabel={i => formatDate(snapshots[i].captured_at)}
+            referenceY={goalAbs}
+        />
     )
 }
 

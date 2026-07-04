@@ -51,30 +51,7 @@
   margin-top: -24px;
 }
 
-.results {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-
 /* ── 2. Search bar ───────────────────────────────────────── */
-.search-form {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-  max-width: 480px;
-}
-
 .search-bar {
   display: flex;
   gap: 8px;
@@ -555,13 +532,6 @@
 
 
 /* ── 7. Stat cards ───────────────────────────────────────── */
-.stat-cards {
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  justify-content: center;
-}
-
 .stat-card {
   flex: 1;
   max-width: 240px;
@@ -594,14 +564,6 @@
 
 
 /* ── 8. Top lists ────────────────────────────────────────── */
-.top-lists {
-  display: flex;
-  gap: 24px;
-  width: 100%;
-  justify-content: center;
-  transition: border-color 0.2s;
-}
-
 .top-list {
   flex: 1;
   max-width: 300px;
@@ -765,32 +727,6 @@
   letter-spacing: 1px;
 }
 
-.match-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.match-tag {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-}
-
-.unit-tag {
-  background: rgba(200, 155, 60, 0.1);
-  color: var(--gold);
-  border: 1px solid rgba(200, 155, 60, 0.2);
-}
-
-.trait-tag {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-
 /* ── 11. Match boards (expanded detail) ──────────────────── */
 .match-boards { display: flex; flex-direction: column; gap: var(--space-3); }
 
@@ -811,7 +747,6 @@
 .board-name { font-weight: 600; color: var(--text-bright); }
 .board-level { color: var(--text-muted); font-size: var(--fs-sm); }
 .board-units { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-2); }
-.board-traits { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 
 .match-fulllink {
   display: inline-block;
@@ -827,40 +762,6 @@
 
 
 /* ── 12. Units, items & traits ───────────────────────────── */
-.match-units {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
-}
-
-.unit-icon-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.unit-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  object-fit: cover;
-}
-
-.unit-fallback {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--fs-xs);
-  background: var(--bg-card-hover);
-  border-radius: var(--radius-sm);
-  text-align: center;
-}
-
 .board-unit {
   display: flex;
   flex-direction: column;
@@ -906,14 +807,6 @@
 
 .unit-items { display: flex; gap: 1px; height: 16px; }
 .item-icon { width: 16px; height: 16px; border-radius: 2px; }
-
-.trait-chip {
-  font-size: var(--fs-xs);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--bg-card-hover);
-  color: var(--text);
-}
 
 .trait-row {
   display: flex;
@@ -1227,7 +1120,6 @@
 .climb-bar { height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 5px; overflow: hidden; }
 .climb-bar-fill { height: 100%; background: var(--gold); }
 .climb-goal-form { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-.climb-goal-form select { padding: 4px 8px; background: var(--panel, #1a1a22); color: inherit; border: 1px solid var(--border); border-radius: 4px; }
 
 
 /* Journal */

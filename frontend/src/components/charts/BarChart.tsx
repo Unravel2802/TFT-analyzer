@@ -15,6 +15,8 @@ interface BarChartProps {
     max?: number
     /** print the value on each bar cap (tooltips still work) */
     showValues?: boolean
+    /** tooltip secondary line; defaults to the bar's axis label */
+    tooltipLabel?: (i: number) => string
 }
 
 // Rounded data-end (top), square at the baseline — per the mark spec.
@@ -37,6 +39,7 @@ export default function BarChart({
     formatValue = String,
     max,
     showValues = false,
+    tooltipLabel,
 }: BarChartProps) {
     const [hover, setHover] = useState<number | null>(null)
     if (bars.length === 0) return null
@@ -92,7 +95,7 @@ export default function BarChart({
                                 fill='transparent'
                                 onPointerEnter={() => setHover(i)}
                             >
-                                <title>{`${b.label}: ${formatValue(b.value)}`}</title>
+                                <title>{`${tooltipLabel ? tooltipLabel(i) : b.label}: ${formatValue(b.value)}`}</title>
                             </rect>
                         </g>
                     )
@@ -108,7 +111,9 @@ export default function BarChart({
                     }}
                 >
                     <span className='chart-tooltip-value'>{formatValue(bars[hover].value)}</span>
-                    <span className='chart-tooltip-label'>{bars[hover].label}</span>
+                    <span className='chart-tooltip-label'>
+                        {tooltipLabel ? tooltipLabel(hover) : bars[hover].label}
+                    </span>
                 </div>
             )}
         </div>
