@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getUnitsMeta } from './api'
 import type { UnitStat } from '@/types/tft'
-import { championFace, championCost } from '@/lib/gameAssets'
+import UnitPortrait from '@/components/UnitPortrait'
 
 type SortKey = 'play_rate' | 'avg_placement' | 'top4_rate' | 'games'
 
@@ -48,14 +48,11 @@ export default function UnitsPage() {
                 </thead>
                 <tbody>
                     {sorted.map(u => {
-                        const cost = championCost(u.unit_id) ?? 1
                         return (
                             <tr key={u.unit_id}>
                                 <td className='unit-cell'>
-                                    <div className={`unit-portrait cost-${cost}`} title={u.unit_id}>
-                                        <img className='portrait-img' src={championFace(u.unit_id)} alt={u.name} loading='lazy' decoding='async' />            
-                                    </div>     
-                                    <span>{u.name}</span>     
+                                    <UnitPortrait id={u.unit_id} />
+                                    <span>{u.name}</span>
                                 </td>
                                 <td>{u.play_rate}%</td>
                                 <td>{u.avg_placement}</td>

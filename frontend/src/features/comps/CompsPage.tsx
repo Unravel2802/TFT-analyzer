@@ -1,31 +1,81 @@
 import { useEffect, useState } from 'react'
 import { getCompsMeta } from './api'
-import { championFace, championCost, itemIcon } from '@/lib/gameAssets'
+import { itemIcon } from '@/lib/gameAssets'
 import type { CompStat, CompUnit } from '@/types/tft'
+import UnitPortrait from '@/components/UnitPortrait'
+import Dropdown from '@/components/Dropdown'
 
-type SortKey = 'play_rate' | 'avg_placement' | 'top4_rate' | 'win_rate' | 'games'
+type SortKey = 'avg_placement' | 'top4_rate' | 'win_rate' | 'play_rate' | 'games'
 
-function Portrait({ unit }: { unit: CompUnit }) {
-    const [failed, setFailed] = useState(false)
-    const cost = championCost(unit.id) ?? 1
-    const short = unit.id.split('_').pop() ?? unit.id
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+    { value: 'avg_placement', label: 'Avg placement' },
+    { value: 'top4_rate', label: 'Top 4 rate' },
+    { value: 'win_rate', label: 'Win rate' },
+    { value: 'play_rate', label: 'Play rate' },
+    { value: 'games', label: 'Games' },
+]
+
+function CompUnitTile({ unit }: { unit: CompUnit }) {
     return (
         <div className='comp-unit'>
-            <div className={`unit-portrait cost-${cost}`} title={unit.id}>
-                {failed
-                    ? <div className='portrait-fallback'>{short}</div>
-                    : <img className='portrait-img' src={championFace(unit.id)} alt={short} loading='lazy' decoding='async' onError={() => setFailed(true)} />
-                }
-            </div>
+            <UnitPortrait id={unit.id} />
             {unit.items.length > 0 && (
                 <div className='comp-unit-items'>
                     {unit.items.map((it, i) => {
                         const img = itemIcon(it)
-                        return img ? <img key={i} className='item-icon' src={img} alt={it} title={it} loading='lazy' decoding='async' /> : null
+                        return img
+                            ? <img key={i} className='item-icon' src={img} alt={it} title={it} loading='lazy' decoding='async' />
+                            : null
                     })}
                 </div>
             )}
         </div>
+    )
+}
+
+// A small horizontal meter reads much faster than a bare percentage.
+function StatMeter({ label, value, color }: { label: string; value: number; color: string }) {
+    return (
+        <div className='stat-meter'>
+            <span className='stat-meter-label'>{label}</span>
+            <div className='stat-meter-track'>
+                <div className='stat-meter-fill' style={{ width: `${Math.min(value, 100)}%`, background: color }} />
+            </div>
+            <span className='stat-meter-value'>{value}%</span>
+        </div>
+    )
+}
+
+function CompCard({ comp, rank }: { comp: CompStat; rank: number }) {
+    return (
+        <section className='comp-card'>
+            <header className='comp-card-head'>
+                <span className='comp-rank'>#{rank}</span>
+                <h2 className='comp-name'>{comp.name}</h2>
+                <span className='comp-meta'>{comp.games} games · {comp.play_rate}% play rate</span>
+            </header>
+            <div className='comp-card-body'>
+                <div className='comp-units'>
+                    {comp.core_units.map(u => <CompUnitTile key={u.id} unit={u} />)}
+                    {comp.flex_units.length > 0 && <span className='comp-flex-divider' />}
+                    {comp.flex_units.map(u => (
+                        <div key={u.id} className='comp-flex'>
+                            <CompUnitTile unit={u} />
+                        </div>
+                    ))}
+                </div>
+                <div className='comp-stats'>
+                    <div className='comp-avg'>
+                        <span className='comp-avg-value'>{comp.avg_placement}</span>
+                        <span className='comp-avg-label'>avg place</span>
+                    </div>
+                    <div className='comp-meters'>
+                        <StatMeter label='Top 4' value={comp.top4_rate} color='var(--top4)' />
+                        <StatMeter label='Win' value={comp.win_rate} color='var(--win)' />
+                    </div>
+                </div>
+            </div>
+        </section>
     )
 }
 
@@ -44,6 +94,7 @@ export default function CompsPage() {
         return () => { active = false }
     }, [])
 
+    // lower avg placement is better; every other stat sorts high-first
     const sorted = [...comps].sort((a, b) =>
         sortKey === 'avg_placement' ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey]
     )
@@ -58,39 +109,20 @@ export default function CompsPage() {
     return (
         <div className='page'>
             <h1 className='page-title'>Comps</h1>
-            <p className='page-tagline'>Best team comps by average placement across tracked games.</p>
+            <p className='page-tagline'>Best team comps across tracked games. Core units always play; flex units (dimmed) are situational.</p>
 
-            <table className='meta-table'>
-                <thead>
-                    <tr>
-                        <th>Comp</th>
-                        <th className='sortable' onClick={() => setSortKey('play_rate')}>Play rate</th>
-                        <th className='sortable' onClick={() => setSortKey('avg_placement')}>Avg place</th>
-                        <th className='sortable' onClick={() => setSortKey('top4_rate')}>Top 4</th>
-                        <th className='sortable' onClick={() => setSortKey('win_rate')}>Win %</th>
-                        <th className='sortable' onClick={() => setSortKey('games')}>Games</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sorted.map(c => (
-                        <tr key={c.name}>
-                            <td>
-                                <div className='comp-name'>{c.name}</div>
-                                <div className='comp-units'>
-                                    {c.core_units.map(u  => <Portrait key={u.id} unit={u} />)}
-                                    {c.flex_units.length > 0 && <span className='comp-flex-divider' />}
-                                    {c.flex_units.map(u => <Portrait key={u.id} unit={u} />)}
-                                </div>
-                            </td>
-                            <td>{c.play_rate}%</td>
-                            <td>{c.avg_placement}</td>
-                            <td>{c.top4_rate}%</td>
-                            <td>{c.win_rate}%</td>
-                            <td>{c.games}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className='comps-toolbar'>
+                <span className='comps-toolbar-label'>Sort by</span>
+                <Dropdown
+                    options={SORT_OPTIONS}
+                    value={sortKey}
+                    onChange={v => setSortKey(v as SortKey)}
+                />
+            </div>
+
+            <div className='comp-list'>
+                {sorted.map((c, i) => <CompCard key={c.name} comp={c} rank={i + 1} />)}
+            </div>
         </div>
     )
 }
