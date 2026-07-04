@@ -5,6 +5,7 @@ import type { ClimbData, RankPoint } from '@/types/tft'
 import Dropdown from '@/components/Dropdown'
 import Button from '@/components/Button'
 import LineChart from '@/components/charts/LineChart'
+import { absLpToRank, rankTickLabel, rankGridValues } from '@/lib/rank'
 
 const TIERS = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND', 'MASTER']
 const DIVISIONS = ['IV', 'III', 'II', 'I']
@@ -18,11 +19,16 @@ function LpChart({ snapshots, goalAbs }: { snapshots: RankPoint[]; goalAbs?: num
         return <p className='muted'>No data yet — play a ranked game and check back.</p>
     }
 
+    const values = snapshots.map(s => s.abs_lp)
+    const all = goalAbs != null ? [...values, goalAbs] : values
+
     return (
         <LineChart
-            values={snapshots.map(s => s.abs_lp)}
-            ariaLabel={`LP over time across ${snapshots.length} rank changes`}
-            formatValue={v => `${v} LP`}
+            values={values}
+            ariaLabel={`Rank over time across ${snapshots.length} rank changes`}
+            gridValues={rankGridValues(Math.min(...all), Math.max(...all))}
+            formatValue={absLpToRank}
+            formatTick={rankTickLabel}
             xLabel={i => formatDate(snapshots[i].captured_at)}
             referenceY={goalAbs}
         />
