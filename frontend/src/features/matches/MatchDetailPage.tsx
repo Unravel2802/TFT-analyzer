@@ -5,10 +5,7 @@ import type { MatchDetail } from '@/types/tft'
 import UnitBoard from '@/components/UnitBoard'
 import TraitRow from '@/components/TraitRow'
 import MatchNote from '@/features/journal/MatchNote'
-
-function placementClass(p: number): string {
-    return p === 1 ? 'result-win' : p <= 4 ? 'result-top4' : 'result-bot4'
-}
+import { placementClass } from '@/lib/placement'
 
 export default function MatchDetailPage() {
     const { id } = useParams<{ id: string }>()

@@ -1,4 +1,5 @@
 import type { MatchEntry } from '@/types/tft'
+import { placementColor } from '@/lib/placement'
 
 export default function PlacementTrend({ matches }: { matches: MatchEntry[] }) {
     // Riot returns newest-first; reverse so the line reads left→right = old→new
@@ -31,8 +32,7 @@ export default function PlacementTrend({ matches }: { matches: MatchEntry[] }) {
             <polyline points={line} fill='none' stroke='var(--gold)'
                       strokeWidth='2' strokeLinejoin='round' strokeLinecap='round' />
             {points.map((p, i) => (
-                <circle key={i} cx={x(i)} cy={y(p)} r='3'
-                        fill={p === 1 ? 'var(--win)' : p <= 4 ? 'var(--top4)' : 'var(--bot4)'} />
+                <circle key={i} cx={x(i)} cy={y(p)} r='3' fill={placementColor(p)} />
             ))}
         </svg>
     )

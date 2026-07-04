@@ -1,5 +1,5 @@
-
 import type { MatchEntry } from '@/types/tft'
+import { placementColor } from '@/lib/placement'
 
 export default function PlacementDistribution({ matches }: { matches: MatchEntry[] }) {
     // tally how many times each placement 1..8 happened
@@ -21,11 +21,9 @@ export default function PlacementDistribution({ matches }: { matches: MatchEntry
                 const bx = pad + i * slot + (slot - barW) / 2
                 const by = pad + innerH - h               // grow UP from baseline
                 const placement = i + 1
-                const color = placement === 1 ? 'var(--win)'
-                            : placement <= 4 ? 'var(--top4)' : 'var(--bot4)'
                 return (
                     <g key={i}>
-                        <rect x={bx} y={by} width={barW} height={h} rx='2' fill={color} />
+                        <rect x={bx} y={by} width={barW} height={h} rx='2' fill={placementColor(placement)} />
                         {c > 0 && (
                             <text x={bx + barW / 2} y={by - 4} textAnchor='middle'
                                   fontSize='9' fill='var(--text-bright)'>{c}</text>

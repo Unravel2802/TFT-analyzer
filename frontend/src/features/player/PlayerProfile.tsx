@@ -4,20 +4,16 @@ import TopList from './TopList'
 import MatchHistory from './MatchHistory'
 import PlacementTrend from './PlacementTrend'
 import PlacementDistribution from './PlacementDistribution'
+import { placementBucket } from '@/lib/placement'
 
 function PlacementGrid({ data }: { data: DashboardData }) {
     return (
         <div className='placement-grid'>
-            {data.matches.map((match, i) => {
-                const p = match.placement
-                const colorClass =
-                    p === 1 ? 'bubble-first' :
-                    p <= 4  ? 'bubble-top4' :
-                    'bubble-bot4'
-                return (
-                    <div key={i} className={`placement-bubble ${colorClass}`}>{p}</div>
-                )
-            })}
+            {data.matches.map((match, i) => (
+                <div key={i} className={`placement-bubble bubble-${placementBucket(match.placement)}`}>
+                    {match.placement}
+                </div>
+            ))}
         </div>
     )
 }

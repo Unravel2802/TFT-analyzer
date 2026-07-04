@@ -4,17 +4,7 @@ import { useAuth } from '@/features/auth/AuthContext'
 import { signup } from '@/features/auth/api'
 import Dropdown from '@/components/Dropdown'
 import Button from '@/components/Button'
-
-const DEFAULT_TAGS: Record<string, string> = {
-    NA1: 'NA1', EUW1: 'EUW', KR: 'KR', BR1: 'BR1',
-}
-
-const REGION_OPTIONS = [
-    { value: 'NA1',  label: 'NA' },
-    { value: 'EUW1', label: 'EUW' },
-    { value: 'KR',   label: 'KR' },
-    { value: 'BR1',  label: 'BR' },
-]
+import { REGION_OPTIONS, defaultTagFor } from '@/lib/regions'
 
 export default function SignupPage() {    
     const { login: setToken } = useAuth()
@@ -24,7 +14,7 @@ export default function SignupPage() {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const [riotId, setRiotId] = useState('')
-    const [region, setRegion] = useState('NA1')
+    const [region, setRegion] = useState('na')
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -34,7 +24,7 @@ export default function SignupPage() {
         try {
             const fullRiotId = riotId.includes('#')
                 ? riotId
-                : `${riotId}#${DEFAULT_TAGS[region] ?? region}`
+                : `${riotId}#${defaultTagFor(region)}`
             const data = await signup(email, password, fullRiotId, region)
             setToken(data.access_token)
             navigate('/dashboard')

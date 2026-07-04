@@ -2,19 +2,10 @@ import { useEffect, useState } from 'react'
 import { getLeaderboard } from './api'
 import type { LeaderboardEntry } from '@/types/tft'
 import Dropdown from '@/components/Dropdown'
-
-const REGIONS = [
-    { value: 'NA1',  label: 'NA' },
-    { value: 'EUW1', label: 'EUW' },
-    { value: 'EUN1', label: 'EUNE' },
-    { value: 'KR',   label: 'KR' },
-    { value: 'BR1',  label: 'BR' },
-    { value: 'JP1',  label: 'JP' },
-    { value: 'OC1',  label: 'OCE' },
-]
+import { REGION_OPTIONS } from '@/lib/regions'
 
 export default function LeaderboardPage() {
-    const [region, setRegion] = useState('NA1')
+    const [region, setRegion] = useState('na')
     const [rows, setRows] = useState<LeaderboardEntry[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -35,7 +26,7 @@ export default function LeaderboardPage() {
             <h1 className='page-title'>Leaderboard</h1>
             <p className='page-tagline'>Top ranked players on the live ladder.</p>
 
-            <Dropdown options={REGIONS} value={region} onChange={setRegion} />
+            <Dropdown options={REGION_OPTIONS} value={region} onChange={setRegion} />
 
             {loading && <p className='page-tagline'>Loading leaderboard…</p>}
             {error && <div className='error-box'><p className='error-text'>{error}</p></div>}
