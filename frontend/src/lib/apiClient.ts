@@ -1,5 +1,14 @@
 export const BASE_URL = import.meta.env?.VITE_API_URL ?? 'http://localhost:8000'
 
+// Called when a token-bearing request gets a 401 (expired/invalid session).
+// AuthContext registers itself here so the layering stays one-directional:
+// apiClient never imports React code.
+let onUnauthorized: (() => void) | null = null
+
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+    onUnauthorized = handler
+}
+
 export class ApiError extends Error {
     status: number
 
@@ -46,6 +55,7 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
     })
 
     if (!res.ok) {
+        if (res.status === 401 && opts.token) onUnauthorized?.()
         const fallback = opts.fallbackError ?? `Request failed: ${res.status}`
         throw new ApiError(await extractErrorMessage(res, fallback), res.status)
     }
