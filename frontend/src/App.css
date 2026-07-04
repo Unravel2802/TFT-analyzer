@@ -895,6 +895,18 @@
 
 
 /* ── 14. Skeletons (loading) ─────────────────────────────── */
+.skeleton-cell {
+  height: 14px;
+  min-width: 48px;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-card {
+  height: 120px;
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -1062,9 +1074,29 @@
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.meta-table th.sortable {
+/* a real <button> inside the th keeps sorting keyboard-operable */
+.th-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    background: none;
+    border: none;
     cursor: pointer;
-    user-select: none;
+    font: inherit;
+    color: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+}
+.th-sort:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+.th-sort-icon {
+    font-size: 8px;
+    color: var(--gold);
+    min-width: 10px;      /* reserve space so columns don't shift on sort */
 }
 .unit-cell {
     display: flex;

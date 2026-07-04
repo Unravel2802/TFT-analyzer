@@ -99,7 +99,14 @@ export default function CompsPage() {
         sortKey === 'avg_placement' ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey]
     )
 
-    if (loading) return <div className='page'><p className='page-tagline'>Loading comps…</p></div>
+    if (loading) return (
+        <div className='page'>
+            <h1 className='page-title'>Comps</h1>
+            <div className='comp-list' aria-hidden='true'>
+                {Array.from({ length: 4 }, (_, i) => <div key={i} className='skeleton skeleton-card' />)}
+            </div>
+        </div>
+    )
     if (error) return (
         <div className='page'>
             <div className='error-box'><p className='error-text'>{error}</p></div>

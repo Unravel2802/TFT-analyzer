@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getLeaderboard } from './api'
 import type { LeaderboardEntry } from '@/types/tft'
 import Dropdown from '@/components/Dropdown'
+import TableSkeleton from '@/components/TableSkeleton'
 import { REGION_OPTIONS } from '@/lib/regions'
 
 export default function LeaderboardPage() {
@@ -28,7 +29,7 @@ export default function LeaderboardPage() {
 
             <Dropdown options={REGION_OPTIONS} value={region} onChange={setRegion} />
 
-            {loading && <p className='page-tagline'>Loading leaderboard…</p>}
+            {loading && <TableSkeleton rows={10} cols={6} />}
             {error && <div className='error-box'><p className='error-text'>{error}</p></div>}
 
             {!loading && !error && (
