@@ -105,8 +105,16 @@ export default function SessionsPage() {
                                     max={8}
                                 />
                                 <div className='tod-foot'>
-                                    {bestBucket && <span className='tod-chip tod-chip-good'>Best · {bestBucket.part}</span>}
-                                    {worstBucket && <span className='tod-chip tod-chip-bad'>Worst · {worstBucket.part}</span>}
+                                    {bestBucket && (
+                                        <span className='tod-chip tod-chip-good'>
+                                            Best · {bestBucket.part} ({bestBucket.games}g)
+                                        </span>
+                                    )}
+                                    {worstBucket && (
+                                        <span className='tod-chip tod-chip-bad'>
+                                            Worst · {worstBucket.part} ({worstBucket.games}g)
+                                        </span>
+                                    )}
                                     <span className='insight-empty'>Lower is better</span>
                                 </div>
                             </>
