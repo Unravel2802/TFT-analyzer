@@ -52,8 +52,9 @@ export default function DashboardPage() {
 
     return (
         <div className='page'>
-            <p className='page-tagline'>Know your game. Climb your rank.</p>
-
+            {/* The loaded profile below carries its own identity header, so the
+                dashboard leads with the scout-a-player search rather than a
+                stray marketing tagline. */}
             <SearchBar onSearch={handleSearch} loading={searchLoading} />
 
             {viewedData && (

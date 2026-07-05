@@ -4,9 +4,15 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 ---
 
-## 2026-07-05 — Comps card layout consistency
+## 2026-07-05 — Frontend consistency pass (all pages)
 
-- **`fix(comps)`** — Comp cards silently flipped layout based on unit count: `.comp-card-body` was a flex row with `flex-wrap`, so wide boards (many units) pushed the stats block onto a second line (stats *below*) while narrow boards kept it inline (stats *right*). Pinned it to one horizontal layout — `.comp-units` now grows to fill the row (`flex: 1 1 auto; min-width: 0`) and wraps its portraits internally, and `.comp-stats` never shrinks (`flex: 0 0 auto`) — so the avg-place + Top4/Win block sits on the right for every card regardless of roster size. Verified with a headless-Chrome screenshot of `/comps` (6 cards, all aligned).
+Audited every page (screenshots of public pages + source review of auth-gated ones); fixing the uneven bits in reviewable steps.
+
+- **`fix(landing)`** — The homepage was broken: `.page-tagline` carries `margin-top:-24px` to hug a `.page-title`, but SearchPage/DashboardPage have no title, so the tagline yanked up under the navbar and the search bar floated over an empty void. Gave SearchPage a real self-contained `.hero-search` (headline + subtitle + search + quick-links to Leaderboard/Comps/Units), shown only until a search resolves (then PlayerProfile's own identity header takes over). Dropped the out-of-place marketing tagline from the logged-in DashboardPage.
+
+### Earlier today
+
+- **`fix(comps)` `b8988f7`** — Comp cards silently flipped layout based on unit count: `.comp-card-body` was a flex row with `flex-wrap`, so wide boards (many units) pushed the stats block onto a second line (stats *below*) while narrow boards kept it inline (stats *right*). Pinned it to one horizontal layout — `.comp-units` now grows to fill the row (`flex: 1 1 auto; min-width: 0`) and wraps its portraits internally, and `.comp-stats` never shrinks (`flex: 0 0 auto`) — so the avg-place + Top4/Win block sits on the right for every card regardless of roster size. Verified with a headless-Chrome screenshot of `/comps` (6 cards, all aligned).
 
 ---
 

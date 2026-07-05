@@ -51,6 +51,44 @@
   margin-top: -24px;
 }
 
+/* Landing hero (search page). Self-contained so it doesn't depend on the
+   .page-title/.page-tagline pair the way inner pages do. */
+.hero-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  padding-top: 32px;
+}
+.hero-search-title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 1px;
+  color: var(--text-bright);
+}
+.hero-search-sub {
+  margin: -8px 0 0;
+  max-width: 440px;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+.hero-search-links {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.hero-search-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-search-links a:hover { color: var(--gold); }
+
 /* ── 2. Search bar ───────────────────────────────────────── */
 .search-bar {
   display: flex;
