@@ -4,11 +4,38 @@ import { getMyCoach } from './api'
 import type { CoachInsights, CoachStat } from '@/types/tft'
 import PageHeader from '@/components/PageHeader'
 
+// Fewer than this many games is a shaky sample — dim the row so a lucky/unlucky
+// 3-game streak isn't read as a hard verdict.
+const LOW_SAMPLE = 5
+
 // A signed delta vs the player's overall average. Negative = better than
 // average (good), positive = worse. Rendered with a proper minus sign.
 function fmtDelta(diff: number): string {
     const rounded = Math.abs(diff).toFixed(1)
     return diff <= 0 ? `−${rounded}` : `+${rounded}`
+}
+
+// The single strongest / weakest pick across both traits and units, so the
+// takeaway banner can name one thing to lean into and one leak to plug.
+function pickExtreme(a: CoachStat[], b: CoachStat[], worst: boolean): CoachStat | null {
+    const all = [...a, ...b]
+    if (all.length === 0) return null
+    return all.reduce((best, s) =>
+        (worst ? s.avg_placement > best.avg_placement : s.avg_placement < best.avg_placement) ? s : best)
+}
+
+function Takeaway({ label, tone, stat }: { label: string; tone: 'good' | 'bad'; stat: CoachStat }) {
+    return (
+        <div className={`takeaway-item takeaway-${tone}`}>
+            <span className='takeaway-icon'>{tone === 'good' ? '▲' : '▼'}</span>
+            <div>
+                <div className='takeaway-label'>{label}</div>
+                <div className='takeaway-body'>
+                    <strong>{stat.name}</strong> — {stat.avg_placement} avg over {stat.games} games
+                </div>
+            </div>
+        </div>
+    )
 }
 
 function InsightCard({
@@ -26,17 +53,26 @@ function InsightCard({
                     <ul className='insight-rows'>
                         {stats.map((s, i) => {
                             const diff = s.avg_placement - overall
+                            const low = s.games < LOW_SAMPLE
                             return (
-                                <li key={s.name} className='insight-row'>
+                                <li key={s.name} className={`insight-row${low ? ' insight-row-low' : ''}`}>
                                     <span className='insight-rank'>{i + 1}</span>
                                     <span className='insight-name'>{s.name}</span>
+                                    <span className='insight-avg'>
+                                        {s.avg_placement}<span className='insight-avg-unit'>avg</span>
+                                    </span>
                                     <span
                                         className={`insight-delta insight-delta-${tone}`}
                                         title={`${s.avg_placement} avg vs ${overall} overall`}
                                     >
                                         {fmtDelta(diff)}
                                     </span>
-                                    <span className='insight-games'>{s.games}g</span>
+                                    <span
+                                        className='insight-games'
+                                        title={low ? 'Small sample — read with caution' : undefined}
+                                    >
+                                        {s.games}g
+                                    </span>
                                 </li>
                             )
                         })}
@@ -65,6 +101,9 @@ export default function CoachPage() {
     if (error) return <div className='page'><div className='error-box'><p className='error-text'>{error}</p></div></div>
     if (!data) return null
 
+    const lean = pickExtreme(data.best_traits, data.best_units, false)
+    const leak = pickExtreme(data.worst_traits, data.worst_units, true)
+
     return (
         <div className='page page-doc'>
             <PageHeader
@@ -72,6 +111,13 @@ export default function CoachPage() {
                 subtitle={`What's working — and what's costing you — across your last ${data.games_analyzed} games`}
                 stats={[{ label: 'Overall avg', value: data.overall_avg_placement }]}
             />
+
+            {lean && leak && (
+                <div className='coach-takeaway'>
+                    <Takeaway label='Lean into' tone='good' stat={lean} />
+                    <Takeaway label='Biggest leak' tone='bad' stat={leak} />
+                </div>
+            )}
 
             <div className='insight-grid'>
                 <InsightCard title='Best traits' stats={data.best_traits} tone='good' overall={data.overall_avg_placement} />
