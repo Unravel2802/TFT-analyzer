@@ -68,6 +68,10 @@ function AppContent() {
                 <Route path='/leaderboard' element={<LeaderboardPage />} />
                 <Route path='/comps' element={<CompsPage />} />
                 <Route path='/units' element={<UnitsPage />} />
+                {/* Deep-linkable player view (e.g. from leaderboard names). Public and
+                    param-driven, so it works whether or not you're signed in — unlike '/'
+                    which redirects logged-in users to /dashboard. */}
+                <Route path='/player' element={<SearchPage />} />
                 <Route path='/help' element={<PlaceholderPage title='Help / About' />} />
 
                 {/* Signed-in only */}

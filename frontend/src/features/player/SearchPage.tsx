@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { getPlayerDashboard } from '@/features/player/api'
+import { defaultTagFor } from '@/lib/regions'
 import type { DashboardData } from '@/types/tft'
 import SearchBar from '@/features/player/SearchBar'
 import PlayerProfile from '@/features/player/PlayerProfile'
 
 export default function SearchPage() {
+    const [searchParams] = useSearchParams()
     const [data, setData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -22,6 +24,16 @@ export default function SearchPage() {
             setLoading(false)
         }
     }
+
+    // Deep link: /player?region=na&name=Foo&tag=NA1 (leaderboard names point here).
+    // Re-runs whenever the params change so navigating between players refetches.
+    const qRegion = searchParams.get('region') ?? 'na'
+    const qName = searchParams.get('name') ?? ''
+    const qTag = searchParams.get('tag') ?? ''
+    useEffect(() => {
+        if (qName) handleSearch(qRegion, qName, qTag || defaultTagFor(qRegion))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [qRegion, qName, qTag])
 
     return (
         <div className='page'>

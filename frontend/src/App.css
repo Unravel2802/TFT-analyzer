@@ -377,17 +377,18 @@
   box-shadow: var(--shadow);
 }
 
-/* tier colour, set on the card so the whole card (emblem glow, border, tint) inherits it */
-.identity-card[data-tier="iron"]        { --tier-color: #8a8a8a; }
-.identity-card[data-tier="bronze"]      { --tier-color: #8c523a; }
-.identity-card[data-tier="silver"]      { --tier-color: #a0a9b4; }
-.identity-card[data-tier="gold"]        { --tier-color: #c89b3c; }
-.identity-card[data-tier="platinum"]    { --tier-color: #0bc4b4; }
-.identity-card[data-tier="emerald"]     { --tier-color: #1aaa55; }
-.identity-card[data-tier="diamond"]     { --tier-color: #576bce; }
-.identity-card[data-tier="master"]      { --tier-color: #9d48e0; }
-.identity-card[data-tier="grandmaster"] { --tier-color: #e06c4a; }
-.identity-card[data-tier="challenger"]  { --tier-color: #e8c44a; }
+/* tier colour, set via data-tier so any element (identity card, leaderboard
+   badge) that carries the attribute inherits --tier-color for its descendants */
+[data-tier="iron"]        { --tier-color: #8a8a8a; }
+[data-tier="bronze"]      { --tier-color: #8c523a; }
+[data-tier="silver"]      { --tier-color: #a0a9b4; }
+[data-tier="gold"]        { --tier-color: #c89b3c; }
+[data-tier="platinum"]    { --tier-color: #0bc4b4; }
+[data-tier="emerald"]     { --tier-color: #1aaa55; }
+[data-tier="diamond"]     { --tier-color: #576bce; }
+[data-tier="master"]      { --tier-color: #9d48e0; }
+[data-tier="grandmaster"] { --tier-color: #e06c4a; }
+[data-tier="challenger"]  { --tier-color: #e8c44a; }
 
 /* crest = the emblem framing the tactician + profile-icon circles, in the upper card */
 .crest {
@@ -1149,6 +1150,33 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+/* Leaderboard: player names link to their profile; tier shows as a compact
+   colour-coded badge instead of the same word shouted on every row. */
+.lb-player {
+    color: var(--text-bright);
+    text-decoration: none;
+}
+.lb-player:hover { color: var(--gold); }
+.lb-tag { color: var(--text-muted); }
+.lb-player:hover .lb-tag { color: inherit; }
+.lb-player-anon { color: var(--text-muted); }
+.tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+.tier-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tier-color, var(--gold));
+    box-shadow: 0 0 6px color-mix(in srgb, var(--tier-color, var(--gold)) 60%, transparent);
 }
 
 .comps-toolbar {
