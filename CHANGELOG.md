@@ -4,6 +4,19 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 ---
 
+## 2026-07-05 — Climb goal journeys + reset, coach items/playstyle, dashboard form
+
+Deepened the three player-facing pages. First session to add new backend surface since the analytics endpoints: one new route, no schema migrations (journey time is derived from data already stored).
+
+- **`feat(climb)` — goal journey tracking.** When a goal is set, the page now tracks the chase itself: day count since the goal was set, LP gained since then, LP/day pace (only quoted after a full day, so one lucky game can't extrapolate into hundreds of LP/day), and a rough ETA at current pace. No new columns: the goal row's `updated_at` is the journey start (now written explicitly on upsert — a column default only fires on INSERT, not on an upsert's conflict-UPDATE), and the rank at that moment is recovered as the last `rank_snapshots` row captured at or before it. The progress bar now also measures from where you were when you set the goal, not your first-ever snapshot.
+- **`feat(climb)` — reset goal.** New `DELETE /me/climb/goal` + a two-click "Reset goal → Confirm reset" button. Reset works even while the 7-day goal lock is active (deliberate two-step escape hatch); the lock itself is now actually surfaced in the UI — the change-goal button disables with a note saying when it unlocks, instead of letting you submit into a mystery 409.
+- **`feat(coach)` — item insights + playstyle.** Best/worst **items** cards alongside traits/units (per-board deduped, junk ids like `EmptyBag`/set-mechanic anomaly items filtered, `TFT_Item_GuinsoosRageblade` → "Guinsoos Rageblade"), and a "How your games end" strip: avg end level, avg exit stage (round number converted to the in-game "5-3" label), avg damage dealt, avg gold left — reads like an econ/tempo fingerprint.
+- **`feat(dashboard)` — recent form + streak.** Hero now shows a "Last 5 Avg" card coloured green/red when it deviates ≥0.3 from the 20-game average (lower is better), a 🔥/🧊 streak chip (consecutive top-4s or bottom-4s, shown from 2+), and "last played Xh ago" — all derived client-side from the matches array.
+
+### Verified by
+
+`pytest` 54/54 (5 new journey tests, 6 new coach tests) · `npm run build` + `tsc` · headless-Chrome screenshots of all three pages via temporary fetch-stubbing harnesses (deleted after) · route table checked for `DELETE /me/climb/goal`.
+
 ## 2026-07-05 — Insight-page features (building on the polish pass)
 
 Added real, data-backed features to the same pages — all computed client-side from data the backend already returns, no new endpoints or faked data.

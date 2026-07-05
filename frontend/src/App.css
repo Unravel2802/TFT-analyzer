@@ -504,6 +504,33 @@
   font-weight: 500;
 }
 
+/* Title row with streak / last-played context on the right. */
+.stats-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.stats-panel-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.streak-chip {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+.streak-top4 { color: var(--top4); background: rgba(76, 175, 80, 0.12); }
+.streak-bot4 { color: var(--bot4); background: rgba(229, 115, 115, 0.12); }
+
+.last-played { font-size: var(--fs-xs); color: var(--text-muted); white-space: nowrap; }
+
 /* Float the bubble grid + stat tiles down together as one block, so the
    breathing room lands under the title instead of as a hollow band between
    them (the panel is as tall as the identity card beside it). */
@@ -602,6 +629,8 @@
   font-weight: 700;
   color: var(--gold);
 }
+.stat-value.good { color: var(--top4); }
+.stat-value.bad  { color: var(--bot4); }
 
 .stat-label {
   font-size: 12px;
@@ -1625,6 +1654,26 @@
 .climb-stat-value.pos { color: var(--top4); }
 .climb-stat-value.neg { color: var(--bot4); }
 .climb-stat-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+
+/* ── Coach: playstyle averages strip (reuses .climb-stat value/label blocks) ── */
+.playstyle-strip { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+
+/* ── Climb: goal journey (elapsed / gained / pace / ETA) + reset ── */
+.climb-journey-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding-top: var(--space-3);
+    margin-top: var(--space-3);
+    border-top: 1px solid var(--border);
+}
+.climb-journey { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+.climb-reset { display: flex; align-items: center; gap: var(--space-2); }
+.btn-ghost.btn-danger { color: var(--bot4); }
+.btn-ghost.btn-danger:hover { background: rgba(229, 115, 115, 0.12); color: var(--bot4); }
+.goal-lock-note { margin: 0; font-size: var(--fs-xs); color: var(--text-muted); line-height: 1.5; }
 
 .change-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .change-row {
