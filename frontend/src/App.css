@@ -504,10 +504,15 @@
   font-weight: 500;
 }
 
+/* Float the bubble grid + stat tiles down together as one block, so the
+   breathing room lands under the title instead of as a hollow band between
+   them (the panel is as tall as the identity card beside it). */
+.stats-panel .placement-grid { margin-top: auto; }
+
 .hero-stats {
   display: flex;
   gap: var(--space-3);
-  margin-top: auto;         /* drop the tiles to the bottom of the panel */
+  margin-top: var(--space-3);
 }
 
 .hero-stats .stat-card {
@@ -1309,48 +1314,12 @@
     margin: 0 6px;
 }
 
-.streak-line {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    margin-bottom: var(--space-2);
-}
-.streak-count {
-    font-size: 32px;
-    font-weight: 700;
-}
-.streak-label {
-    color: var(--text-muted);
-    font-size: var(--fs-sm);
-}
-
-.coach-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-top: 16px;
-}
-.coach-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 12px 16px;
-}
-.coach-card-title { margin: 0 0 8px; font-size: 0.95rem; }
-.coach-list { list-style: none; margin: 0; padding: 0; }
-.coach-row { display: flex; justify-content: space-between; padding: 4px 0; }
+/* good/bad text colour — shared by the sessions streak number */
 .coach-good { color: #6ee7a8; }
 .coach-bad { color: #f3a3a3; }
 
 
-/* Climb */
-.climb-progress { margin: 12px 0; max-width: 320px; }
-.climb-bar { height: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 5px; overflow: hidden; }
-.climb-bar-fill { height: 100%; background: var(--gold); }
-.climb-goal-form { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-
-
-/* Journal */
+/* Match note editor (rendered on the match detail page) */
 .match-note { margin-top: 24px; max-width: 480px; }
 .note-input {
     width: 100%;
@@ -1364,6 +1333,256 @@
 }
 .note-actions { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
 .journal-list { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 12px; }
-.journal-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
-.journal-note { margin: 0 0 8px; white-space: pre-wrap; }
-.journal-meta { display: flex; gap: 16px; align-items: center; }
+
+
+/* ===========================================================================
+   INSIGHT PAGES  (coach · climb · journal · sessions)
+   A shared, calmer layout: left-aligned doc column + quiet PageHeader, then
+   cards that match the dashboard's .panel aesthetic.
+   =========================================================================== */
+
+/* ── Doc layout: opt-in variant of .page that stops centering a short column
+      in the middle of an empty screen and lets cards fill the width. ──────── */
+.page.page-doc {
+    align-items: stretch;
+    max-width: 940px;
+    gap: var(--space-4);
+}
+
+/* ── Shared page header ──────────────────────────────────────── */
+.page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+}
+.page-head-text { display: flex; flex-direction: column; gap: 4px; }
+.page-head-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--gold-light);
+    line-height: 1.1;
+}
+.page-head-sub {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+.page-head-aside {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+.head-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.15;
+}
+.head-stat-value {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+}
+.head-stat-good { color: var(--top4); }
+.head-stat-bad  { color: var(--bot4); }
+.head-stat-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* Two-column card grid the insight pages share (replaces .coach-grid). */
+.insight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+    width: 100%;
+}
+
+/* ── Insight card (coach best/worst, sessions cards) ─────────── */
+.insight-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+.insight-card-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+.insight-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+}
+.insight-dot-good { background: var(--top4); box-shadow: 0 0 8px rgba(76, 175, 80, 0.5); }
+.insight-dot-bad  { background: var(--bot4); box-shadow: 0 0 8px rgba(229, 115, 115, 0.5); }
+.insight-card-title {
+    font-size: var(--fs-sm);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    font-weight: 700;
+}
+
+/* ranked rows with aligned columns (fixes the old name/value collision) */
+.insight-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.insight-row {
+    display: grid;
+    grid-template-columns: 18px 1fr auto 52px;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 9px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.insight-row:first-child { border-top: none; }
+.insight-rank { font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.insight-name { color: var(--text-bright); font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.insight-delta {
+    justify-self: start;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+}
+.insight-delta-good { color: var(--top4); background: rgba(76, 175, 80, 0.12); }
+.insight-delta-bad  { color: var(--bot4); background: rgba(229, 115, 115, 0.12); }
+.insight-games { text-align: right; font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.insight-empty { color: var(--text-muted); font-size: var(--fs-sm); }
+
+/* ── Climb ───────────────────────────────────────────────────── */
+.climb-hero {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+.rank-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--tier-color, var(--gold)) 16%, var(--bg-card)) 0%,
+        var(--bg-card) 100%);
+    border: 1px solid color-mix(in srgb, var(--tier-color, var(--gold)) 40%, var(--border));
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    min-width: 190px;
+}
+.rank-chip-emblem { width: 52px; height: 52px; object-fit: contain; flex: 0 0 auto;
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--tier-color, var(--gold)) 40%, transparent)); }
+.rank-chip-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+.rank-chip-rank { font-size: var(--fs-md); font-weight: 700; color: var(--text-bright); }
+.rank-chip-lp { font-size: var(--fs-sm); color: var(--text-muted); }
+.climb-arrow { font-size: var(--fs-lg); color: var(--text-muted); }
+
+.climb-progress-wide { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+.climb-progress-top { display: flex; justify-content: space-between; align-items: baseline; }
+.climb-progress-pct { font-size: var(--fs-md); font-weight: 700; color: var(--gold); }
+.climb-progress-note { font-size: var(--fs-xs); color: var(--text-muted); }
+.climb-bar-lg { height: 12px; background: var(--bg-card-hover); border: 1px solid var(--border); border-radius: var(--radius-pill); overflow: hidden; }
+.climb-bar-lg .climb-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 60%, #fff) 0%, var(--gold) 100%);
+    box-shadow: 0 0 12px var(--gold-glow);
+    transition: width 0.4s ease;
+}
+
+.goal-form-panel { display: flex; flex-direction: column; gap: var(--space-3); }
+.climb-goal-form { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; margin: 0; }
+.climb-goal-form > span { color: var(--text-muted); font-size: var(--fs-sm); }
+
+/* ── Sessions: streak + callout ──────────────────────────────── */
+.streak-big { display: flex; align-items: baseline; gap: var(--space-2); }
+.streak-num { font-size: 44px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.streak-word { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); }
+.callout {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--row-color, var(--border));
+    background: rgba(255, 255, 255, 0.03);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+}
+.callout-good { --row-color: var(--top4); }
+.callout-bad  { --row-color: var(--bot4); }
+.callout-icon { font-size: var(--fs-md); flex: 0 0 auto; }
+.tod-foot { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-2); }
+.tod-chip { font-size: var(--fs-xs); color: var(--text-muted); display: inline-flex; align-items: center; gap: 5px; }
+.tod-chip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--chip-color, var(--text-muted)); }
+.tod-chip-good { --chip-color: var(--top4); }
+.tod-chip-bad  { --chip-color: var(--bot4); }
+
+/* ── Journal: quote cards ────────────────────────────────────── */
+.journal-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    box-shadow: var(--shadow);
+    transition: border-color 0.2s;
+}
+.journal-card:hover { border-color: var(--gold-dim); }
+.journal-card-note {
+    margin: 0;
+    white-space: pre-wrap;
+    color: var(--text-bright);
+    font-size: var(--fs-md);
+    line-height: 1.55;
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--gold-dim);
+}
+.journal-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.journal-match-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-xs);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+}
+.journal-match-link:hover { text-decoration: underline; }
+.journal-date { font-size: var(--fs-xs); color: var(--text-muted); margin-left: auto; }
+
+/* empty state that doesn't float in the void */
+.insight-empty-panel {
+    text-align: center;
+    padding: var(--space-5);
+    background: var(--bg-card);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+    .insight-grid { grid-template-columns: 1fr; }
+}

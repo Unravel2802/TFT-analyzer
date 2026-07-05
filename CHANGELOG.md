@@ -4,6 +4,18 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 ---
 
+## 2026-07-05 — UI/UX polish: signed-in insight pages
+
+Redesigned the five signed-in pages (coach, climb, journal, sessions, dashboard) so they read as one system instead of barebones content dumped under a loud title. Verified each with headless-Chrome screenshots against a throwaway `fetch`-stubbing preview harness (deleted after).
+
+- **`feat(ui)` — shared page header.** New [PageHeader](frontend/src/components/PageHeader.tsx) + a `.page-doc` layout variant. The four insight pages led with a centered 48px glowing uppercase `.page-title` (a splash-screen look the polished dashboard never used) while `.page { align-items:center }` marooned their short content in a narrow island. `.page-doc` stops the centering and fills the width; PageHeader is a quiet left-aligned title + subtitle with an optional right-side summary-stat cluster.
+- **`feat(coach)`** — Best/worst cards now have green/red accent dots, ranked rows, and a CSS-grid layout that fixes the old name/value collision ("Ambusher5.5"). Each row shows a "vs your overall avg" delta chip (e.g. `−1.5` green) — the actual coaching signal, not just a raw average.
+- **`feat(climb)`** — Added a current-rank → goal-rank hero with tier emblems (reusing the medal art + `[data-tier]` colour map), a full-width labelled progress bar with "LP to go", and moved the chart and goal form into titled `.panel`s.
+- **`feat(journal)`** — Notes are now quote-style cards that surface the previously-unused `updated_at` date and a match link; empty state is a real dashed panel instead of floating text.
+- **`feat(sessions)`** — Balanced the two cards: a big streak number, the tilt insight as an icon callout box, and best/worst time-of-day chips under the bar chart.
+- **`style(dashboard)`** — One scoped fix: the "Recent Matches" panel had a hollow band because the stat tiles were pinned to the bottom; grouped the bubble grid + tiles so they float down together and the breathing room lands under the title.
+- **`chore(css)`** — Pruned the now-dead `.coach-grid/.coach-card/.streak-*/.climb-progress/.journal-item` rules the redesign replaced (CSS bundle shrank ~1 kB).
+
 ## 2026-07-05 — Frontend consistency pass (all pages)
 
 Audited every page (screenshots of public pages + source review of auth-gated ones); fixing the uneven bits in reviewable steps.
