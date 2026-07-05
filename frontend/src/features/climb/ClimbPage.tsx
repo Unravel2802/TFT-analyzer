@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
-import { getMyClimb, setClimbGoal } from './api'
-import type { ClimbData, RankPoint } from '@/types/tft'
+import { getMyClimb, setClimbGoal, resetClimbGoal } from './api'
+import type { ClimbData, ClimbJourney, RankPoint } from '@/types/tft'
 import Dropdown from '@/components/Dropdown'
 import Button from '@/components/Button'
 import PageHeader from '@/components/PageHeader'
@@ -61,6 +61,43 @@ function RankChip({ label, tier, sub }: { label: string; tier: string; sub: stri
     )
 }
 
+// The goal chase since the day it was set: how long, how far, how fast,
+// and — if the pace is positive — a rough arrival estimate.
+function JourneyStrip({ journey }: { journey: ClimbJourney }) {
+    const j = journey
+    const pace = j.lp_per_day == null
+        ? '—'
+        : `${signedLp(Math.round(j.lp_per_day))} /day`
+    const eta = j.eta_days === 0
+        ? 'Reached 🎉'
+        : j.eta_days == null
+            ? '—'
+            : `~${j.eta_days} day${j.eta_days === 1 ? '' : 's'}`
+
+    return (
+        <div className='climb-journey'>
+            <div className='climb-stat'>
+                <span className='climb-stat-value'>Day {j.days_elapsed + 1}</span>
+                <span className='climb-stat-label'>Started {formatDate(j.started_at)}</span>
+            </div>
+            <div className='climb-stat'>
+                <span className={`climb-stat-value ${j.lp_gained > 0 ? 'pos' : j.lp_gained < 0 ? 'neg' : ''}`}>
+                    {signedLp(j.lp_gained)} LP
+                </span>
+                <span className='climb-stat-label'>Since goal set</span>
+            </div>
+            <div className='climb-stat'>
+                <span className='climb-stat-value'>{pace}</span>
+                <span className='climb-stat-label'>Pace</span>
+            </div>
+            <div className='climb-stat'>
+                <span className='climb-stat-value'>{eta}</span>
+                <span className='climb-stat-label'>Est. to goal</span>
+            </div>
+        </div>
+    )
+}
+
 function LpChart({ snapshots, goalAbs }: { snapshots: RankPoint[]; goalAbs?: number }) {
     if (snapshots.length === 0) {
         return <p className='insight-empty'>No data yet — play a ranked game and check back.</p>
@@ -90,6 +127,8 @@ export default function ClimbPage() {
     const [tier, setTier] = useState('DIAMOND')
     const [division, setDivision] = useState('IV')
     const [saving, setSaving] = useState(false)
+    const [confirmReset, setConfirmReset] = useState(false)
+    const [resetting, setResetting] = useState(false)
 
     const load = useCallback(async () => {
         try {
@@ -118,6 +157,24 @@ export default function ClimbPage() {
         }
     }
 
+    // Two-click reset: first click arms the button, second actually deletes.
+    async function handleReset() {
+        if (!confirmReset) {
+            setConfirmReset(true)
+            return
+        }
+        setResetting(true)
+        try {
+            await resetClimbGoal(token!)
+            setConfirmReset(false)
+            await load()
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed to reset goal')
+        } finally {
+            setResetting(false)
+        }
+    }
+
     if (loading) return <div className='page'><p className='status-text'>Loading your climb…</p></div>
     if (error) return <div className='page'><div className='error-box'><p className='error-text'>{error}</p></div></div>
     if (!data) return null
@@ -125,6 +182,7 @@ export default function ClimbPage() {
     const c = data.current
     const currentSub = c.tier === 'UNRANKED' ? '' : `${c.division} · ${c.lp} LP`
     const goal = data.goal
+    const goalLocked = goal != null && !goal.can_change
     const lpToGo = data.progress ? Math.max(0, data.progress.goal_abs_lp - data.progress.current_abs_lp) : null
 
     // Derived climb stats from the snapshot history.
@@ -167,6 +225,28 @@ export default function ClimbPage() {
                         </div>
                     )}
                 </div>
+
+                {data.journey && (
+                    <div className='climb-journey-row'>
+                        <JourneyStrip journey={data.journey} />
+                        <div className='climb-reset'>
+                            {confirmReset && !resetting && (
+                                <Button variant='ghost' type='button' onClick={() => setConfirmReset(false)}>
+                                    Keep it
+                                </Button>
+                            )}
+                            <Button
+                                variant='ghost'
+                                type='button'
+                                className={confirmReset ? 'btn-danger' : undefined}
+                                disabled={resetting}
+                                onClick={handleReset}
+                            >
+                                {resetting ? 'Resetting…' : confirmReset ? 'Confirm reset' : 'Reset goal'}
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 {snaps.length >= 2 && (
                     <div className='climb-stats'>
@@ -215,7 +295,7 @@ export default function ClimbPage() {
             )}
 
             <section className='panel goal-form-panel'>
-                <h3 className='panel-title'>Set a goal</h3>
+                <h3 className='panel-title'>{goal ? 'Change goal' : 'Set a goal'}</h3>
                 <form className='climb-goal-form' onSubmit={saveGoal}>
                     <span>Reach</span>
                     <Dropdown
@@ -230,8 +310,16 @@ export default function ClimbPage() {
                             onChange={setDivision}
                         />
                     )}
-                    <Button disabled={saving}>{saving ? 'Saving…' : 'Set goal'}</Button>
+                    <Button disabled={saving || goalLocked}>
+                        {saving ? 'Saving…' : goal ? 'Change goal' : 'Set goal'}
+                    </Button>
                 </form>
+                {goalLocked && goal && (
+                    <p className='goal-lock-note'>
+                        Goal changes are locked until {formatDate(goal.locked_until)} to keep you
+                        committed — resetting the goal above clears it (and the lock) immediately.
+                    </p>
+                )}
             </section>
         </div>
     )

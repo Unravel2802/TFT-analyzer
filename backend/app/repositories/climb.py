@@ -27,10 +27,18 @@ def get_goal(user_id) -> dict | None:
     return result.data[0] if result.data else None
 
 
-def upsert_goal(user_id, target_tier: str, target_division: str, target_abs_lp: int) -> None:
+def upsert_goal(user_id, target_tier: str, target_division: str, target_abs_lp: int, updated_at: str) -> None:
+    # updated_at is set explicitly: a column default only fires on INSERT, not on
+    # the conflict-UPDATE path of an upsert, and the goal lock + journey clock
+    # both read this field as "when the goal was set".
     supabase.table("climb_goals").upsert({
         "user_id": user_id,
         "target_tier": target_tier,
         "target_division": target_division,
         "target_abs_lp": target_abs_lp,
+        "updated_at": updated_at,
     }).execute()
+
+
+def delete_goal(user_id) -> None:
+    supabase.table("climb_goals").delete().eq("user_id", user_id).execute()

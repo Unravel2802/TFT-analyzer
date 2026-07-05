@@ -7,7 +7,7 @@ from app.services.coach_service import build_coach
 from app.schemas.coach import CoachInsights
 from app.config import get_settings
 from app.schemas.climb import ClimbData, GoalRequest
-from app.services.climb_service import build_climb, set_goal, GoalLockedError
+from app.services.climb_service import build_climb, set_goal, clear_goal, GoalLockedError
 from app.services.session_service import build_sessions
 from app.schemas.session import SessionsInsights
 import httpx
@@ -62,6 +62,11 @@ async def set_my_climb_goal(body: GoalRequest, current_user: dict = Depends(get_
         await set_goal(current_user["id"], body.target_tier, body.target_division)
     except GoalLockedError as e:
         raise HTTPException(status_code=409, detail=f"Goal is locked until {e.locked_until}")
+    return {"status": "ok"}
+
+@router.delete("/climb/goal")
+async def reset_my_climb_goal(current_user: dict = Depends(get_current_user)):
+    await clear_goal(current_user["id"])
     return {"status": "ok"}
 
 @router.get("/sessions", response_model=SessionsInsights)

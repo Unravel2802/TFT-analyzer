@@ -28,10 +28,20 @@ class ClimbProgress(BaseModel):
     percent: float
 
 
+class ClimbJourney(BaseModel):
+    started_at: str
+    start_abs_lp: int
+    days_elapsed: int
+    lp_gained: int
+    lp_per_day: float | None    # None until the journey is a day old
+    eta_days: int | None        # None when there's no positive pace to project
+
+
 class ClimbData(BaseModel):
     current: CurrentRank
     goal: ClimbGoal | None
     progress: ClimbProgress | None
+    journey: ClimbJourney | None
     snapshots: list[RankPoint]
 
 class GoalRequest(BaseModel):

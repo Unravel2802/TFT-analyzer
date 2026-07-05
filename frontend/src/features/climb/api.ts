@@ -17,3 +17,11 @@ export async function setClimbGoal(
         fallbackError: 'Failed to set goal',
     })
 }
+
+export async function resetClimbGoal(token: string): Promise<void> {
+    await request('/me/climb/goal', {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to reset goal',
+    })
+}

@@ -84,6 +84,13 @@ export interface CoachStat {
     avg_placement: number
 }
 
+export interface CoachPlaystyle {
+    avg_level: number
+    avg_last_stage: string    // "5-3"-style label for the average exit round
+    avg_damage_dealt: number
+    avg_gold_left: number
+}
+
 export interface CoachInsights {
     games_analyzed: number
     overall_avg_placement: number
@@ -91,6 +98,9 @@ export interface CoachInsights {
     worst_traits: CoachStat[]
     best_units: CoachStat[]
     worst_units: CoachStat[]
+    best_items: CoachStat[]
+    worst_items: CoachStat[]
+    playstyle: CoachPlaystyle | null
 }
 
 export interface RankPoint {
@@ -98,10 +108,26 @@ export interface RankPoint {
     captured_at: string
 }
 
+export interface ClimbJourney {
+    started_at: string
+    start_abs_lp: number
+    days_elapsed: number
+    lp_gained: number
+    lp_per_day: number | null   // null until the journey is a day old
+    eta_days: number | null     // null when there's no positive pace to project
+}
+
 export interface ClimbData {
     current: { tier: string; division: string; lp: number; abs_lp: number }
-    goal: { target_tier: string; target_division: string; target_abs_lp: number } | null
+    goal: {
+        target_tier: string
+        target_division: string
+        target_abs_lp: number
+        can_change: boolean
+        locked_until: string
+    } | null
     progress: { start_abs_lp: number; current_abs_lp: number; goal_abs_lp: number; percent: number } | null
+    journey: ClimbJourney | null
     snapshots: RankPoint[]
 }
 
