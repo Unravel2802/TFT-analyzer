@@ -4,6 +4,12 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 ---
 
+## 2026-07-05 — Comps card layout consistency
+
+- **`fix(comps)`** — Comp cards silently flipped layout based on unit count: `.comp-card-body` was a flex row with `flex-wrap`, so wide boards (many units) pushed the stats block onto a second line (stats *below*) while narrow boards kept it inline (stats *right*). Pinned it to one horizontal layout — `.comp-units` now grows to fill the row (`flex: 1 1 auto; min-width: 0`) and wraps its portraits internally, and `.comp-stats` never shrinks (`flex: 0 0 auto`) — so the avg-place + Top4/Win block sits on the right for every card regardless of roster size. Verified with a headless-Chrome screenshot of `/comps` (6 cards, all aligned).
+
+---
+
 ## 2026-07-04 — Frontend visualization overhaul + critical fixes
 
 Full-codebase review, then a 10-step plan: fix the things that break the app in practice, build a shared chart foundation, and render the analytics the backend already computed but the UI never showed.

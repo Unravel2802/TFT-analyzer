@@ -1148,15 +1148,14 @@
 .comp-card-body {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-4);
-    flex-wrap: wrap;
 }
 .comp-flex { opacity: 0.5; }
 .comp-stats {
     display: flex;
     align-items: center;
     gap: var(--space-4);
+    flex: 0 0 auto;            /* never shrink or wrap: stays a fixed block on the right */
 }
 .comp-avg {
     display: flex;
@@ -1214,6 +1213,8 @@
     align-items: flex-start;     /* was center; items make units different heights */
     gap: 4px;
     flex-wrap: wrap;
+    flex: 1 1 auto;              /* grow to fill leftover row space, pushing stats to the right */
+    min-width: 0;               /* allow the board to be narrower than its content so portraits wrap internally instead of shoving stats onto a new line */
 }
 .comp-unit {
     display: flex;
