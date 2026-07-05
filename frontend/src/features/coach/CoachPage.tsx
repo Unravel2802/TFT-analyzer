@@ -2,23 +2,44 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getMyCoach } from './api'
 import type { CoachInsights, CoachStat } from '@/types/tft'
+import PageHeader from '@/components/PageHeader'
 
-function StatList({ title, stats, tone }: { title: string; stats: CoachStat[]; tone: 'good' | 'bad' }) {
+// A signed delta vs the player's overall average. Negative = better than
+// average (good), positive = worse. Rendered with a proper minus sign.
+function fmtDelta(diff: number): string {
+    const rounded = Math.abs(diff).toFixed(1)
+    return diff <= 0 ? `−${rounded}` : `+${rounded}`
+}
+
+function InsightCard({
+    title, stats, tone, overall,
+}: { title: string; stats: CoachStat[]; tone: 'good' | 'bad'; overall: number }) {
     return (
-        <div className='coach-card'>
-            <h3 className='coach-card-title'>{title}</h3>
+        <div className='insight-card'>
+            <div className='insight-card-head'>
+                <span className={`insight-dot insight-dot-${tone}`} />
+                <h3 className='insight-card-title'>{title}</h3>
+            </div>
             {stats.length === 0
-                ? <p className='muted'>Not enough games yet.</p>
+                ? <p className='insight-empty'>Not enough games yet.</p>
                 : (
-                    <ul className='coach-list'>
-                        {stats.map(s => (
-                            <li key={s.name} className='coach-row'>
-                                <span>{s.name}</span>
-                                <span className={tone === 'good' ? 'coach-good' : 'coach-bad'}>
-                                    {s.avg_placement} avg · {s.games}g
-                                </span>
-                            </li>
-                        ))}
+                    <ul className='insight-rows'>
+                        {stats.map((s, i) => {
+                            const diff = s.avg_placement - overall
+                            return (
+                                <li key={s.name} className='insight-row'>
+                                    <span className='insight-rank'>{i + 1}</span>
+                                    <span className='insight-name'>{s.name}</span>
+                                    <span
+                                        className={`insight-delta insight-delta-${tone}`}
+                                        title={`${s.avg_placement} avg vs ${overall} overall`}
+                                    >
+                                        {fmtDelta(diff)}
+                                    </span>
+                                    <span className='insight-games'>{s.games}g</span>
+                                </li>
+                            )
+                        })}
                     </ul>
                 )}
         </div>
@@ -40,22 +61,23 @@ export default function CoachPage() {
         return () => { active = false }
     }, [token])
 
-    if (loading) return <div className='page'><p className='page-tagline'>Analyzing your games…</p></div>
+    if (loading) return <div className='page'><p className='status-text'>Analyzing your games…</p></div>
     if (error) return <div className='page'><div className='error-box'><p className='error-text'>{error}</p></div></div>
     if (!data) return null
 
     return (
-        <div className='page'>
-            <h1 className='page-title'>Personal Coach</h1>
-            <p className='page-tagline'>
-                From your last {data.games_analyzed} games · overall avg {data.overall_avg_placement}
-            </p>
+        <div className='page page-doc'>
+            <PageHeader
+                title='Coach'
+                subtitle={`What's working — and what's costing you — across your last ${data.games_analyzed} games`}
+                stats={[{ label: 'Overall avg', value: data.overall_avg_placement }]}
+            />
 
-            <div className='coach-grid'>
-                <StatList title='Best traits' stats={data.best_traits} tone='good' />
-                <StatList title='Worst traits' stats={data.worst_traits} tone='bad' />
-                <StatList title='Best units' stats={data.best_units} tone='good' />
-                <StatList title='Worst units' stats={data.worst_units} tone='bad' />
+            <div className='insight-grid'>
+                <InsightCard title='Best traits' stats={data.best_traits} tone='good' overall={data.overall_avg_placement} />
+                <InsightCard title='Worst traits' stats={data.worst_traits} tone='bad' overall={data.overall_avg_placement} />
+                <InsightCard title='Best units' stats={data.best_units} tone='good' overall={data.overall_avg_placement} />
+                <InsightCard title='Worst units' stats={data.worst_units} tone='bad' overall={data.overall_avg_placement} />
             </div>
         </div>
     )
