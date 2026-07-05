@@ -1442,15 +1442,18 @@
 .insight-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .insight-row {
     display: grid;
-    grid-template-columns: 18px 1fr auto 52px;
+    grid-template-columns: 18px 1fr auto auto 44px;
     align-items: center;
     gap: var(--space-3);
     padding: 9px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 .insight-row:first-child { border-top: none; }
+.insight-row-low { opacity: 0.55; }   /* small sample size — read with caution */
 .insight-rank { font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .insight-name { color: var(--text-bright); font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.insight-avg { font-size: var(--fs-sm); color: var(--text-bright); font-variant-numeric: tabular-nums; }
+.insight-avg-unit { font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); margin-left: 3px; }
 .insight-delta {
     justify-self: start;
     font-size: var(--fs-xs);
@@ -1583,6 +1586,91 @@
     color: var(--text-muted);
 }
 
+/* ── Coach: key-takeaway banner ──────────────────────────────── */
+.coach-takeaway {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+}
+.takeaway-item {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--row-color, var(--border));
+    background: var(--bg-card);
+    box-shadow: var(--shadow);
+}
+.takeaway-good { --row-color: var(--top4); }
+.takeaway-bad  { --row-color: var(--bot4); }
+.takeaway-icon { font-size: var(--fs-lg); font-weight: 700; line-height: 1.1; }
+.takeaway-good .takeaway-icon { color: var(--top4); }
+.takeaway-bad  .takeaway-icon { color: var(--bot4); }
+.takeaway-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+.takeaway-body { font-size: var(--fs-sm); color: var(--text); margin-top: 2px; }
+.takeaway-body strong { color: var(--text-bright); font-size: var(--fs-md); }
+
+/* ── Climb: quick-stat strip + recent-changes list ───────────── */
+.climb-stats {
+    display: flex;
+    gap: var(--space-5);
+    padding-top: var(--space-3);
+    margin-top: var(--space-3);
+    border-top: 1px solid var(--border);
+}
+.climb-stat { display: flex; flex-direction: column; gap: 2px; }
+.climb-stat-value { font-size: var(--fs-lg); font-weight: 700; color: var(--text-bright); font-variant-numeric: tabular-nums; }
+.climb-stat-value.pos { color: var(--top4); }
+.climb-stat-value.neg { color: var(--bot4); }
+.climb-stat-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+
+.change-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.change-row {
+    display: grid;
+    grid-template-columns: 1fr auto 64px;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 9px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.change-row:first-child { border-top: none; }
+.change-rank { color: var(--text-bright); font-size: var(--fs-sm); }
+.change-date { font-size: var(--fs-xs); color: var(--text-muted); }
+.change-delta { text-align: right; font-size: var(--fs-sm); font-weight: 700; font-variant-numeric: tabular-nums; }
+.change-delta.pos { color: var(--top4); }
+.change-delta.neg { color: var(--bot4); }
+
+/* ── Journal: toolbar + inline editor ────────────────────────── */
+.journal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+.journal-search {
+    flex: 1;
+    min-width: 180px;
+    padding: 9px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    color: var(--text-bright);
+    font: inherit;
+    font-size: var(--fs-sm);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.journal-search:focus { border-color: var(--gold); }
+.journal-search::placeholder { color: var(--text-muted); }
+.journal-edit-actions { display: flex; align-items: center; gap: var(--space-2); }
+.journal-empty-filter { color: var(--text-muted); font-size: var(--fs-sm); text-align: center; padding: var(--space-4); }
+
+/* ── Sessions: recommendation callout reuses .callout ────────── */
+
 @media (max-width: 720px) {
     .insight-grid { grid-template-columns: 1fr; }
+    .coach-takeaway { grid-template-columns: 1fr; }
+    .climb-stats { flex-wrap: wrap; gap: var(--space-4); }
 }

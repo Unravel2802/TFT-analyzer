@@ -4,6 +4,15 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 ---
 
+## 2026-07-05 — Insight-page features (building on the polish pass)
+
+Added real, data-backed features to the same pages — all computed client-side from data the backend already returns, no new endpoints or faked data.
+
+- **`feat(coach)`** — A "key takeaway" banner names the single strongest pick to lean into and the biggest leak to plug (min/max avg across both traits and units). Rows now show the actual avg placement next to the vs-average delta, and rows with < 5 games are dimmed + tooltipped as a small sample so a lucky 3-game streak isn't read as a verdict.
+- **`feat(climb)`** — A quick-stat strip under the hero (net LP over the tracked window, peak rank, ranked-games count) plus a "Recent changes" panel listing the last few rank snapshots with per-game LP deltas (+/− coloured) — all derived from the existing `snapshots` array.
+- **`feat(journal)`** — Turned the static list into a tool: a search box (filters by note text), a newest/oldest sort, and inline editing of any note (reuses the existing `saveNote` PUT) with save/cancel.
+- **`feat(sessions)`** — Best/worst time-of-day chips now carry their game counts for at-a-glance sample size.
+
 ## 2026-07-05 — UI/UX polish: signed-in insight pages
 
 Redesigned the five signed-in pages (coach, climb, journal, sessions, dashboard) so they read as one system instead of barebones content dumped under a loud title. Verified each with headless-Chrome screenshots against a throwaway `fetch`-stubbing preview harness (deleted after).
