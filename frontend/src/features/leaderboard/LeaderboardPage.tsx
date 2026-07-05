@@ -39,9 +39,9 @@ export default function LeaderboardPage() {
                             <th>#</th>
                             <th>Player</th>
                             <th>Tier</th>
-                            <th>LP</th>
-                            <th>Wins</th>
-                            <th>Losses</th>
+                            <th className='num'>LP</th>
+                            <th className='num'>Wins</th>
+                            <th className='num'>Losses</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,9 +50,9 @@ export default function LeaderboardPage() {
                                 <td>{r.rank}</td>
                                 <td>{r.game_name ? `${r.game_name}#${r.tag_line}` : r.puuid.slice(0, 8) + '…'}</td>
                                 <td>{r.tier}</td>
-                                <td>{r.league_points}</td>
-                                <td>{r.wins}</td>
-                                <td>{r.losses}</td>
+                                <td className='num'>{r.league_points}</td>
+                                <td className='num'>{r.wins}</td>
+                                <td className='num'>{r.losses}</td>
                             </tr>
                         ))}
                     </tbody>

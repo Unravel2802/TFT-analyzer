@@ -64,6 +64,7 @@ export default function UnitsPage() {
                             {COLUMNS.map(col => (
                                 <th
                                     key={col.key}
+                                    className='num'
                                     aria-sort={sortKey === col.key ? (asc ? 'ascending' : 'descending') : undefined}
                                 >
                                     <button className='th-sort' onClick={() => toggleSort(col.key)}>
@@ -83,10 +84,10 @@ export default function UnitsPage() {
                                     <UnitPortrait id={u.unit_id} />
                                     <span>{u.name}</span>
                                 </td>
-                                <td>{u.play_rate}%</td>
-                                <td>{u.avg_placement}</td>
-                                <td>{u.top4_rate}%</td>
-                                <td>{u.games}</td>
+                                <td className='num'>{u.play_rate}%</td>
+                                <td className='num'>{u.avg_placement.toFixed(2)}</td>
+                                <td className='num'>{u.top4_rate}%</td>
+                                <td className='num'>{u.games}</td>
                             </tr>
                         ))}
                     </tbody>

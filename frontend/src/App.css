@@ -1112,6 +1112,15 @@
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+/* Numeric columns read far better right-aligned with fixed-width digits so
+   values line up on their right edge and columns don't jitter row to row. */
+.meta-table th.num,
+.meta-table td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+/* the sort button fills the header cell so its label + arrow ride the right edge */
+.meta-table th.num .th-sort { justify-content: flex-end; width: 100%; }
 /* a real <button> inside the th keeps sorting keyboard-operable */
 .th-sort {
     display: inline-flex;

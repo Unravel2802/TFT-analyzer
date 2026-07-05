@@ -8,6 +8,7 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 Audited every page (screenshots of public pages + source review of auth-gated ones); fixing the uneven bits in reviewable steps.
 
+- **`style(tables)`** — Every `.meta-table` cell was `text-align:left`, so numeric columns were ragged and hard to compare. Added an opt-in `.num` class (right-align + `tabular-nums`) on the numeric columns of the Units and Leaderboard tables; text columns and the rank index stay left. Also formatted the Units avg-placement to 2 decimals so the column aligns on the decimal (TFT convention).
 - **`fix(landing)`** — The homepage was broken: `.page-tagline` carries `margin-top:-24px` to hug a `.page-title`, but SearchPage/DashboardPage have no title, so the tagline yanked up under the navbar and the search bar floated over an empty void. Gave SearchPage a real self-contained `.hero-search` (headline + subtitle + search + quick-links to Leaderboard/Comps/Units), shown only until a search resolves (then PlayerProfile's own identity header takes over). Dropped the out-of-place marketing tagline from the logged-in DashboardPage.
 
 ### Earlier today
