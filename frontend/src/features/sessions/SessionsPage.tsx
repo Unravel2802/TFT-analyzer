@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getMySessions } from './api'
 import type { SessionsInsights } from '@/types/tft'
+import PageHeader from '@/components/PageHeader'
 import BarChart from '@/components/charts/BarChart'
 
 // Lower avg placement is better, so the tallest bar is the WORST bucket.
@@ -37,7 +38,7 @@ export default function SessionsPage() {
         return () => { active = false }
     }, [token])
 
-    if (loading) return <div className='page'><p className='page-tagline'>Analyzing your sessions…</p></div>
+    if (loading) return <div className='page'><p className='status-text'>Analyzing your sessions…</p></div>
     if (error) return <div className='page'><div className='error-box'><p className='error-text'>{error}</p></div></div>
     if (!data) return null
 
@@ -47,43 +48,53 @@ export default function SessionsPage() {
     const tiltWorse = tilt != null && tilt.avg_placement - data.overall_avg_placement >= 0.5
 
     const buckets = data.time_of_day
-    const bestBucket = buckets.length >= 2
-        ? buckets.reduce((a, b) => (b.avg_placement < a.avg_placement ? b : a))
-        : null
+    const sorted = [...buckets].sort((a, b) => a.avg_placement - b.avg_placement)
+    const bestBucket = buckets.length >= 2 ? sorted[0] : null
+    const worstBucket = buckets.length >= 2 ? sorted[sorted.length - 1] : null
 
     return (
-        <div className='page'>
-            <h1 className='page-title'>Sessions</h1>
-            <p className='page-tagline'>
-                From your last {data.games_analyzed} games · overall avg {data.overall_avg_placement}
-            </p>
+        <div className='page page-doc'>
+            <PageHeader
+                title='Sessions'
+                subtitle={`Streaks, tilt and timing across your last ${data.games_analyzed} games`}
+                stats={[{ label: 'Overall avg', value: data.overall_avg_placement }]}
+            />
 
-            <div className='coach-grid'>
-                <div className='coach-card'>
-                    <h3 className='coach-card-title'>Current streak</h3>
+            <div className='insight-grid'>
+                <div className='insight-card'>
+                    <div className='insight-card-head'>
+                        <span className={`insight-dot insight-dot-${s?.type === 'loss' ? 'bad' : 'good'}`} />
+                        <h3 className='insight-card-title'>Current streak</h3>
+                    </div>
                     {s ? (
-                        <p className='streak-line'>
-                            <span className={`streak-count ${s.type === 'loss' ? 'coach-bad' : 'coach-good'}`}>
+                        <p className='streak-big'>
+                            <span className={`streak-num ${s.type === 'loss' ? 'coach-bad' : 'coach-good'}`}>
                                 {s.count}
                             </span>
-                            <span className='streak-label'>{s.type === 'loss' ? 'losses' : 'wins'} in a row</span>
+                            <span className='streak-word'>{s.type === 'loss' ? 'losses in a row' : 'wins in a row'}</span>
                         </p>
-                    ) : <p className='muted'>No active streak.</p>}
+                    ) : <p className='insight-empty'>No active streak.</p>}
 
                     {tilt && (
-                        <p className={tiltWorse ? 'coach-bad' : 'coach-good'}>
-                            {tiltWorse
-                                ? `After two straight losses you average ${tilt.avg_placement} — noticeably below your ${data.overall_avg_placement} overall. Consider a short break after two losses.`
-                                : `After two straight losses you average ${tilt.avg_placement} vs ${data.overall_avg_placement} overall — you recover well.`}
-                            <span className='muted'> ({tilt.games} games)</span>
-                        </p>
+                        <div className={`callout ${tiltWorse ? 'callout-bad' : 'callout-good'}`}>
+                            <span className='callout-icon'>{tiltWorse ? '⚠️' : '💪'}</span>
+                            <span>
+                                {tiltWorse
+                                    ? `After two straight losses you average ${tilt.avg_placement} — noticeably below your ${data.overall_avg_placement} overall. Consider a short break.`
+                                    : `After two straight losses you average ${tilt.avg_placement} vs ${data.overall_avg_placement} overall — you recover well.`}
+                                <span className='muted'> ({tilt.games} games)</span>
+                            </span>
+                        </div>
                     )}
                 </div>
 
-                <div className='coach-card'>
-                    <h3 className='coach-card-title'>Avg placement by time of day</h3>
+                <div className='insight-card'>
+                    <div className='insight-card-head'>
+                        <span className='insight-dot insight-dot-good' />
+                        <h3 className='insight-card-title'>Avg placement by time of day</h3>
+                    </div>
                     {buckets.length === 0
-                        ? <p className='muted'>Not enough games yet.</p>
+                        ? <p className='insight-empty'>Not enough games yet.</p>
                         : (
                             <>
                                 <BarChart
@@ -93,9 +104,11 @@ export default function SessionsPage() {
                                     tooltipLabel={i => `${buckets[i].part} · ${buckets[i].games} games`}
                                     max={8}
                                 />
-                                <p className='muted'>Lower is better.
-                                    {bestBucket && ` You place best in the ${bestBucket.part.toLowerCase()}.`}
-                                </p>
+                                <div className='tod-foot'>
+                                    {bestBucket && <span className='tod-chip tod-chip-good'>Best · {bestBucket.part}</span>}
+                                    {worstBucket && <span className='tod-chip tod-chip-bad'>Worst · {worstBucket.part}</span>}
+                                    <span className='insight-empty'>Lower is better</span>
+                                </div>
                             </>
                         )}
                 </div>
