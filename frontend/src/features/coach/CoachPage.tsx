@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/features/auth/AuthContext'
 import { getMyCoach } from './api'
-import type { CoachInsights, CoachStat } from '@/types/tft'
+import type { CoachInsights, CoachPlaystyle, CoachStat } from '@/types/tft'
 import PageHeader from '@/components/PageHeader'
 
 // Fewer than this many games is a shaky sample — dim the row so a lucky/unlucky
@@ -34,6 +34,27 @@ function Takeaway({ label, tone, stat }: { label: string; tone: 'good' | 'bad'; 
                     <strong>{stat.name}</strong> — {stat.avg_placement} avg over {stat.games} games
                 </div>
             </div>
+        </div>
+    )
+}
+
+// How your games tend to end — one row of averages that sketches your style
+// (greedy econ? early exits? damage-heavy boards?).
+function PlaystyleStrip({ p }: { p: CoachPlaystyle }) {
+    const stats = [
+        { value: p.avg_level.toFixed(1), label: 'Avg end level' },
+        { value: p.avg_last_stage, label: 'Avg exit stage' },
+        { value: String(p.avg_damage_dealt), label: 'Avg dmg dealt' },
+        { value: p.avg_gold_left.toFixed(1), label: 'Avg gold left' },
+    ]
+    return (
+        <div className='playstyle-strip'>
+            {stats.map(s => (
+                <div key={s.label} className='climb-stat'>
+                    <span className='climb-stat-value'>{s.value}</span>
+                    <span className='climb-stat-label'>{s.label}</span>
+                </div>
+            ))}
         </div>
     )
 }
@@ -119,11 +140,20 @@ export default function CoachPage() {
                 </div>
             )}
 
+            {data.playstyle && (
+                <section className='panel'>
+                    <h3 className='panel-title'>How your games end</h3>
+                    <PlaystyleStrip p={data.playstyle} />
+                </section>
+            )}
+
             <div className='insight-grid'>
                 <InsightCard title='Best traits' stats={data.best_traits} tone='good' overall={data.overall_avg_placement} />
                 <InsightCard title='Worst traits' stats={data.worst_traits} tone='bad' overall={data.overall_avg_placement} />
                 <InsightCard title='Best units' stats={data.best_units} tone='good' overall={data.overall_avg_placement} />
                 <InsightCard title='Worst units' stats={data.worst_units} tone='bad' overall={data.overall_avg_placement} />
+                <InsightCard title='Best items' stats={data.best_items} tone='good' overall={data.overall_avg_placement} />
+                <InsightCard title='Worst items' stats={data.worst_items} tone='bad' overall={data.overall_avg_placement} />
             </div>
         </div>
     )

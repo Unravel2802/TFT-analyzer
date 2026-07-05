@@ -7,6 +7,13 @@ class CoachStat(BaseModel):
     avg_placement: float
 
 
+class CoachPlaystyle(BaseModel):
+    avg_level: float          # board level when the game ends
+    avg_last_stage: str       # "5-3"-style label for the average exit round
+    avg_damage_dealt: int
+    avg_gold_left: float
+
+
 class CoachInsights(BaseModel):
     games_analyzed: int
     overall_avg_placement: float
@@ -14,3 +21,6 @@ class CoachInsights(BaseModel):
     worst_traits: list[CoachStat]
     best_units: list[CoachStat]
     worst_units: list[CoachStat]
+    best_items: list[CoachStat]
+    worst_items: list[CoachStat]
+    playstyle: CoachPlaystyle | None
