@@ -6,6 +6,27 @@ import PlacementTrend from './PlacementTrend'
 import PlacementDistribution from './PlacementDistribution'
 import { placementBucket } from '@/lib/placement'
 
+// "3h ago" / "2d ago" from a game_datetime in epoch milliseconds.
+function relativeTime(ms: number): string {
+    const mins = Math.floor((Date.now() - ms) / 60000)
+    if (mins < 60) return `${Math.max(mins, 1)}m ago`
+    if (mins < 60 * 24) return `${Math.floor(mins / 60)}h ago`
+    return `${Math.floor(mins / (60 * 24))}d ago`
+}
+
+// Matches arrive newest-first: the streak is the run length of consecutive
+// top-4 (or bottom-4) finishes starting from the most recent game.
+function currentStreak(matches: DashboardData['matches']) {
+    if (matches.length === 0) return null
+    const top4 = matches[0].placement <= 4
+    let count = 0
+    for (const m of matches) {
+        if ((m.placement <= 4) === top4) count++
+        else break
+    }
+    return { top4, count }
+}
+
 function PlacementGrid({ data }: { data: DashboardData }) {
     return (
         <div className='placement-grid'>
@@ -23,6 +44,16 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
     const top4Count = data.matches.filter(m => m.placement <= 4).length
     const winCount = data.matches.filter(m => m.placement === 1).length
     const tierLabel = data.tier.charAt(0) + data.tier.slice(1).toLowerCase()
+
+    // Recent form: last-5 average vs the full-window average. Lower placement
+    // is better, so a negative delta means the player is trending up.
+    const last5 = data.matches.slice(0, 5)
+    const last5Avg = hasMatches
+        ? last5.reduce((sum, m) => sum + m.placement, 0) / last5.length
+        : 0
+    const formDelta = last5Avg - data.avg_placement
+    const formTone = formDelta <= -0.3 ? 'good' : formDelta >= 0.3 ? 'bad' : undefined
+    const streak = currentStreak(data.matches)
     return (
         <div className='profile'>
             <header className='hero'>
@@ -54,12 +85,27 @@ export default function PlayerProfile({ data }: { data: DashboardData }) {
 
                 {hasMatches && (
                     <div className='stats-panel'>
-                        <h3 className='stats-panel-title'>
-                            Recent {data.matches.length} Matches <span className='muted'>(Ranked)</span>
-                        </h3>
+                        <div className='stats-panel-head'>
+                            <h3 className='stats-panel-title'>
+                                Recent {data.matches.length} Matches <span className='muted'>(Ranked)</span>
+                            </h3>
+                            <div className='stats-panel-meta'>
+                                {streak && streak.count >= 2 && (
+                                    <span className={`streak-chip ${streak.top4 ? 'streak-top4' : 'streak-bot4'}`}>
+                                        {streak.top4 ? '🔥' : '🧊'} {streak.count} {streak.top4 ? 'top-4s' : 'bot-4s'} in a row
+                                    </span>
+                                )}
+                                <span className='last-played'>last played {relativeTime(data.matches[0].game_datetime)}</span>
+                            </div>
+                        </div>
                         <PlacementGrid data={data} />
                         <div className='hero-stats'>
                             <StatCard label='Avg.' value={data.avg_placement.toFixed(2)} />
+                            <StatCard
+                                label='Last 5 Avg.'
+                                value={last5Avg.toFixed(2)}
+                                tone={formTone}
+                            />
                             <StatCard label='Top 4' value={top4Count} />
                             <StatCard label='Won' value={winCount} />
                         </div>
