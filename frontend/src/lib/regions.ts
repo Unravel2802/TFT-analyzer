@@ -28,3 +28,14 @@ export const REGION_OPTIONS = REGIONS.map(r => ({ value: r.alias, label: r.label
 export function defaultTagFor(alias: string): string {
     return REGIONS.find(r => r.alias === alias)?.defaultTag ?? alias.toUpperCase()
 }
+
+// alias -> Riot platform code, mirroring the backend's REGION_ALIASES, so the
+// client can tell whether a leaderboard view matches the signed-in user's region.
+const PLATFORM_CODES: Record<string, string> = {
+    na: 'NA1', euw: 'EUW1', eune: 'EUN1', kr: 'KR', br: 'BR1', lan: 'LA1',
+    las: 'LA2', oce: 'OC1', tr: 'TR1', ru: 'RU', jp: 'JP1', sg: 'SG2',
+}
+
+export function platformFor(alias: string): string {
+    return PLATFORM_CODES[alias] ?? alias.toUpperCase()
+}

@@ -146,6 +146,15 @@ export interface NoteEntry {
     updated_at: string
 }
 
+export interface MyRank {
+    riot_id: string
+    region: string      // normalized platform code (NA1, EUW1, ...)
+    puuid: string
+    tier: string
+    division: string
+    lp: number
+}
+
 export interface LeaderboardEntry {
     rank: number
     game_name: string | null

@@ -5,6 +5,16 @@ const TIER_SHORT = ['I', 'B', 'S', 'G', 'P', 'E', 'D', 'M']
 const DIVISIONS = ['IV', 'III', 'II', 'I']
 const MASTER_BASE = 2800
 
+// Forward direction, matching absLpToRank's convention: apex tiers (Master+)
+// all sit on the 2800 base with raw LP on top — apex "divisions" are cosmetic.
+export function rankToAbsLp(tier: string, division: string, lp: number): number {
+    const t = tier.toUpperCase()
+    if (['MASTER', 'GRANDMASTER', 'CHALLENGER'].includes(t)) return MASTER_BASE + lp
+    const tierIdx = TIERS.findIndex(x => x.toUpperCase() === t)
+    const divIdx = DIVISIONS.indexOf(division.toUpperCase())
+    return Math.max(tierIdx, 0) * 400 + Math.max(divIdx, 0) * 100 + lp
+}
+
 export function absLpToRank(abs: number): string {
     if (abs < 0) return `${abs} LP`
     if (abs >= MASTER_BASE) return `Master ${abs - MASTER_BASE} LP`

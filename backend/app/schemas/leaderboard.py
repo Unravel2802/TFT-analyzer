@@ -10,3 +10,12 @@ class LeaderboardEntry(BaseModel):
     league_points: int
     wins: int
     losses: int
+
+
+class MyRank(BaseModel):
+    riot_id: str
+    region: str                # normalized platform code (NA1, EUW1, ...)
+    puuid: str                 # lets the client spot itself in the top-25 rows
+    tier: str
+    division: str
+    lp: int
