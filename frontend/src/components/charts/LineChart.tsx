@@ -21,6 +21,12 @@ interface LineChartProps {
     dotColor?: (v: number, i: number) => string
     /** dashed horizontal reference line (e.g. a rank goal) */
     referenceY?: number
+    /**
+     * Second, dashed forecast series sharing the same x axis. Null-padded so
+     * index i lines up with values[i]; to connect the ray to the solid line,
+     * its first non-null entry should repeat the last real value.
+     */
+    projectionValues?: (number | null)[]
 }
 
 export default function LineChart({
@@ -34,17 +40,34 @@ export default function LineChart({
     xLabel,
     dotColor,
     referenceY,
+    projectionValues,
 }: LineChartProps) {
     const [hover, setHover] = useState<number | null>(null)
-    const n = values.length
+    // The x scale spans real points plus any projected ones.
+    const n = Math.max(values.length, projectionValues?.length ?? 0)
     if (n === 0) return null
 
-    const domainSource = referenceY != null ? [...values, referenceY] : values
+    const projPoints = (projectionValues ?? []).filter((v): v is number => v != null)
+    const domainSource = [
+        ...values,
+        ...projPoints,
+        ...(referenceY != null ? [referenceY] : []),
+    ]
     const [lo, hi] = yDomain ?? [Math.min(...domainSource), Math.max(...domainSource)]
     const s = makeScale({ n, lo, hi, invertY })
     const tick = formatTick ?? formatValue
 
     const line = values.map((v, i) => `${s.x(i)},${s.y(v)}`).join(' ')
+    const projLine = (projectionValues ?? [])
+        .map((v, i) => (v == null ? null : `${s.x(i)},${s.y(v)}`))
+        .filter(Boolean)
+        .join(' ')
+
+    // y value under the pointer, whichever series owns that index
+    function valueAt(i: number): number | null {
+        if (i < values.length) return values[i]
+        return projectionValues?.[i] ?? null
+    }
 
     // Map pointer position (CSS pixels) back into viewBox units, then snap to
     // the nearest data index — readers aim at an x position, not at a 2px line.
@@ -54,6 +77,8 @@ export default function LineChart({
         const i = n <= 1 ? 0 : Math.round(((vx - s.pad) / s.innerW) * (n - 1))
         setHover(Math.min(n - 1, Math.max(0, i)))
     }
+
+    const hoverValue = hover != null ? valueAt(hover) : null
 
     return (
         <div className='chart-wrap'>
@@ -96,6 +121,14 @@ export default function LineChart({
                     />
                 )}
 
+                {projLine && (
+                    <polyline
+                        points={projLine} fill='none' stroke={CHART.line}
+                        strokeWidth='2' strokeDasharray='6 5' opacity='0.55'
+                        strokeLinejoin='round' strokeLinecap='round'
+                    />
+                )}
+
                 <polyline
                     points={line} fill='none' stroke={CHART.line}
                     strokeWidth='2' strokeLinejoin='round' strokeLinecap='round'
@@ -112,15 +145,15 @@ export default function LineChart({
                 ))}
             </svg>
 
-            {hover != null && (
+            {hover != null && hoverValue != null && (
                 <div
                     className='chart-tooltip'
                     style={{
                         left: `${(s.x(hover) / s.W) * 100}%`,
-                        top: `${(s.y(values[hover]) / s.H) * 100}%`,
+                        top: `${(s.y(hoverValue) / s.H) * 100}%`,
                     }}
                 >
-                    <span className='chart-tooltip-value'>{formatValue(values[hover])}</span>
+                    <span className='chart-tooltip-value'>{formatValue(hoverValue)}</span>
                     {xLabel && <span className='chart-tooltip-label'>{xLabel(hover)}</span>}
                 </div>
             )}

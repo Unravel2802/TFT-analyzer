@@ -98,13 +98,39 @@ function JourneyStrip({ journey }: { journey: ClimbJourney }) {
     )
 }
 
-function LpChart({ snapshots, goalAbs }: { snapshots: RankPoint[]; goalAbs?: number }) {
+// Forecast ray: from the last snapshot, one point per day at the current
+// lp_per_day pace until the goal (capped so a slow pace can't dwarf history).
+const MAX_PROJECTED_DAYS = 14
+
+function buildProjection(
+    snapshots: RankPoint[], journey: ClimbJourney | null, goalAbs?: number,
+): (number | null)[] | undefined {
+    if (!journey || journey.lp_per_day == null || journey.lp_per_day <= 0 || goalAbs == null) return undefined
+    const last = snapshots[snapshots.length - 1].abs_lp
+    if (last >= goalAbs) return undefined   // already there — nothing to project
+
+    const pace = journey.lp_per_day
+    const days = Math.min(Math.ceil((goalAbs - last) / pace), MAX_PROJECTED_DAYS)
+    // null-padded so projected x indices continue where the real series ends;
+    // repeating `last` at the seam connects the dashed ray to the solid line
+    const points: (number | null)[] = new Array<number | null>(snapshots.length - 1).fill(null)
+    points.push(last)
+    for (let d = 1; d <= days; d++) {
+        points.push(Math.min(goalAbs, Math.round(last + pace * d)))
+    }
+    return points
+}
+
+function LpChart({ snapshots, journey, goalAbs }: {
+    snapshots: RankPoint[]; journey: ClimbJourney | null; goalAbs?: number
+}) {
     if (snapshots.length === 0) {
         return <p className='insight-empty'>No data yet — play a ranked game and check back.</p>
     }
 
     const values = snapshots.map(s => s.abs_lp)
     const all = goalAbs != null ? [...values, goalAbs] : values
+    const projection = buildProjection(snapshots, journey, goalAbs)
 
     return (
         <LineChart
@@ -113,8 +139,11 @@ function LpChart({ snapshots, goalAbs }: { snapshots: RankPoint[]; goalAbs?: num
             gridValues={rankGridValues(Math.min(...all), Math.max(...all))}
             formatValue={absLpToRank}
             formatTick={rankTickLabel}
-            xLabel={i => formatDate(snapshots[i].captured_at)}
+            xLabel={i => i < snapshots.length
+                ? formatDate(snapshots[i].captured_at)
+                : `in ~${i - snapshots.length + 1}d at current pace`}
             referenceY={goalAbs}
+            projectionValues={projection}
         />
     )
 }
@@ -274,7 +303,7 @@ export default function ClimbPage() {
 
             <section className='panel'>
                 <h3 className='panel-title'>Rank over time</h3>
-                <LpChart snapshots={data.snapshots} goalAbs={data.goal?.target_abs_lp} />
+                <LpChart snapshots={data.snapshots} journey={data.journey} goalAbs={data.goal?.target_abs_lp} />
             </section>
 
             {changes.length > 0 && (
