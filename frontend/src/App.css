@@ -35,11 +35,14 @@
 
 .page-title {
   font-size: 48px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 2px;
-  color: var(--gold);
   text-transform: uppercase;
-  text-shadow: 0 0 30px rgba(200, 155, 60, 0.4);
+  background: linear-gradient(135deg, var(--gold) 30%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(200, 155, 60, 0.35));
 }
 
 .page-tagline {
@@ -54,6 +57,7 @@
 /* Landing hero (search page). Self-contained so it doesn't depend on the
    .page-title/.page-tagline pair the way inner pages do. */
 .hero-search {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,25 +65,46 @@
   text-align: center;
   padding-top: 32px;
 }
+
+/* radial bloom sits behind the headline text */
+.hero-search::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 380px;
+  background: radial-gradient(ellipse at center, rgba(200, 155, 60, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-search > * { position: relative; z-index: 1; }
+
 .hero-search-title {
   margin: 0;
-  font-size: 44px;
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: 1px;
-  color: var(--text-bright);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  background: linear-gradient(160deg, #fff 30%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .hero-search-sub {
-  margin: -8px 0 0;
+  margin: -4px 0 0;
   max-width: 440px;
   font-size: 15px;
   color: var(--text-muted);
+  line-height: 1.6;
 }
 .hero-search-links {
   display: flex;
   gap: 24px;
-  font-size: 13px;
-  letter-spacing: 1px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 .hero-search-links a {
@@ -103,14 +128,18 @@
   padding: 12px 16px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   color: var(--text-bright);
   font-size: 16px;
+  font-family: inherit;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.search-input:focus { border-color: var(--gold); }
+.search-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200, 155, 60, 0.12);
+}
 
 .search-input::placeholder {
   color: var(--text);
@@ -132,12 +161,16 @@
   color: #0a0e1a;
   padding: 12px 28px;
   font-size: 15px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 0 2px 12px rgba(200, 155, 60, 0.28);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 0 16px var(--gold-glow);
+  background-color: #d4a84a;
+  box-shadow: 0 0 24px var(--gold-glow);
+  transform: translateY(-1px);
 }
 
 .btn-ghost {
@@ -258,20 +291,29 @@
 
 /* ── 3. Navbar ───────────────────────────────────────────── */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--space-3) var(--space-4);
+  background: rgba(10, 14, 26, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
-  margin-bottom: var(--space-4);
 }
 
 .nav-brand {
   font-size: var(--fs-lg);
-  font-weight: 700;
-  color: var(--gold-light);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-decoration: none;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  filter: drop-shadow(0 0 8px rgba(200, 155, 60, 0.3));
 }
 
 .nav-links {
@@ -310,6 +352,13 @@
   gap: 16px;
   width: 100%;
   max-width: 400px;
+  background: rgba(17, 24, 39, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(200, 155, 60, 0.06);
 }
 
 .auth-title {
@@ -577,6 +626,11 @@
   border-radius: var(--radius-md);
   padding: var(--space-4);
   box-shadow: var(--shadow);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.panel:hover {
+  border-color: rgba(200, 155, 60, 0.35);
+  box-shadow: var(--shadow), 0 0 20px rgba(200, 155, 60, 0.06);
 }
 
 .panel-title {
