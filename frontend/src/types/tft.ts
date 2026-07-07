@@ -82,6 +82,7 @@ export interface CoachStat {
     name: string
     games: number
     avg_placement: number
+    meta_avg?: number | null   // ladder-wide avg for the same unit; absent for traits/items
 }
 
 export interface CoachPlaystyle {

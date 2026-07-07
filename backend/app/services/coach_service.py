@@ -1,22 +1,12 @@
+import asyncio
 import re
 from collections import defaultdict
-from app.services.units_meta_service import compute_unit_stats
+from app.services.units_meta_service import compute_unit_stats, get_units_meta_cached
 from app.services.stats_service import format_trait_name
-from app.services.player_lookup import resolve_puuid, fetch_user_matches
+from app.services.player_lookup import fetch_user_participants
 
 # Board fillers, not real completed/component items.
 _ITEM_JUNK = ("emptybag", "unusableslot")
-
-
-async def _fetch_user_participants(riot_client, game_name, tag_line, count=20) -> list[dict]:
-    puuid = await resolve_puuid(riot_client, game_name, tag_line)
-    matches = await fetch_user_matches(riot_client, puuid, count=count)
-    participants = []
-    for m in matches:
-        board = next((p for p in m["info"]["participants"] if p["puuid"] == puuid), None)
-        if board is not None:
-            participants.append(board)
-    return participants
 
 
 
@@ -109,8 +99,17 @@ def compute_playstyle(participants: list[dict]) -> dict:
     }
 
 
+async def _units_meta_by_id() -> dict[str, float]:
+    """unit_id -> ladder-wide avg placement; empty on failure so Coach never dies on the join."""
+    try:
+        meta = await asyncio.to_thread(get_units_meta_cached)
+    except Exception:
+        return {}
+    return {row["unit_id"]: row["avg_placement"] for row in meta}
+
+
 async def build_coach(riot_client, game_name: str, tag_line: str, count: int = 20) -> dict:
-    participants = await _fetch_user_participants(riot_client, game_name, tag_line, count=count)
+    participants = await fetch_user_participants(riot_client, game_name, tag_line, count=count)
     if not participants:
         return {
             "games_analyzed": 0, "overall_avg_placement": 0,
@@ -119,6 +118,9 @@ async def build_coach(riot_client, game_name: str, tag_line: str, count: int = 2
         }
 
     units = compute_unit_stats(participants, min_games=2)      # already sorted best-first
+    meta_avg = await _units_meta_by_id()
+    for u in units:
+        u["meta_avg"] = meta_avg.get(u["unit_id"])
     traits = compute_trait_stats(participants, min_games=2)
     items = compute_item_stats(participants, min_games=2)
     overall = round(sum(p["placement"] for p in participants) / len(participants), 2)

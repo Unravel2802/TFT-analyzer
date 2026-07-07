@@ -5,6 +5,7 @@ class CoachStat(BaseModel):
     name: str
     games: int
     avg_placement: float
+    meta_avg: float | None = None   # ladder-wide avg for the same unit; None for traits/items
 
 
 class CoachPlaystyle(BaseModel):

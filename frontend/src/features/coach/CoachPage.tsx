@@ -81,6 +81,14 @@ function InsightCard({
                                     <span className='insight-name'>{s.name}</span>
                                     <span className='insight-avg'>
                                         {s.avg_placement}<span className='insight-avg-unit'>avg</span>
+                                        {s.meta_avg != null && (
+                                            <span
+                                                className='insight-meta'
+                                                title={`Ladder average on ${s.name}: ${s.meta_avg} — ${s.avg_placement <= s.meta_avg ? 'you outperform' : 'you underperform'} the field on this pick`}
+                                            >
+                                                meta {s.meta_avg}
+                                            </span>
+                                        )}
                                     </span>
                                     <span
                                         className={`insight-delta insight-delta-${tone}`}

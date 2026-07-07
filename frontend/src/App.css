@@ -1508,7 +1508,16 @@
 .insight-delta-bad  { color: var(--bot4); background: rgba(229, 115, 115, 0.12); }
 .insight-games { text-align: right; font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .insight-empty { color: var(--text-muted); font-size: var(--fs-sm); }
-
+/* ladder-wide average for the same unit, stacked under your own avg so the
+   row grid stays five columns whether or not meta data resolved */
+.insight-meta {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
 
 /* ── Climb ───────────────────────────────────────────────────── */
 .climb-hero {
