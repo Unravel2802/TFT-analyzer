@@ -5,7 +5,7 @@ from app.db.supabase import supabase
 def list_notes(user_id) -> list[dict]:
     result = (
         supabase.table("match_notes")
-        .select("match_id, note, updated_at")
+        .select("match_id, note, tags, updated_at")
         .eq("user_id", user_id)
         .order("updated_at", desc=True)
         .execute()
@@ -13,12 +13,13 @@ def list_notes(user_id) -> list[dict]:
     return result.data
 
 
-def upsert_note(user_id, match_id: str, note: str) -> None:
+def upsert_note(user_id, match_id: str, note: str, tags: list[str] | None = None) -> None:
     supabase.table("match_notes").upsert(
         {
             "user_id": user_id,
             "match_id": match_id,
             "note": note,
+            "tags": tags or [],
             "updated_at": datetime.now(timezone.utc).isoformat(),
         },
         on_conflict="user_id,match_id",

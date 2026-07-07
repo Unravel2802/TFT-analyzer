@@ -1643,7 +1643,46 @@
 
 
 
+/* ── Journal tags ────────────────────────────────────────────── */
+.tag-picker,
+.journal-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+}
+.tag-chip {
+    font: inherit;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+.tag-chip:hover { border-color: var(--gold-dim); color: var(--text-bright); }
+.tag-chip-on {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+    background: rgba(200, 155, 60, 0.12);
+}
+.tag-chip-static { cursor: default; }
+.tag-chip-static:hover { border-color: var(--border); color: var(--text-muted); }
 
+/* per-tag placement report at the top of the Journal page */
+.tag-report { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.tag-report-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 8px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tag-report-row:first-child { border-top: none; }
+.tag-report-body { font-size: var(--fs-sm); color: var(--text); }
+.tag-report-body strong { color: var(--text-bright); }
+.tag-report-games { color: var(--text-muted); }
 .journal-match-link {
     display: inline-flex;
     align-items: center;

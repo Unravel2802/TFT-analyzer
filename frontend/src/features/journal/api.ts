@@ -1,15 +1,19 @@
 import { request } from '@/lib/apiClient'
-import type { NoteEntry } from '@/types/tft'
+import type { NoteEntry, TagReport } from '@/types/tft'
 
 export function getJournal(token: string): Promise<NoteEntry[]> {
     return request('/me/journal', { token, fallbackError: 'Failed to fetch journal' })
 }
 
-export async function saveNote(token: string, matchId: string, note: string): Promise<void> {
+export function getTagReport(token: string): Promise<TagReport> {
+    return request('/me/journal/report', { token, fallbackError: 'Failed to fetch tag report' })
+}
+
+export async function saveNote(token: string, matchId: string, note: string, tags: string[] = []): Promise<void> {
     await request(`/me/journal/${matchId}`, {
         method: 'PUT',
         token,
-        body: { note },
+        body: { note, tags },
         fallbackError: 'Failed to save note',
     })
 }

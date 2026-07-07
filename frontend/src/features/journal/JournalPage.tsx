@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthContext'
-import { getJournal, saveNote, deleteNote } from './api'
-import type { NoteEntry } from '@/types/tft'
+import { getJournal, getTagReport, saveNote, deleteNote } from './api'
+import TagPicker from './TagPicker'
+import type { NoteEntry, TagReport } from '@/types/tft'
 import Button from '@/components/Button'
 import Dropdown from '@/components/Dropdown'
 import PageHeader from '@/components/PageHeader'
@@ -17,19 +18,59 @@ function formatDate(iso: string): string {
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
+// Which recurring mistake costs you the most: avg placement per tag vs your
+// baseline across all noted games. Only rendered once any note carries a tag.
+function TagReportPanel({ report }: { report: TagReport }) {
+    if (report.tags.length === 0) return null
+    return (
+        <section className='panel'>
+            <h3 className='panel-title'>What your tags say</h3>
+            <ul className='tag-report'>
+                {report.tags.map(t => {
+                    const diff = t.avg_placement - report.overall_avg_placement
+                    const costly = diff >= 0.15
+                    const helpful = diff <= -0.15
+                    return (
+                        <li key={t.tag} className='tag-report-row'>
+                            <span className='tag-chip tag-chip-static'>{t.tag}</span>
+                            <span className='tag-report-body'>
+                                avg <strong>{t.avg_placement}</strong> vs your {report.overall_avg_placement} overall
+                                <span className='tag-report-games'> ({t.games} {t.games === 1 ? 'game' : 'games'})</span>
+                            </span>
+                            {(costly || helpful) && (
+                                <span className={`insight-delta insight-delta-${costly ? 'bad' : 'good'}`}>
+                                    {diff <= 0 ? '−' : '+'}{Math.abs(diff).toFixed(1)}
+                                </span>
+                            )}
+                        </li>
+                    )
+                })}
+            </ul>
+        </section>
+    )
+}
+
 function NoteCard({ note, onSave, onDelete }: {
     note: NoteEntry
-    onSave: (matchId: string, text: string) => Promise<void>
+    onSave: (matchId: string, text: string, tags: string[]) => Promise<void>
     onDelete: (matchId: string) => void
 }) {
     const [editing, setEditing] = useState(false)
     const [draft, setDraft] = useState(note.note)
+    const [draftTags, setDraftTags] = useState<string[]>(note.tags ?? [])
     const [saving, setSaving] = useState(false)
+
+    const dirty = draft.trim() !== note.note || draftTags.join('|') !== (note.tags ?? []).join('|')
 
     async function save() {
         setSaving(true)
-        try { await onSave(note.match_id, draft.trim()); setEditing(false) }
+        try { await onSave(note.match_id, draft.trim(), draftTags); setEditing(false) }
         finally { setSaving(false) }
+    }
+    function cancel() {
+        setDraft(note.note)
+        setDraftTags(note.tags ?? [])
+        setEditing(false)
     }
 
     return (
@@ -43,16 +84,22 @@ function NoteCard({ note, onSave, onDelete }: {
                         rows={3}
                         autoFocus
                     />
+                    <TagPicker selected={draftTags} onChange={setDraftTags} />
                     <div className='journal-edit-actions'>
-                        <Button onClick={save} disabled={saving || !draft.trim() || draft.trim() === note.note}>
+                        <Button onClick={save} disabled={saving || !draft.trim() || !dirty}>
                             {saving ? 'Saving…' : 'Save'}
                         </Button>
-                        <Button variant='ghost' onClick={() => { setDraft(note.note); setEditing(false) }}>Cancel</Button>
+                        <Button variant='ghost' onClick={cancel}>Cancel</Button>
                     </div>
                 </>
             ) : (
                 <>
                     <p className='journal-card-note'>{note.note}</p>
+                    {(note.tags?.length ?? 0) > 0 && (
+                        <div className='journal-card-tags'>
+                            {note.tags.map(t => <span key={t} className='tag-chip tag-chip-static'>{t}</span>)}
+                        </div>
+                    )}
                     <div className='journal-card-foot'>
                         <Link to={`/matches/${note.match_id}`} className='journal-match-link'>View match →</Link>
                         <span className='journal-date'>{formatDate(note.updated_at)}</span>
@@ -68,6 +115,7 @@ function NoteCard({ note, onSave, onDelete }: {
 export default function JournalPage() {
     const { token } = useAuth()
     const [notes, setNotes] = useState<NoteEntry[]>([])
+    const [report, setReport] = useState<TagReport | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [query, setQuery] = useState('')
@@ -77,6 +125,8 @@ export default function JournalPage() {
         try { setNotes(await getJournal(token!)); setError(null) }
         catch (e) { setError(e instanceof Error ? e.message : 'Failed to load') }
         finally { setLoading(false) }
+        // The report is an extra; if it fails (rate limit) the journal still works.
+        getTagReport(token!).then(setReport).catch(() => {})
     }, [token])
     useEffect(() => { load() }, [load])
 
@@ -84,16 +134,16 @@ export default function JournalPage() {
         await deleteNote(token!, matchId)
         await load()
     }
-    async function edit(matchId: string, text: string) {
-        await saveNote(token!, matchId, text)
+    async function edit(matchId: string, text: string, tags: string[]) {
+        await saveNote(token!, matchId, text, tags)
         await load()
     }
 
-    // Filter by note text, then order by updated_at in the chosen direction.
+    // Filter by note text or tag, then order by updated_at in the chosen direction.
     const visible = useMemo(() => {
         const q = query.trim().toLowerCase()
         return notes
-            .filter(n => n.note.toLowerCase().includes(q))
+            .filter(n => n.note.toLowerCase().includes(q) || (n.tags ?? []).some(t => t.includes(q)))
             .sort((a, b) => {
                 const diff = new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
                 return sort === 'new' ? diff : -diff
@@ -110,6 +160,8 @@ export default function JournalPage() {
                 subtitle='Notes you left on your matches — spot the patterns'
                 stats={notes.length > 0 ? [{ label: notes.length === 1 ? 'note' : 'notes', value: notes.length }] : undefined}
             />
+
+            {report && <TagReportPanel report={report} />}
 
             {notes.length === 0
                 ? (

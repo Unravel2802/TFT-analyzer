@@ -143,7 +143,20 @@ export interface SessionsInsights {
 export interface NoteEntry {
     match_id: string
     note: string
+    tags: string[]
     updated_at: string
+}
+
+export interface TagStat {
+    tag: string
+    games: number
+    avg_placement: number
+}
+
+export interface TagReport {
+    games_analyzed: number
+    overall_avg_placement: number
+    tags: TagStat[]
 }
 
 export interface MyRank {
