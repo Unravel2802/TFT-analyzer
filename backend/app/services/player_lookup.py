@@ -29,3 +29,15 @@ async def fetch_user_matches(riot_client, puuid, count=20) -> list[dict]:
     await asyncio.to_thread(store_matches, fetched)
     all_matches = {**cached, **fetched}
     return [all_matches[mid] for mid in match_ids]
+
+
+async def fetch_user_participants(riot_client, game_name: str, tag_line: str, count: int = 20) -> list[dict]:
+    """The user's own board (their participant entry) from each recent match."""
+    puuid = await resolve_puuid(riot_client, game_name, tag_line)
+    matches = await fetch_user_matches(riot_client, puuid, count=count)
+    participants = []
+    for m in matches:
+        board = next((p for p in m["info"]["participants"] if p["puuid"] == puuid), None)
+        if board is not None:
+            participants.append(board)
+    return participants

@@ -1,7 +1,11 @@
 from collections import defaultdict
+from app.repositories.matches import get_all_matches
+from app.services.cache import ttl_cached
 from app.services.meta_common import (
     dominant_set, participants_from_matches, set_prefix, is_real_unit, short_name,
 )
+
+META_TTL = 300
 
 def compute_unit_stats(participants: list[dict], min_games: int = 1, set_number: int | None = None) -> list[dict]:
     total_boards = len(participants)
@@ -47,4 +51,11 @@ def compute_units_meta(raw_matches: list[dict], min_games: int = 1) -> list[dict
     set_number = dominant_set(raw_matches)
     participants = participants_from_matches(raw_matches, set_number)
     return compute_unit_stats(participants, min_games=min_games, set_number=set_number)
-    
+
+
+def get_units_meta_cached(min_games: int = 1) -> list[dict]:
+    """Ladder-wide unit table, shared by the /meta/units route and Coach's meta join."""
+    return ttl_cached(
+        ("units", min_games), META_TTL,
+        lambda: compute_units_meta(get_all_matches(source="ladder"), min_games=min_games),
+    )
