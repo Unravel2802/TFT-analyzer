@@ -37,7 +37,6 @@ export default function SignupPage() {
 
     return (
         <div className='page'>
-            <h1 className='page-title'>TierMind</h1>
             <p className='page-tagline'>Know your game. Climb your rank.</p>
 
             <form className='auth-form' onSubmit={handleSubmit}>

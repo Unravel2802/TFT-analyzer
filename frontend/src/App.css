@@ -146,6 +146,16 @@
   opacity: 0.5;
 }
 
+.search-input:-webkit-autofill,
+.search-input:-webkit-autofill:hover,
+.search-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-card) inset;
+  -webkit-text-fill-color: var(--text-bright);
+  caret-color: var(--text-bright);
+  border-color: var(--border);
+  transition: background-color 9999s ease-in-out;
+}
+
 /* shared Button component (components/Button.tsx) — variant="primary" | "ghost" */
 .btn {
   border: none;
