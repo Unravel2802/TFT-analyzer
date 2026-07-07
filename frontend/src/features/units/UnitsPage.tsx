@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getUnitsMeta } from './api'
+import { useAuth } from '@/features/auth/AuthContext'
+import { getUnitsMeta, getMyUnits } from './api'
 import type { UnitStat } from '@/types/tft'
 import UnitPortrait from '@/components/UnitPortrait'
 import TableSkeleton from '@/components/TableSkeleton'
@@ -18,8 +19,25 @@ function defaultAsc(key: SortKey): boolean {
     return key === 'avg_placement'
 }
 
+// Your own numbers on a unit, next to the meta's. Green when you place better
+// than the ladder average on it, red when worse (0.15 dead zone so a coin-flip
+// difference isn't painted as a verdict).
+function YourAvgCell({ mine, metaAvg }: { mine: UnitStat | undefined; metaAvg: number }) {
+    if (!mine) return <td className='num unit-mine-empty'>—</td>
+    const diff = mine.avg_placement - metaAvg
+    const tone = diff <= -0.15 ? ' unit-mine-good' : diff >= 0.15 ? ' unit-mine-bad' : ''
+    return (
+        <td className={`num unit-mine${tone}`} title={`Your ${mine.avg_placement.toFixed(2)} vs meta ${metaAvg.toFixed(2)} over ${mine.games} of your games`}>
+            {mine.avg_placement.toFixed(2)}
+            <span className='unit-mine-games'>{mine.games}g</span>
+        </td>
+    )
+}
+
 export default function UnitsPage() {
+    const { token } = useAuth()
     const [units, setUnits] = useState<UnitStat[]>([])
+    const [mine, setMine] = useState<Map<string, UnitStat> | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [sortKey, setSortKey] = useState<SortKey>('avg_placement')
@@ -34,6 +52,17 @@ export default function UnitsPage() {
         return () => { active = false }
     }, [])
 
+    // Personal column is additive: fetched only when signed in, and any failure
+    // (rate limit, no games) just leaves the table global — never an error state.
+    useEffect(() => {
+        if (!token) return
+        let active = true
+        getMyUnits(token)
+            .then(data => { if (active) setMine(new Map(data.map(u => [u.unit_id, u]))) })
+            .catch(() => { /* column simply doesn't render */ })
+        return () => { active = false }
+    }, [token])
+
     function toggleSort(key: SortKey) {
         if (key === sortKey) {
             setAsc(a => !a)
@@ -44,6 +73,8 @@ export default function UnitsPage() {
     }
 
     const sorted = [...units].sort((a, b) => (asc ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey]))
+    // token gate means a signed-out visitor never sees the column, even with stale state
+    const showMine = !!token && mine !== null && mine.size > 0
 
     if (error) return (
         <div className='page'>
@@ -75,6 +106,7 @@ export default function UnitsPage() {
                                     </button>
                                 </th>
                             ))}
+                            {showMine && <th className='num'>Your avg</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -88,6 +120,7 @@ export default function UnitsPage() {
                                 <td className='num'>{u.avg_placement.toFixed(2)}</td>
                                 <td className='num'>{u.top4_rate}%</td>
                                 <td className='num'>{u.games}</td>
+                                {showMine && <YourAvgCell mine={mine.get(u.unit_id)} metaAvg={u.avg_placement} />}
                             </tr>
                         ))}
                     </tbody>

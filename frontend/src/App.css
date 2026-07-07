@@ -1185,6 +1185,17 @@
     align-items: center;
     gap: 0.5rem;
 }
+/* "Your avg" column: your own number on the unit, tinted by whether you beat
+   the ladder average on it; sample size rides along in small muted type */
+.unit-mine { color: var(--text-bright); }
+.unit-mine-good { color: var(--top4); }
+.unit-mine-bad  { color: var(--bot4); }
+.unit-mine-empty { color: var(--text-muted); }
+.unit-mine-games {
+    margin-left: 6px;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+}
 
 /* Leaderboard: player names link to their profile; tier shows as a compact
    colour-coded badge instead of the same word shouted on every row. */
@@ -1196,6 +1207,7 @@
 .lb-tag { color: var(--text-muted); }
 .lb-player:hover .lb-tag { color: inherit; }
 .lb-player-anon { color: var(--text-muted); }
+
 .tier-badge {
     display: inline-flex;
     align-items: center;
@@ -1254,6 +1266,7 @@
     font-size: var(--fs-xs);
     color: var(--text-muted);
 }
+
 .comp-card-body {
     display: flex;
     align-items: center;
@@ -1496,6 +1509,7 @@
 .insight-games { text-align: right; font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .insight-empty { color: var(--text-muted); font-size: var(--fs-sm); }
 
+
 /* ── Climb ───────────────────────────────────────────────────── */
 .climb-hero {
     display: flex;
@@ -1592,6 +1606,10 @@
     padding-top: var(--space-2);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+
+
+
 .journal-match-link {
     display: inline-flex;
     align-items: center;
