@@ -53,7 +53,7 @@ next step isn't more pages, it's wiring these together so the personal data we
 already persist actually shows up where a player is looking. Each item below
 names the exact page, the machinery it reuses, and what's net-new.
 
-### 1. Units page — "Your placement" column vs. the meta
+### 1. Units page — "Your placement" column vs. the meta — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/units/UnitsPage.tsx`
 **What changes:** add a 6th column, shown only when signed in, with the
@@ -73,7 +73,7 @@ signed-in user's match history and returns the full list (Coach currently
 only exposes top-3/bottom-3 — this needs the *whole* list); a `getMyUnits()`
 call in `units/api.ts`; merge-by-`unit_id` in `UnitsPage.tsx`.
 
-### 2. Comps page — mark comps you actually pilot
+### 2. Comps page — mark comps you actually pilot — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/comps/CompsPage.tsx`
 **What changes:** on each `CompCard`, if the signed-in user has games in that
@@ -94,7 +94,7 @@ on the user's own matches; in `CompsPage.tsx`, fetch it alongside the global
 list (only when a token exists) and look up each global comp's `name` in a
 `Map` built from the personal list.
 
-### 3. Coach page — "you vs. the meta" on every stat row
+### 3. Coach page — "you vs. the meta" on every stat row — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/coach/CoachPage.tsx` (`InsightCard`)
 **What changes:** each unit/trait row already shows the player's own avg vs
@@ -114,7 +114,7 @@ against a cached global `compute_units_meta()` result before returning
 `backend/app/schemas/coach.py`; extend the `CoachStat` type in
 `frontend/src/types/tft.ts`; render the extra delta in `InsightCard`.
 
-### 4. Journal page — tags instead of free text, plus a tag report
+### 4. Journal page — tags instead of free text, plus a tag report — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/journal/JournalPage.tsx`,
 `backend/app/repositories/journal.py`
@@ -140,7 +140,7 @@ the match's stored `placement`, which requires pulling placement from the
 match doc since `match_notes` doesn't store it today); a chip picker in
 `JournalPage.tsx`'s `NoteCard`.
 
-### 5. Leaderboard page — show where *you* stand, even off the top-25
+### 5. Leaderboard page — show where *you* stand, even off the top-25 — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/leaderboard/LeaderboardPage.tsx`
 **What changes:** if signed in and viewing your own region, pin a "You"
@@ -160,7 +160,7 @@ rank" for anyone outside Challenger/GM/Master needs a *separate* targeted
 already be in the top-25 payload. Add that lookup to the leaderboard
 endpoint when a token is present; render the pinned row client-side.
 
-### 6. Climb page — pace projection drawn on the chart itself
+### 6. Climb page — pace projection drawn on the chart itself — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/climb/ClimbPage.tsx` (`LpChart`),
 `frontend/src/components/charts/LineChart.tsx`
@@ -180,7 +180,7 @@ horizontal `referenceY` line — it needs a second, dashed-stroke series prop
 projection points themselves are computed client-side in `ClimbPage.tsx`
 from data it already has (no backend change needed).
 
-### 7. Dashboard page — one glanceable "state of your account" strip
+### 7. Dashboard page — one glanceable "state of your account" strip — ✅ shipped 2026-07-07
 
 **Where:** `frontend/src/features/player/DashboardPage.tsx`
 **What changes:** above the existing `PlayerProfile`, add a row of 3 small

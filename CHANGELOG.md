@@ -4,6 +4,22 @@ Every working session gets one dated entry, newest first. Each bullet says **wha
 
 ---
 
+## 2026-07-07 — Cross-page personalization: all seven roadmap "feature upgrades"
+
+Shipped the roadmap's entire "Feature upgrades to existing pages" section in one pass — the theme is wiring the pages together so personal data shows up wherever a player is already looking, mostly by re-running existing `compute_*` functions over the signed-in user's own matches instead of the global sample.
+
+- **`feat(units)` — "Your avg" column vs the meta.** New `GET /me/units` runs `compute_unit_stats()` over your own match history (full list, not Coach's top-3); the Units page joins it to the global table by `unit_id` and adds a signed-in-only column, tinted green/red where you beat/trail the meta average (±0.15 dead zone), with your game count alongside. Signed-out visitors see the exact same table as before.
+- **`feat(comps)` — "You've played this" badges.** New `GET /me/comps` runs `compute_comp_stats()` on your matches; since comp `name` is built identically on both sides, the page badges any global comp you've piloted: "You've played this 6× · your avg 3.8".
+- **`feat(coach)` — you vs. the meta on unit rows.** `build_coach()` now joins each of your unit rows against the cached ladder-wide units table (`meta_avg` on `CoachStat`, `None` for traits/items); the UI stacks a small "META 3.71" under your own avg, so a "leak" can be read as *your* weak spot vs. a unit that's just weak for everyone. The units-meta cache moved into `get_units_meta_cached()` so the `/meta/units` route and Coach share one 5-min TTL entry; join failure degrades to no meta column, never a dead Coach page.
+- **`feat(journal)` — tags + "what your tags say" report.** ⚠️ **Requires a one-line Supabase migration (`backend/migrations/001_match_notes_tags.sql`) before the Journal works again** — the code now selects the `tags` column. Notes take chips from a fixed 8-tag vocabulary (fixed so aggregation is possible at all); a new `GET /me/journal/report` joins each tagged note to your placement in that match (pulled from the cached match docs, since `match_notes` never stored placement) and reports avg placement per tag vs your overall — "games tagged *misplayed econ*: 5.4 vs your 4.2". Tag picker appears in both the match-detail note editor and journal-card editing; search also matches tags.
+- **`feat(leaderboard)` — pinned "You" row.** New `GET /me/rank` (one targeted `get_rank()` call — anyone below apex is never in the top-25 payload). Viewing your own region signed-in: your row is highlighted in place if you're top-25, otherwise a pinned row under the header shows tier/LP and "N LP off the board" (distance to the lowest LP on display). Kept out of the public leaderboard endpoint on purpose: its response is TTL-cached *shared*, so per-user data there would poison the cache.
+- **`feat(climb)` — pace projection drawn on the chart.** `LineChart` grew a `projectionValues` prop (second dashed series, null-padded to share the x axis); ClimbPage computes a forecast ray client-side from `journey.lp_per_day` — one point per day from the last snapshot to the goal, capped at 14 days so a slow pace can't dwarf history. Tooltip on projected points reads "in ~Nd at current pace".
+- **`feat(dashboard)` — focus strip.** Three chips above the profile, one live fact from each differentiator page (fired in parallel, each failure-tolerant): current 2+ streak → Sessions, climb ETA/pace → Climb, single biggest leak (same min/max rule as Coach's takeaway) → Coach. Hidden while scouting another player.
+
+### Verified by
+
+`pytest` 59/59 (5 new tag-report tests) · `tsc` + `vite build` · headless-Chrome screenshots of all seven pages via a temporary fetch-stubbing harness (deleted after) plus the live signed-out Units/meta endpoints against the real backend. **Not verifiable live:** the Riot API key in `backend/.env` is currently expired (even public leaderboard 401s) — renew at developer.riotgames.com to exercise the `/me/*` endpoints end-to-end.
+
 ## 2026-07-05 — Climb goal journeys + reset, coach items/playstyle, dashboard form
 
 Deepened the three player-facing pages. First session to add new backend surface since the analytics endpoints: one new route, no schema migrations (journey time is derived from data already stored).
