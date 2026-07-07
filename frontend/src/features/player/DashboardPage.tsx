@@ -3,6 +3,7 @@ import { useAuth } from '@/features/auth/AuthContext'
 import { getMyDashboard, getPlayerDashboard } from '@/features/player/api'
 import type { DashboardData } from '@/types/tft'
 import SearchBar from '@/features/player/SearchBar'
+import FocusStrip from '@/features/player/FocusStrip'
 import PlayerProfile from '@/features/player/PlayerProfile'
 import ProfileSkeleton from '@/features/player/ProfileSkeleton'
 import Button from '@/components/Button'
@@ -56,6 +57,9 @@ export default function DashboardPage() {
                 dashboard leads with the scout-a-player search rather than a
                 stray marketing tagline. */}
             <SearchBar onSearch={handleSearch} loading={searchLoading} />
+
+            {/* your own pulse from Sessions/Climb/Coach — hidden while scouting someone else */}
+            {!viewedData && <FocusStrip />}
 
             {viewedData && (
                 <Button variant='ghost' onClick={() => setViewedData(null)}>

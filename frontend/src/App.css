@@ -1641,7 +1641,32 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-
+/* ── Dashboard focus strip ───────────────────────────────────── */
+.focus-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: var(--space-3) 0;
+}
+.focus-chip {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: border-color 0.2s;
+}
+.focus-chip:hover { border-color: var(--gold-dim); }
+.focus-chip-value { color: var(--text-bright); font-size: var(--fs-md); font-weight: 700; }
+.focus-chip-label {
+    font-size: var(--fs-xs);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
 
 /* ── Journal tags ────────────────────────────────────────────── */
 .tag-picker,
