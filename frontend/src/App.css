@@ -1266,7 +1266,16 @@
     font-size: var(--fs-xs);
     color: var(--text-muted);
 }
-
+/* badge on comps the signed-in player has actually piloted */
+.comp-mine-badge {
+    font-size: var(--fs-xs);
+    color: var(--gold);
+    background: rgba(200, 155, 60, 0.12);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius-pill);
+    padding: 2px 9px;
+    white-space: nowrap;
+}
 .comp-card-body {
     display: flex;
     align-items: center;

@@ -6,8 +6,9 @@ from app.services.dashboard_service import build_dashboard
 from app.services.coach_service import build_coach
 from app.services.player_lookup import fetch_user_participants
 from app.services.units_meta_service import compute_unit_stats
+from app.services.comps_meta_service import compute_comp_stats
 from app.schemas.coach import CoachInsights
-from app.schemas.meta import UnitStat
+from app.schemas.meta import UnitStat, CompStat
 from app.config import get_settings
 from app.schemas.climb import ClimbData, GoalRequest
 from app.services.climb_service import build_climb, set_goal, clear_goal, GoalLockedError
@@ -54,6 +55,22 @@ async def get_my_units(current_user: dict = Depends(get_current_user)):
     try:
         participants = await fetch_user_participants(riot_client, game_name, tag_line)
         return compute_unit_stats(participants, min_games=1)
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 429:
+            raise HTTPException(status_code=429, detail="Riot API rate limit hit. Wait 2 minutes")
+        raise HTTPException(status_code=e.response.status_code, detail="Riot API error")
+    finally:
+        await riot_client.close()
+
+@router.get("/comps", response_model=list[CompStat])
+async def get_my_comps(current_user: dict = Depends(get_current_user)):
+    """The signed-in user's own comp stats, keyed by the same comp `name` the
+    /meta/comps table builds, so the Comps page can badge comps you've piloted."""
+    game_name, tag_line = current_user["riot_id"].split("#")
+    riot_client = RiotClient(api_key=settings.riot_api_key, region=current_user["region"])
+    try:
+        participants = await fetch_user_participants(riot_client, game_name, tag_line)
+        return compute_comp_stats(participants, min_games=1)
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 429:
             raise HTTPException(status_code=429, detail="Riot API rate limit hit. Wait 2 minutes")

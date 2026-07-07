@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getCompsMeta } from './api'
+import { useAuth } from '@/features/auth/AuthContext'
+import { getCompsMeta, getMyComps } from './api'
 import { itemIcon } from '@/lib/gameAssets'
 import type { CompStat, CompUnit } from '@/types/tft'
 import UnitPortrait from '@/components/UnitPortrait'
@@ -46,12 +47,20 @@ function StatMeter({ label, value, color }: { label: string; value: number; colo
     )
 }
 
-function CompCard({ comp, rank }: { comp: CompStat; rank: number }) {
+function CompCard({ comp, rank, mine }: { comp: CompStat; rank: number; mine?: CompStat }) {
     return (
         <section className='comp-card'>
             <header className='comp-card-head'>
                 <span className='comp-rank'>#{rank}</span>
                 <h2 className='comp-name'>{comp.name}</h2>
+                {mine && (
+                    <span
+                        className='comp-mine-badge'
+                        title={`Your last games: ${mine.games} played, ${mine.avg_placement} avg placement`}
+                    >
+                        You've played this {mine.games}× · your avg {mine.avg_placement}
+                    </span>
+                )}
                 <span className='comp-meta'>{comp.games} games · {comp.play_rate}% play rate</span>
             </header>
             <div className='comp-card-body'>
@@ -80,7 +89,9 @@ function CompCard({ comp, rank }: { comp: CompStat; rank: number }) {
 }
 
 export default function CompsPage() {
+    const { token } = useAuth()
     const [comps, setComps] = useState<CompStat[]>([])
+    const [mine, setMine] = useState<Map<string, CompStat> | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [sortKey, setSortKey] = useState<SortKey>('avg_placement')
@@ -93,6 +104,17 @@ export default function CompsPage() {
             .finally(() => { if (active) setLoading(false) })
         return () => { active = false }
     }, [])
+
+    // Personal badges are additive: fetched only when signed in; comp `name` is
+    // built the same way on both sides, so lookup is a straight Map hit.
+    useEffect(() => {
+        if (!token) return
+        let active = true
+        getMyComps(token)
+            .then(data => { if (active) setMine(new Map(data.map(c => [c.name, c]))) })
+            .catch(() => { /* badges simply don't render */ })
+        return () => { active = false }
+    }, [token])
 
     // lower avg placement is better; every other stat sorts high-first
     const sorted = [...comps].sort((a, b) =>
@@ -128,7 +150,9 @@ export default function CompsPage() {
             </div>
 
             <div className='comp-list'>
-                {sorted.map((c, i) => <CompCard key={c.name} comp={c} rank={i + 1} />)}
+                {sorted.map((c, i) => (
+                    <CompCard key={c.name} comp={c} rank={i + 1} mine={token ? mine?.get(c.name) : undefined} />
+                ))}
             </div>
         </div>
     )
